@@ -1,0 +1,5 @@
+/* temporary fix to suppress Chromium error,
+  tracked via: https://github.com/electron/electron/issues/4420 */
+::selection {
+  background:transparent;
+}
