@@ -1,0 +1,2 @@
+# bonsai
+Bonsai is a cross platform IDE aimed at research into Programming as Problem-Solving, and cards-based user interfaces. Bonsai is a Japenese art form that uses trees grown in containers as aesthetic expressions of wabi-sabi; the acceptance of transience and imperfection. Wabi-sabi encompasses the concept of beauty as "imperfect, impermanent, and incomplete". Bonsai IDE allows users to gather transient knowledge across multiple sources, build and rebuild software, and engender knowledge and awareness in a workspace that is constantly changing.
