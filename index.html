@@ -6,12 +6,50 @@
     <link rel="stylesheet" type="text/css" href="default.css">.
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-    <div id="testdiv" style="background-color: lightgreen; position:absolute; top:300px; left: 300px;">H train</div>
+    <div id="create">
+      <button id="openFile" onclick="openFile();">Open</button>
+      <button id="saveFile">Save</button>
+      <button onClick="versionNotice()">Version</button>
+      <button onClick="createDiv()">Create Div</button>
+    </div>
+    <div id="getText" style="display: none;">
+        INNERHTML
+    </div>
+
+    <textarea id="editor" style="width: 400px; height: 300px;"></textarea>
+
+    <div id="test-element" class="draggable-element">draggable-element</div>
+
+    <div id="info-box">
+      <!--
+      <script>
+        var thisBox = document.getElementById('info-box');
+        document.write("x: " + thisBox.left + "<br />y: " + thisBox.top);
+      </script>
+    -->
+    </div>
+
     <script src="libs/draggable.js"></script>
-    <script src="index.js"></script>
+    <!--<script src="index.js"></script>-->
   </body>
+  <script>
+    var remote = require('remote');
+    var dialog = remote.require('dialog');
+
+    function openFile() {
+      dialog.showOpenDialog(function (fileNames) {
+
+      });
+    }
+
+    function createDiv() {
+      var div = document.createElement('div');
+      div.className = "draggable-element";
+      div.innerHTML = document.getElementById('getText').innerHTML;
+      document.body.appendChild(div);
+    }
+    function versionNotice() {
+      console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}));
+    }
+  </script>
 </html>

@@ -1,84 +1,41 @@
-function get (el) {
-  if (typeof el == 'string') return document.getElementById(el);
-  return el;
+var selected = null, // Object of the element to be moved
+    x_pos = 0, y_pos = 0, // Stores x & y coordinates of the mouse pointer
+    x_elem = 0, y_elem = 0; // Stores top, left values (edge) of the element
+
+// Will be called when user starts dragging an element
+function _drag_init(elem) {
+    // Store the object of the element which needs to be moved
+    selected = elem;
+    x_elem = x_pos - selected.offsetLeft;
+    y_elem = y_pos - selected.offsetTop;
 }
 
-function mouseX (e) {
-  if (e.pageX) {
-    return e.pageX;
-  }
-  if (e.clientX) {
-    return e.clientX + (document.documentElement.scrollLeft ?
-      document.documentElement.scrollLeft :
-      document.body.scrollLeft);
-  }
-  return null;
+// Will be called when user dragging an element
+function _move_elem(e) {
+    x_pos = document.all ? window.event.clientX : e.pageX;
+    y_pos = document.all ? window.event.clientY : e.pageY;
+    if (selected !== null) {
+        selected.style.left = (x_pos - x_elem) + 'px';
+        selected.style.top = (y_pos - y_elem) + 'px';
+    }
+    document.getElementById('info-box').innerHTML =
+      "<b>draggable-element</b><br />" +
+      "   x: " + x_pos + ", y: " + y_pos + "<br />" +
+      "<b>mouse</b><br />" +
+      "   x: " + window.event.clientX + ", y: " + window.event.clientY +
+       "<br />";
 }
 
-function mouseY (e) {
-  if (e.pageY) {
-    return e.pageY;
-  }
-  if (e.clientY) {
-    return e.clientY + (document.documentElement.scrollTop ?
-      document.documentElement.scrollTop :
-      document.body.scrollTop);
-  }
-  return null;
+// Destroy the object when we are done
+function _destroy() {
+    selected = null;
 }
 
-function draggable (clickEl,dragEl) {
-  var p = get(clickEl);
-  var t = get(dragEl);
-  var drag = false;
-  offsetX = 0;
-  offsetY = 0;
-  var mousemoveTemp = null;
+// Bind the functions...
+document.getElementById('draggable-element').onmousedown = function () {
+    _drag_init(this);
+    return false;
+};
 
-  if (t) {
-    var move = function (x,y) {
-      t.style.left = (parseInt(t.style.left)+x) + "px";
-      t.style.top  = (parseInt(t.style.top) +y) + "px";
-    }
-    var mouseMoveHandler = function (e) {
-      e = e || window.event;
-
-      if(!drag){return true};
-
-      var x = mouseX(e);
-      var y = mouseY(e);
-      if (x != offsetX || y != offsetY) {
-        move(x-offsetX,y-offsetY);
-        offsetX = x;
-        offsetY = y;
-      }
-      return false;
-    }
-    var start_drag = function (e) {
-      e = e || window.event;
-
-      offsetX=mouseX(e);
-      offsetY=mouseY(e);
-      drag=true; // basically we're using this to detect dragging
-
-      // save any previous mousemove event handler:
-      if (document.body.onmousemove) {
-        mousemoveTemp = document.body.onmousemove;
-      }
-      document.body.onmousemove = mouseMoveHandler;
-      return false;
-    }
-    var stop_drag = function () {
-      drag=false;
-
-      // restore previous mousemove event handler if necessary:
-      if (mousemoveTemp) {
-        document.body.onmousemove = mousemoveTemp;
-        mousemoveTemp = null;
-      }
-      return false;
-    }
-    p.onmousedown = start_drag;
-    p.onmouseup = stop_drag;
-  }
-}
+document.onmousemove = _move_elem;
+document.onmouseup = _destroy;
