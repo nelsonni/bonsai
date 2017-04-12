@@ -7,23 +7,10 @@
     <link rel="stylesheet" type="text/css" href="default.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="cards.js"></script>
     <script>
         var idCounter = 0;
-
-        $(function() { //make cards at start draggable
-            $("#dragMe").draggable();
-        });
-
-        function createCard() {
-            var div = document.createElement('div');
-            div.innerHTML = "Id: " + (++idCounter);
-            div.setAttribute("class", "draggable-element")
-            div.setAttribute("id", idCounter);
-            document.body.appendChild(div);
-
-            // Look for new things with the draggable-element class to be.. draggable
-            $(".draggable-element").draggable();
-        }
+        function newCard() {var card = new Card(++idCounter);}
     </script>
 </head>
 
@@ -32,19 +19,14 @@
         <button id="openFile" onclick="openFile();">Open</button>
         <button id="saveFile">Save</button>
         <button onClick="versionNotice()">Version</button>
-        <button onClick="createCard()">Create Card</button>
+        <button onClick="newCard()">Create Card</button>
     </div>
     <div id="getText" style="display: none;">
         Inside the test box
     </div>
 
-    <textarea id="editor" style="width: 400px; height: 300px;"></textarea>
-
-    <div id="dragMe" class="draggable-element">draggable-element</div>
-
-    <div id="info-box">
-        I'm inside info-box!
-    </div>
+    <textarea id="editor" style="width: 400px; height: 300px;">
+    </textarea>
 </body>
 
 </html>

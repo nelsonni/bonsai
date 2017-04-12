@@ -13,8 +13,8 @@ body {padding:10px}
 }
 
 .draggable-element {
-  width:100px;
-  height:100px;
+  width:200px;
+  height:280px;
   background-color:#666;
   color:white;
   padding:10px 12px;
