@@ -11,7 +11,14 @@ function Card(id) {
     $(".textArea").draggable({
         handle: ".header"
     });
+
 }
+
+/*
+TODO:
+      - Stack & snap windows in an area
+*/
+
 // Ugly I know :(
 function setDiv(div, id, header, textArea) {
     div.setAttribute("class", "textArea");

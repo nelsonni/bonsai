@@ -27,6 +27,7 @@ body {padding:10px}
   background-color: #696660;
   position: relative;
   border: 2px;
+  cursor: move;
   border-color: #000;
   border-bottom: solid;
 }
@@ -39,6 +40,5 @@ body {padding:10px}
   border: 2px;
   border-style: solid;
   border-color: #000;
-  cursor:move;
   position:relative; /* important (all position that's not `static`) */
 }
