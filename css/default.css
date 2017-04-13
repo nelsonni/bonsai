@@ -11,13 +11,34 @@ body {padding:10px}
   height:200px;
   background-color:#385f88;
 }
+.cancelButton{
+  height: auto;
+  width: auto;
+  position: absolute;
+  background-color: #eb463b;
+  align: center;
+  right: 0;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+.header{
+  height: 20px;
+  width: 100%;
+  background-color: #696660;
+  position: relative;
+  border: 2px;
+  border-color: #000;
+  border-bottom: solid;
+}
 
-.draggable-element {
+.textArea {
   width:200px;
   height:280px;
-  background-color:#666;
+  background-color:#e6e2da;
   color:white;
-  padding:10px 12px;
+  border: 2px;
+  border-style: solid;
+  border-color: #000;
   cursor:move;
   position:relative; /* important (all position that's not `static`) */
 }
