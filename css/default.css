@@ -13,8 +13,9 @@ body {padding:10px}
 }
 
 #codeArea{
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 .cancelButton{
   height: auto;
@@ -31,7 +32,6 @@ body {padding:10px}
   height: 20px;
   width: 100%;
   background-color: #696660;
-  position: relative;
   top: 0;
   border: 2px;
   cursor: move;
@@ -40,7 +40,7 @@ body {padding:10px}
 }
 
 .textArea {
-  display: block;
+  display: inherit;
   width: 71%;
   height: 100%;
   padding-bottom: 75%;

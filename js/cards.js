@@ -16,6 +16,7 @@ function Card(id) {
 /*
 TODO:
       - Stack & snap windows in an area
+      - Make textarea full window size
 */
 
 // Ugly I know :(
