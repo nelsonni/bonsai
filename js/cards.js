@@ -3,7 +3,7 @@ function Card(id) {
     var div = document.createElement('div');
     var header = document.createElement('div');
     var button = document.createElement('button');
-    var textArea = document.createTextNode("I'm inside the text area");
+    var textArea = document.createElement('textarea');
     button = setButton(button, id);
     header = setHeader(header, id, button);
     div = setDiv(div, id, header, textArea);
@@ -11,7 +11,6 @@ function Card(id) {
     $(".textArea").draggable({
         handle: ".header"
     });
-
 }
 
 /*
@@ -24,6 +23,7 @@ function setDiv(div, id, header, textArea) {
     div.setAttribute("class", "textArea");
     div.appendChild(header);
     div.setAttribute("id", id);
+    textArea.setAttribute("id", "codeArea");
     div.appendChild(textArea);
     return div;
 }
