@@ -1,47 +1,37 @@
 function Card(id) {
-    this.id = id;
-    var div = document.createElement('div');
-    var header = document.createElement('div');
-    var button = document.createElement('button');
-    var textArea = document.createElement('textarea');
-    button = setButton(button, id);
-    header = setHeader(header, id, button);
-    div = setDiv(div, id, header, textArea);
-    document.body.appendChild(div);
-    $(".textArea").draggable({
-        handle: ".header"
-    });
-}
+  this.id = id;
+  var div = document.createElement('div');
+  div.setAttribute("class", "card");
+  div.setAttribute("id", this.id);
 
 /*
 TODO:
       - Stack & snap windows in an area
-      - Make textarea full window size
 */
+  var header = document.createElement('div');
+  header.setAttribute("class", "card card-header");
+  header.innerHTML = "id:" + this.id;
 
-// Ugly I know :(
-function setDiv(div, id, header, textArea) {
-    div.setAttribute("class", "textArea");
-    div.appendChild(header);
-    div.setAttribute("id", id);
-    textArea.setAttribute("id", "codeArea");
-    div.appendChild(textArea);
-    return div;
-}
+  var close_button = document.createElement('button');
+  close_button.setAttribute("class", "close");
+  close_button.setAttribute("value", "x");
+  close_button.innerHTML = "x";
+  close_button.onclick = function() {
+    $("#" + id).remove(); // remove first element with 'id' tag
+  };
 
-function setHeader(header, id, button) {
-    header.setAttribute("class", "header");
-    header.innerHTML = "id:" + id;
-    header.appendChild(button);
-    return header;
-}
+  var editor = document.createElement('textarea');
+  editor.setAttribute("class", "editor");
+  editor.name = "code_editor";
+  editor.maxLength = "5000";
+  editor.cols = "25";
+  editor.rows = "30";
 
-function setButton(button, id) {
-    button.onclick = function() {
-        $("#" + id).remove(); //remove window with current ID
-    };
-    button.setAttribute('class', 'cancelButton');
-    button.setAttribute('value', 'x');
-    button.innerHTML = "x";
-    return button;
+  header.appendChild(close_button);
+  div.appendChild(header);
+  div.appendChild(editor);
+  document.body.appendChild(div);
+  $(".card").draggable({
+    handle: ".card-header"
+  });
 }
