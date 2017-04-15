@@ -6,7 +6,9 @@ function Card(id) {
 
     /*
     TODO:
-          - Stack & snap windows in an area
+          - Fix drag and drop so that dragged elements always land on first card in stack
+          - Fix drag and drop positioning when pulling cards out
+          - Fix I can't drag and drop a child card (Maybe fixed by not stacking cards)
     */
     var header = document.createElement('div');
     header.setAttribute("class", "card card-header");
@@ -35,7 +37,7 @@ function Card(id) {
     header.appendChild(close_button);
     div.appendChild(header);
     div.appendChild(editor);
-    setPosition(div);
+    setDivPosition(div);
 
 
 
@@ -43,31 +45,30 @@ function Card(id) {
         handle: ".card-header"
     });
     var children = 0;
-    $(".container").droppable({
-        drop: function(event, ui) {
-            $(this).append($(ui.draggable));
-            $(ui.draggable).css({
-                top: event.pageY,
-                left: event.pageX
-            });
-        }
-    });
 
     $(".card").droppable({
         drop: function(event, ui) {
-            children = $(this).children().size();
+            children = $(this).parents('div').children().size();
             if (children - 1 != 0)
                 children--;
-            $(this).append($(ui.draggable)); //appends it to inside the div
+            console.log(children);
+            if ($(this).parents('div').length == 1)
+                $(this).parents('div').last().append($(ui.draggable)); //appends it to first div
+            else
+                $(this).append($(ui.draggable));
             $(ui.draggable).css({ //repositions child div
                 top: 40 * (children), // - 1 for textBox inside div
                 left: 15 * (children)
             });
         },
         out: function(event, ui) {
-            $(".container").append($(ui.draggable)).css({
-                top: event.pageY,
-                left: event.pageX
+            children = $(this).children().size();
+            $(ui.draggable).mouseup(function(e) {
+                document.body.appendChild($(ui.draggable)[0]);
+                $(ui.draggable).css({
+                    top: e.pageY - 20 * children,
+                    left: e.pageX - 40 * children
+                })
             });
         }
     });
@@ -86,7 +87,7 @@ function getHighestZIndexCard() {
 }
 
 //To make sure that when a card is created it stacks on top of the other cards
-function setPosition(div) {
+function setDivPosition(div) {
     let cards = document.getElementsByClassName("card");
     let zVal = getHighestZIndexCard();
     var eleAtStart = {};
@@ -101,7 +102,7 @@ function setPosition(div) {
         if (cards[i].style.left == "" && cards[i].style.top == "") {
             eleAtStart = cards[i]; // get whoever is at the start at spawn point
             $("#" + eleAtStart.id).append(div);
-            multiplier = eleAtStart.getElementsByTagName("div").length; //for offset 
+            multiplier = eleAtStart.getElementsByTagName("div").length; //for offset
             $("#" + div.id).css({
                 top: 20 * (multiplier - 1),
                 left: 5 * (multiplier - 1)
