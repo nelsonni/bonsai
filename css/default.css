@@ -4,7 +4,12 @@
   background:transparent;
 }
 
-body {padding:10px}
+body {
+  padding:10px;
+
+  position: relative;
+}
+
 
 #info-box {
   width:200px;

@@ -4,14 +4,12 @@
   background:transparent;
 }
 
-body {padding:10px}
-
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
   background-color: #666;
   color: white;
-  position: fixed;
+  position: relative;
 }
 
 div.card.card-header {
