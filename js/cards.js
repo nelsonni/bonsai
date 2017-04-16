@@ -40,7 +40,7 @@ function Card(id) {
     setDivPosition(div);
 
 
-
+    // These jQuery commands should be moved inside a function for recursiveness?
     $(".card").draggable({
         handle: ".card-header"
     });
@@ -49,26 +49,49 @@ function Card(id) {
     $(".card").droppable({
         drop: function(event, ui) {
             children = $(this).parents('div').children().size();
-            if (children - 1 != 0)
+            if (children - 1 >= 1)
                 children--;
+            else
+                children = 1; // don't allow child multiplier to be > 1. 
             console.log(children);
             if ($(this).parents('div').length == 1)
                 $(this).parents('div').last().append($(ui.draggable)); //appends it to first div
             else
-                $(this).append($(ui.draggable));
+                $(this).append($(ui.draggable)); // append to the first div, not doc.body
             $(ui.draggable).css({ //repositions child div
-                top: 40 * (children), // - 1 for textBox inside div
-                left: 15 * (children)
+                top: 40 * (children - 1), // - 1 for textBox inside div
+                left: 15 * (children - 1)
             });
         },
         out: function(event, ui) {
             children = $(this).children().size();
+            var parent = $(ui.draggable).parents("div").last();
+            var getCurPos = 0;
+            //console.log(parent[0].childNodes, $(ui.draggable));
+            for (var i = 2; i < parent[0].childNodes.length; i++) //start at 2 to get past header and text box
+                if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
+                    getCurPos = i;
+            for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
+                $("#" + parent[0].childNodes[getCurPos].id).css({
+                    top: 40 * (getCurPos - 2),
+                    left: 15 * (getCurPos - 2)
+                })
+            }
+
             $(ui.draggable).mouseup(function(e) {
+                var cardTop = $(ui.draggable)[0].style.top;
+                var cardLeft = $(ui.draggable)[0].style.left;
+                //console.log($(ui.draggable)[0].style.top, $(ui.draggable)[0].style.left);
+
                 document.body.appendChild($(ui.draggable)[0]);
                 $(ui.draggable).css({
-                    top: e.pageY - 20 * children,
-                    left: e.pageX - 40 * children
-                })
+                    top: e.pageY - 20,
+                    left: e.pageX - 50
+                });
+                $("#" + $(ui.draggable).id).draggable("destroy");
+                $("#" + $(ui.draggable).id).draggable({
+                    handle: ".card-header"
+                });
             });
         }
     });

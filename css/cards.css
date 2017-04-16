@@ -9,7 +9,7 @@ div.card {
   width: 200px;   /* 7:5 aspect ratio */
   background-color: #666;
   color: white;
-  position: relative;
+  position: fixed;
 }
 
 div.card.card-header {
