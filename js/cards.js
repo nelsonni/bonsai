@@ -4,12 +4,14 @@ function Card(id) {
     div.setAttribute("class", "card");
     div.setAttribute("id", this.id);
 
+
     /*
     TODO:
-          - Fix drag and drop so that dragged elements always land on first card in stack
-          - Fix drag and drop positioning when pulling cards out
-          - Fix I can't drag and drop a child card (Maybe fixed by not stacking cards)
+          - Prevent closing top card to delete all cards
+          - prevent moving stack onto stack to stay as stack.
     */
+
+
     var header = document.createElement('div');
     header.setAttribute("class", "card card-header");
     header.innerHTML = "id:" + this.id;
@@ -39,63 +41,55 @@ function Card(id) {
     div.appendChild(editor);
     setDivPosition(div);
 
-
-    // These jQuery commands should be moved inside a function for recursiveness?
     $(".card").draggable({
         handle: ".card-header"
     });
     var children = 0;
+    setCardDroppableEffects();
+}
 
+function setCardDroppableEffects() {
     $(".card").droppable({
         drop: function(event, ui) {
+            console.log("Dropped!");
             children = $(this).parents('div').children().size();
-            if (children - 1 >= 1)
-                children--;
-            else
-                children = 1; // don't allow child multiplier to be > 1. 
-            console.log(children);
-            if ($(this).parents('div').length == 1)
-                $(this).parents('div').last().append($(ui.draggable)); //appends it to first div
-            else
-                $(this).append($(ui.draggable)); // append to the first div, not doc.body
+            if ($(this).parents('div').length == 1) {
+                $(this).parents('div').last().append($(ui.draggable)[0]); //appends it to first div
+                console.log("BLAH!!!");
+            } else {
+                $(this).append($(ui.draggable)[0]); // append to the first div, not doc.body
+            }
+            if (children < 1)
+                children = 3;
             $(ui.draggable).css({ //repositions child div
-                top: 40 * (children - 1), // - 1 for textBox inside div
-                left: 15 * (children - 1)
+                top: 40 * (children - 2), // - 2 for textBox inside div & header
+                left: 15 * (children - 2)
             });
         },
         out: function(event, ui) {
-            children = $(this).children().size();
-            var parent = $(ui.draggable).parents("div").last();
-            var getCurPos = 0;
-            //console.log(parent[0].childNodes, $(ui.draggable));
-            for (var i = 2; i < parent[0].childNodes.length; i++) //start at 2 to get past header and text box
-                if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
-                    getCurPos = i;
-            for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
-                $("#" + parent[0].childNodes[getCurPos].id).css({
-                    top: 40 * (getCurPos - 2),
-                    left: 15 * (getCurPos - 2)
-                })
-            }
-
             $(ui.draggable).mouseup(function(e) {
-                var cardTop = $(ui.draggable)[0].style.top;
-                var cardLeft = $(ui.draggable)[0].style.left;
-                //console.log($(ui.draggable)[0].style.top, $(ui.draggable)[0].style.left);
-
+                var parent = $(ui.draggable).parents("div").last();
+                var getCurPos = 0;
+                for (var i = 2; i < parent[0].childNodes.length; i++) //start at 2 to get past header and text box
+                    if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
+                        getCurPos = i;
+                for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
+                    $("#" + parent[0].childNodes[getCurPos].id).css({ // move divs to prevent gaps in stack
+                        top: 40 * (getCurPos - 2),
+                        left: 15 * (getCurPos - 2)
+                    })
+                }
                 document.body.appendChild($(ui.draggable)[0]);
                 $(ui.draggable).css({
                     top: e.pageY - 20,
-                    left: e.pageX - 50
+                    left: e.pageX - 70
                 });
-                $("#" + $(ui.draggable).id).draggable("destroy");
-                $("#" + $(ui.draggable).id).draggable({
-                    handle: ".card-header"
-                });
+                setCardDroppableEffects(); //reset all droppable attributes
             });
         }
     });
 }
+
 
 // Gets the highest z Index so that the clicked card will appear at the front.
 function getHighestZIndexCard() {
