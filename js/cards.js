@@ -55,11 +55,9 @@ function arrangeLowerCards(parent, ui) {
             if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
                 getCurPos = i;
         for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
-            console.log(parent[0].childNodes[getCurPos].style.top);
-            console.log(getCurPos);
             $("#" + parent[0].childNodes[getCurPos].id).css({ // move divs to prevent gaps in stack
                 top: parseInt(parent[0].childNodes[getCurPos].style.top) - 40,
-                left: parseInt(parent[0].childNodes[getCurPos].style.left) - 5
+                left: parseInt(parent[0].childNodes[getCurPos].style.left) - 7
             })
         }
     }
@@ -77,21 +75,41 @@ function getBottomStack(element, ui) {
     return getBottomStack(element[0].parentNode);
 }
 
+function removeBaseCard(element, ui) {
+    if ($(ui.draggable)[0].classList.contains("Base")) {
+        $(ui.draggable).children('.card').each(function() {
+            if (!this.classList.contains("card-header"))
+                document.body.appendChild(this)
+        })
+    }
+}
+
 function setCardDroppableEffects(id) {
     $("#" + id).droppable({
         tolerance: "pointer",
         drop: function(event, ui) {
+            removeBaseCard($(ui.draggable), ui);
+
             $(ui.draggable).removeClass("Base")
             var parent = $(ui.draggable).parents("div"); // get parent of dropped card
             arrangeLowerCards(parent, ui);
+            var lastCardIdx = getBottomStack($(this)).children.length - 2;
             getBottomStack($(this)).append($(ui.draggable)[0]); // append to bottom div
-            $(ui.draggable).css({ //repositions child div
-                top: parseInt($(this)[0].lastChild.style.top) + 40,
-                left: parseInt($(this)[0].lastChild.style.left) + 5
-            });
+            if (lastCardIdx > 0)
+                $(ui.draggable).css({ // if there is only one card
+                    top: parseInt(getBottomStack($(this)).children[lastCardIdx].style.top) + 40,
+                    left: parseInt(getBottomStack($(this)).children[lastCardIdx].style.left) + 15
+                });
+            else {
+                $(ui.draggable).css({ //repositions child div
+                    top: parseInt($(this)[0].style.top) + 40,
+                    left: parseInt($(this)[0].style.left) + 15
+                });
+            }
 
         },
         out: function(event, ui) {
+            removeBaseCard($(ui.draggable), ui);
             var parent = $(ui.draggable).parents("div");
             arrangeLowerCards(parent, ui);
             $(ui.draggable).addClass("Base");
@@ -124,6 +142,12 @@ function setDivPosition(div) {
     if (cards.length == 0) { // if there are no cards on page
         div.className += " Base";
         document.body.appendChild(div);
+        $("#" + div.id).mousedown(function() {
+            $(div).children('.card').each(function() {
+                if (!this.classList.contains("card-header"))
+                    document.body.appendChild(this)
+            })
+        });
         return;
     }
     for (var i = 0; i < cards.length; i += 2) { // +=2 to only get the cards not the headers
