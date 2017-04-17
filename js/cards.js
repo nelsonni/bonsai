@@ -142,11 +142,14 @@ function setDivPosition(div) {
     if (cards.length == 0) { // if there are no cards on page
         div.className += " Base";
         document.body.appendChild(div);
-        $("#" + div.id).mousedown(function() {
-            $(div).children('.card').each(function() {
-                if (!this.classList.contains("card-header"))
-                    document.body.appendChild(this)
-            })
+        $("#" + div.id).mousedown(function(event) {
+            console.log(event);
+            if (event.target.parentNode.classList.contains("Base")) {
+                $(div).children('.card').each(function() {
+                    if (!this.classList.contains("card-header"))
+                        document.body.appendChild(this)
+                })
+            }
         });
         return;
     }
