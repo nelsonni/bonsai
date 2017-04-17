@@ -17,8 +17,8 @@ function Card(id) {
     header.innerHTML = "id:" + this.id;
     header.onmousedown = function() {
         var highestZIndex = getHighestZIndexCard();
-        header.style.zIndex = ++highestZIndex;
-        div.style.zIndex = ++highestZIndex;
+        header.style.zIndex = highestZIndex + 5;
+        div.style.zIndex = highestZIndex + 5;
     }
 
     var close_button = document.createElement('button');
@@ -45,47 +45,57 @@ function Card(id) {
         handle: ".card-header"
     });
     var children = 0;
-    setCardDroppableEffects();
+    setCardDroppableEffects(id);
 }
 
-function setCardDroppableEffects() {
-    $(".card").droppable({
+function arrangeLowerCards(parent, ui) {
+    var getCurPos = 0;
+    if (parent[0] != undefined) {
+        for (var i = 2; i < parent[0].childNodes.length; i++) //start at 2 to get past header and text box
+            if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
+                getCurPos = i;
+        for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
+            console.log(parent[0].childNodes[getCurPos].style.top);
+            console.log(getCurPos);
+            $("#" + parent[0].childNodes[getCurPos].id).css({ // move divs to prevent gaps in stack
+                top: parseInt(parent[0].childNodes[getCurPos].style.top) - 40,
+                left: parseInt(parent[0].childNodes[getCurPos].style.left) - 5
+            })
+        }
+    }
+}
+
+function getBottomStack(element, ui) {
+    if (element[0] != undefined) {
+        if (element[0].classList.contains("Base")) {
+            return element[0]
+        }
+    } else {
+        if (element.classList.contains("Base"))
+            return element
+    }
+    return getBottomStack(element[0].parentNode);
+}
+
+function setCardDroppableEffects(id) {
+    $("#" + id).droppable({
+        tolerance: "pointer",
         drop: function(event, ui) {
-            console.log("Dropped!");
-            children = $(this).parents('div').children().size();
-            if ($(this).parents('div').length == 1) {
-                $(this).parents('div').last().append($(ui.draggable)[0]); //appends it to first div
-                console.log("BLAH!!!");
-            } else {
-                $(this).append($(ui.draggable)[0]); // append to the first div, not doc.body
-            }
-            if (children < 1)
-                children = 3;
+            $(ui.draggable).removeClass("Base")
+            var parent = $(ui.draggable).parents("div"); // get parent of dropped card
+            arrangeLowerCards(parent, ui);
+            getBottomStack($(this)).append($(ui.draggable)[0]); // append to bottom div
             $(ui.draggable).css({ //repositions child div
-                top: 40 * (children - 2), // - 2 for textBox inside div & header
-                left: 15 * (children - 2)
+                top: parseInt($(this)[0].lastChild.style.top) + 40,
+                left: parseInt($(this)[0].lastChild.style.left) + 5
             });
+
         },
         out: function(event, ui) {
-            $(ui.draggable).mouseup(function(e) {
-                var parent = $(ui.draggable).parents("div").last();
-                var getCurPos = 0;
-                for (var i = 2; i < parent[0].childNodes.length; i++) //start at 2 to get past header and text box
-                    if (parent[0].childNodes[i].id == $(ui.draggable)[0].id)
-                        getCurPos = i;
-                for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
-                    $("#" + parent[0].childNodes[getCurPos].id).css({ // move divs to prevent gaps in stack
-                        top: 40 * (getCurPos - 2),
-                        left: 15 * (getCurPos - 2)
-                    })
-                }
-                document.body.appendChild($(ui.draggable)[0]);
-                $(ui.draggable).css({
-                    top: e.pageY - 20,
-                    left: e.pageX - 70
-                });
-                setCardDroppableEffects(); //reset all droppable attributes
-            });
+            var parent = $(ui.draggable).parents("div");
+            arrangeLowerCards(parent, ui);
+            $(ui.draggable).addClass("Base");
+            document.body.appendChild($(ui.draggable)[0]);
         }
     });
 }
@@ -109,9 +119,10 @@ function setDivPosition(div) {
     let zVal = getHighestZIndexCard();
     var eleAtStart = {};
     let multiplier = 0;
-    div.style.position = "absolute";
+    div.style.position = "fixed";
     div.style.zIndex = ++zVal; // the newest window will be on top of the stack
     if (cards.length == 0) { // if there are no cards on page
+        div.className += " Base";
         document.body.appendChild(div);
         return;
     }
@@ -121,10 +132,10 @@ function setDivPosition(div) {
             $("#" + eleAtStart.id).append(div);
             multiplier = eleAtStart.getElementsByTagName("div").length; //for offset
             $("#" + div.id).css({
-                top: 20 * (multiplier - 1),
-                left: 5 * (multiplier - 1)
+                top: 20 * (multiplier),
+                left: 5 * (multiplier)
             });
-            return;
+            return; // prevent from being attached to doc.body
         }
     }
     document.body.appendChild(div);
