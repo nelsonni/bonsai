@@ -114,6 +114,7 @@ function setCardDroppableEffects(id) {
             $(".Base").draggable("destroy");
             $(".Base").draggable({
                 cancel: "text",
+                handler: "card-header",
                 drag: function (event, ui) {
                     var parent = this;
                     var test = $(parent).parents("div").first();
@@ -168,7 +169,7 @@ function setCardDroppableEffects(id) {
             var parent = $(ui.draggable).parents("div");
             arrangeLowerCards(parent, ui);
             $(ui.draggable).addClass("Base");
-            $(ui.draggable)[0].children[0].classList += " Base";
+            //$(ui.draggable)[0].children[0].classList += " Base";
             document.body.appendChild($(ui.draggable)[0]);
         }
     });
