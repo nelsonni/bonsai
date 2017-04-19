@@ -1,6 +1,6 @@
 function Card(id) {
     this.id = id;
-    var div = document.createElement('div');
+    var div = document.createElement("div");
     div.setAttribute("class", "card");
     div.setAttribute("id", this.id);
 
@@ -8,6 +8,7 @@ function Card(id) {
     /*
     TODO:
           - Prevent closing top card to delete all cards
+     - Dragging anywhere but the header drags the entire stack
     */
 
 
@@ -40,9 +41,11 @@ function Card(id) {
     div.appendChild(editor);
     setDivPosition(div);
 
+    $(".editor").draggable();
     $(".card").draggable({
         handle: ".card-header"
     });
+
     var children = 0;
     setCardDroppableEffects(id);
 }
@@ -85,16 +88,55 @@ function removeBaseCard(element, ui) {
     }
 }
 
+function moveStackEffects(latestAdd) {
+
+
+}
+
 function setCardDroppableEffects(id) {
     $("#" + id).droppable({
         tolerance: "pointer",
         drop: function(event, ui) {
             removeBaseCard($(ui.draggable), ui);
-            $(ui.draggable).removeClass("Base")
+            $(ui.draggable).removeClass("Base");
+            $(ui.draggable).addClass("Test");
             var parent = $(ui.draggable).parents("div"); // get parent of dropped card
             arrangeLowerCards(parent, ui);
             var lastCardIdx = getBottomStack($(this)).children.length - 2;
+            var baseChildren = getBottomStack($(this)).children;
+
+            console.log($(this), $(ui.draggable));
+            if (!($(this)[0].lastElementChild.classList.contains("editor-drag")))
+                $(this)[0].lastElementChild.className += " editor-drag";
+            $(ui.draggable)[0].lastElementChild.className += " editor-drag";
             getBottomStack($(this)).append($(ui.draggable)[0]); // append to bottom div
+
+            $(".Base").draggable("destroy");
+            $(".Base").draggable({
+                cancel: "text",
+                drag: function (event, ui) {
+                    var parent = this;
+                    var test = $(parent).parents("div").first();
+                    console.log(test);
+                    var fart = getBottomStack(test.context);
+                    $("#" + fart.id + " div.Test").each(function (index) {
+                        console.log(index);
+                        var top = parseFloat(parent.style.top) + ((index + 1 ) * 40);
+                        var left = parseFloat(parent.style.left) + ((index + 1) * 15);
+                        this.style.top = top.toString() + "px";
+                        this.style.left = left.toString() + "px";
+                    });
+                }
+            });
+
+
+            moveStackEffects($(ui.draggable)[0]);
+            console.log(lastCardIdx);
+            //$(".card-header").removeClass("Base");
+
+
+
+
             if (lastCardIdx > 0)
                 $(ui.draggable).css({ // if there is only one card
                     top: parseInt(getBottomStack($(this)).children[lastCardIdx].style.top) + 40,
@@ -116,7 +158,7 @@ function setCardDroppableEffects(id) {
                     $(ui.draggable).children('.card').each(function() {
                         var i = 0;
                         if (!this.classList.contains("card-header"))
-                            document.body.appendChild(this)
+                            document.body.appendChild(this);
                         if (i == 0)
                             this.className += " Base";
                         i++;
@@ -126,6 +168,7 @@ function setCardDroppableEffects(id) {
             var parent = $(ui.draggable).parents("div");
             arrangeLowerCards(parent, ui);
             $(ui.draggable).addClass("Base");
+            $(ui.draggable)[0].children[0].classList += " Base";
             document.body.appendChild($(ui.draggable)[0]);
         }
     });
@@ -153,10 +196,9 @@ function setDivPosition(div) {
     div.style.position = "fixed";
     div.style.zIndex = ++zVal; // the newest window will be on top of the stack
     if (cards.length == 0) { // if there are no cards on page
-        div.className += " Base";
+        //div.className += " Base";
         document.body.appendChild(div);
         $("#" + div.id).mousedown(function(event) {
-            console.log(event);
             if (event.target.parentNode.classList.contains("Base")) {
                 $(div).children('.card').each(function() {
                     if (!this.classList.contains("card-header"))
