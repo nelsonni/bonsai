@@ -22,11 +22,18 @@ function Card(id) {
     }
 
     var close_button = document.createElement('button');
+    close_button.setAttribute("id", "closeBtn" + id);
     close_button.setAttribute("class", "close");
     close_button.setAttribute("value", "x");
     close_button.innerHTML = "x";
-    close_button.onclick = function() {
-        $("#" + id).remove(); // remove element with specified 'id' tag
+    close_button.onclick = function () {
+        var parentCard = $("#" + id);
+        console.log(parentCard);
+        if (parentCard[0].children.length <= 2) //When it is just the single card pulled out of stack
+            $("#" + id).remove();
+        else
+            alert("Can't delete base card of stack.");
+
     };
 
     var editor = document.createElement('textarea');
@@ -45,8 +52,6 @@ function Card(id) {
     $(".card").draggable({
         handle: ".card-header"
     });
-
-    var children = 0;
     setCardDroppableEffects(id);
 }
 
@@ -146,14 +151,14 @@ function setCardDroppableEffects(id) {
         out: function(event, ui) {
             $("#" + $(ui.draggable)[0].id).mousedown(function(event) {
                 if (event.target.parentNode.classList.contains("Base")) {
-                    $(ui.draggable).children('.card').each(function() {
+                    $(ui.draggable).children(".card").each(function () {
                         var i = 0;
                         if (!this.classList.contains("card-header"))
                             document.body.appendChild(this);
-                        if (i == 0)
+                        if (i === 0)
                             this.className += " Base";
                         i++;
-                    })
+                    });
                 }
             });
             var parent = $(ui.draggable).parents("div");
@@ -186,14 +191,13 @@ function setDivPosition(div) {
     div.style.position = "fixed";
     div.style.zIndex = ++zVal; // the newest window will be on top of the stack
     if (cards.length == 0) { // if there are no cards on page
-        //div.className += " Base";
         document.body.appendChild(div);
         $("#" + div.id).mousedown(function(event) {
             if (event.target.parentNode.classList.contains("Base")) {
                 $(div).children('.card').each(function() {
                     if (!this.classList.contains("card-header"))
-                        document.body.appendChild(this)
-                })
+                        document.body.appendChild(this);
+                });
             }
         });
         return;
