@@ -7,7 +7,7 @@ function Card(id) {
 
     /*
      TODO:
-
+     - Card Expansion
      */
 
 
@@ -27,10 +27,13 @@ function Card(id) {
     close_button.innerHTML = "x";
     close_button.onclick = function () {
         var parentCard = $("#" + id);
-        if (parentCard[0].children.length <= 2) //When it is just the single card pulled out of stack
+        //When it is just the single card pulled out of stack
+        if (parentCard[0].children.length == 2 && parentCard[0].parentNode.classList.contains("container"))
             $("#" + id).remove();
-        else
-            alert("Can't delete base card of stack.");
+        else {
+            alert("Can't delete card while in stack.");
+            parentCard[0].style.zIndex = parentCard[0].nextElementSibling.style.zIndex;
+        }
     };
 
     var editor = document.createElement('textarea');
@@ -115,10 +118,8 @@ function setCardDroppableEffects(id) {
             else
                 $(ui.draggable)[0].lastElementChild.className += " editor-drag";
 
-
             bottomStack.append($(ui.draggable)[0]); // append to bottom of stack
-            moveStackEffects($(ui.draggable)[0], bottomStack);
-
+            moveStackEffects($(ui.draggable)[0], bottomStack); // give cards the moving stackable effects
 
             if (lastCardIdx > 0) {
                 $(ui.draggable).css({
