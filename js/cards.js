@@ -53,6 +53,15 @@ function Card(id) {
         handle: ".card-header"
     });
     setCardDroppableEffects(id);
+    setMouseOverEffects(id);
+}
+
+function setMouseOverEffects(id) {
+    var expandBtn = document.createElement("button");
+    $("#" + id).on('mouseenter', function () {
+        $(this).find(":button").show();
+        console.log("You entered me!");
+    });
 }
 
 function arrangeLowerCards(parent, ui) {
@@ -165,7 +174,7 @@ function setCardDroppableEffects(id) {
             var parent = $(ui.draggable).parents("div");
             $($(ui.draggable)[0]).addClass("Base");
             moveStackEffects($(ui.draggable)[0], getBottomStack($(this)));
-            document.body.appendChild($(ui.draggable)[0]);
+            bottomStack = getBottomStack($(this));
             // if there is only 2 cards removes stackable drag effects
             if ($(this)[0].children.length === 2) {
                 $($(this)[0]).draggable("destroy");
@@ -174,9 +183,23 @@ function setCardDroppableEffects(id) {
                 });
             }
             $($(ui.draggable)[0]).draggable("option", "handle", ".card-header");
-            arrangeLowerCards(parent, ui);
+            console.log(getBottomStack($(this)));
+            console.log($(ui.draggable));
+            var atBtm = isBottom($(ui.draggable), bottomStack);
+            if (atBtm === false)
+                arrangeLowerCards(parent, ui);
+            document.body.appendChild($(ui.draggable)[0]);
+
         }
     });
+}
+
+function isBottom(curCard, fromStack) {
+    var test = $("#" + fromStack.id);
+    if (test[0].lastChild.id === curCard[0].id)
+        return true;
+    else
+        return false;
 }
 
 
