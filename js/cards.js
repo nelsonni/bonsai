@@ -7,8 +7,7 @@ function Card(id) {
 
     /*
      TODO:
-     - Last card must be shown at the top as well.
-     - Base card when moved must push next card as new base
+
      */
 
 
@@ -79,8 +78,8 @@ function moveStackEffects(latestAdd, base) {
     var last = base.lastChild;
     var zVal = getHighestZIndexCard();
     console.log(last);
-    $(".Base").draggable("destroy");
-    $(".Base").draggable({
+    $("#" + base.id).draggable("destroy");
+    $("#" + base.id).draggable({
         cancel: "text",
         drag: function (event, ui) {
             var thing = this;
@@ -143,20 +142,38 @@ function setCardDroppableEffects(id) {
 
         },
         out: function(event, ui) {
+            var base = null;
+            var found = false;
             $("#" + $(ui.draggable)[0].id).mousedown(function(event) {
                 if (event.target.parentNode.classList.contains("Base")) {
                     $(ui.draggable).children(".card").each(function () {
-                        var i = 0;
-                        if (!this.classList.contains("card-header"))
-                            document.body.appendChild(this);
+                        if (found === false) {
+                            if (this.classList.contains("Test")) {
+                                document.body.appendChild(this);
+                                this.className += " Base";
+                                found = true;
+                                base = this;
+                            }
+                        } else {
+                            if (this.classList.contains("Test") && base !== this)
+                                base.append(this);
+                        }
                     });
                 }
             });
-
             var parent = $(ui.draggable).parents("div");
-            arrangeLowerCards(parent, ui);
-            $(ui.draggable).addClass("Base");
+            $($(ui.draggable)[0]).addClass("Base");
+            moveStackEffects($(ui.draggable)[0], getBottomStack($(this)));
             document.body.appendChild($(ui.draggable)[0]);
+            // if there is only 2 cards removes stackable drag effects
+            if ($(this)[0].children.length === 2) {
+                $($(this)[0]).draggable("destroy");
+                $($(this)[0]).draggable({
+                    handle: ".card-header"
+                });
+            }
+            $($(ui.draggable)[0]).draggable("option", "handle", ".card-header");
+            arrangeLowerCards(parent, ui);
         }
     });
 }
