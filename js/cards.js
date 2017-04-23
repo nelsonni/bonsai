@@ -8,6 +8,7 @@ function Card(id) {
     /*
      TODO:
      - Last card must be shown at the top as well.
+     - Base card when moved must push next card as new base
      */
 
 
@@ -61,8 +62,7 @@ function arrangeLowerCards(parent, ui) {
         for (getCurPos++; getCurPos < parent[0].childNodes.length; getCurPos++) {
             $("#" + parent[0].childNodes[getCurPos].id).css({ // move divs to prevent gaps in stack
                 top: parseInt(parent[0].childNodes[getCurPos].style.top) - 40,
-                left: parseInt(parent[0].childNodes[getCurPos].style.left) - 10,
-                zIndex: getHighestZIndexCard()
+                left: parseInt(parent[0].childNodes[getCurPos].style.left) - 10
             });
         }
     }
@@ -83,7 +83,6 @@ function moveStackEffects(latestAdd, base) {
     $(".Base").draggable({
         cancel: "text",
         drag: function (event, ui) {
-            this.style.zIndex = getHighestZIndexCard();
             var thing = this;
             var test = $(thing).parents("div").first(); // get bottom of stack drug
             console.log(test.context.id); //Moves each child card with the parent card
@@ -118,32 +117,29 @@ function setCardDroppableEffects(id) {
                 $(ui.draggable)[0].lastElementChild.className += " editor-drag";
 
 
-
-
+            bottomStack.append($(ui.draggable)[0]); // append to bottom of stack
             moveStackEffects($(ui.draggable)[0], bottomStack);
 
-            if (lastCardIdx > 0)
-                $(ui.draggable).css({ // if there is only one card
-                    top: parseInt(getBottomStack($(this)).children[lastCardIdx].style.top) + 40,
-                    left: parseInt(getBottomStack($(this)).children[lastCardIdx].style.left) + 15
+
+            if (lastCardIdx > 0) {
+                $(ui.draggable).css({
+                    top: parseInt(bottomStack.children[lastCardIdx].style.top) + 40,
+                    left: parseInt(bottomStack.children[lastCardIdx].style.left) + 15
                 });
-            else {
+                // append child cards of stack to dragged stack of cards
+                $($(ui.draggable)[0].children).each(function () {
+                    if (this.classList.contains("Test")) {
+                        bottomStack.append(this);
+                        this.style.zIndex = getHighestZIndexCard();
+                    }
+                });
+            } else { // if there is only one card
                 $(ui.draggable).css({ //repositions child div
                     top: parseInt($(this)[0].style.top) + 40,
                     left: parseInt($(this)[0].style.left) + 15
                 });
             }
 
-            bottomStack.append($(ui.draggable)[0]); // append to bottom of stack
-            // append child cards of stack to dragged stack of cards
-            $($(ui.draggable)[0].children).each(function () {
-                if (this.classList.contains("Test")) {
-                    bottomStack.append(this);
-                    this.style.zIndex = getHighestZIndexCard();
-                }
-            });
-            //$(ui.draggable)[0]
-            arrangeLowerCards(parent, ui);
 
         },
         out: function(event, ui) {
@@ -189,7 +185,7 @@ function setDivPosition(div) {
     div.style.top = "35px";
     div.style.left = "10px";
     if (cards.length == 0) { // if there are no cards on page
-        div.className += " Base";
+        //div.className += " Base";
         document.body.appendChild(div);
         $("#" + div.id).mousedown(function(event) {
             if (event.target.parentNode.classList.contains("Base")) {
