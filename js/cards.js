@@ -3,8 +3,6 @@ function Card(id) {
     var div = document.createElement("div");
     div.setAttribute("class", "card");
     div.setAttribute("id", this.id);
-    var numOfBtns = 0;
-
 
     /*
      TODO:
@@ -54,33 +52,49 @@ function Card(id) {
         handle: ".card-header"
     });
     setCardDroppableEffects(id);
-    setMouseOverEffects(id, numOfBtns);
+    setMouseOverEffects(id);
 }
 
+function cardExpansion(id) {
+    var test = $("#" + id);
+    var base = getBottomStack(test, test);
+    base = $("#" + base.id);
 
-function setMouseOverEffects(id, numOfBtns) {
+    $(base[0].children).each(function (idx) {
+        if (this.classList.contains("Test")) {
+            console.log(base[0].style.left);
+            $(this).css({
+                top: base[0].style.top,
+                left: parseInt(base[0].style.left) + (225 * (idx - 1))
+            });
+        }
+    });
+}
+
+// need to position button better
+function setMouseOverEffects(id) {
     $("#" + id).on('mouseenter', function () {
-        console.log(numOfBtns)
         var div = document.createElement("div");
         var expandBtn = document.createElement("button");
         expandBtn.setAttribute("id", "expandBtn" + id);
+        expandBtn.setAttribute("class", "expandableBtn");
         expandBtn.setAttribute("position", "fixed");
         var parentCard = document.getElementById(id);
-        if (numOfBtns === 0) {
+        if (document.getElementsByClassName("expandableBtn").length === 0) {
             if (parentCard.children.length !== 2)
                 parentCard.lastElementChild.append(expandBtn);
             else
                 parentCard.append(expandBtn);
-            numOfBtns++;
         }
+        expandBtn.onclick = function () {
+            cardExpansion(id);
+        };
         console.log("You entered me!");
     }).on("mouseleave", function () {
-        var removeBtn = $("#" + "expandBtn" + id);
-        $("#" + removeBtn[0].id).fadeOut(2000);
+        $("#expandBtn" + id).fadeOut(3000);
         setTimeout(function () {
             $("#expandBtn" + id).remove();
-            numOfBtns = 0;
-        }, 2000);
+        }, 3000);
 
     });
 }
@@ -151,7 +165,7 @@ function setCardDroppableEffects(id) {
             bottomStack.append($(ui.draggable)[0]); // append to bottom of stack
             moveStackEffects($(ui.draggable)[0], bottomStack); // give cards the moving stackable effects
 
-            if (lastCardIdx > 0) {
+            if (lastCardIdx > 1) {
                 $(ui.draggable).css({
                     top: parseInt(bottomStack.children[lastCardIdx].style.top) + 40,
                     left: parseInt(bottomStack.children[lastCardIdx].style.left) + 15
@@ -246,6 +260,7 @@ function setDivPosition(div) {
     div.style.zIndex = ++zVal; // the newest window will be on top of the stack
     div.style.top = "35px";
     div.style.left = "10px";
+    div.className += " Test";
     if (cards.length == 0) { // if there are no cards on page
         //div.className += " Base";
         document.body.appendChild(div);
@@ -259,6 +274,7 @@ function setDivPosition(div) {
         });
         return;
     }
+    // Jesus christ this is ugly, refactor this at some point
     for (var i = 0; i < cards.length; i += 2) { // +=2 to only get the cards not the headers
         if (cards[i].style.left == "10px" && cards[i].style.top == "35px") {
             eleAtStart = cards[i]; // get whoever is at the start at spawn point
