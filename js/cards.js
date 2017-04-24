@@ -5,9 +5,14 @@ function Card(id) {
     div.setAttribute("id", this.id);
 
     /*
-     TODO:
-     - Card Expansion
-     - Find out why card collapsing triggers doc.body.append
+     - Remember to issue numbers in commit messages
+     - With 2 cards, when bottom is pulled out parent card no longer editable
+     - Cards that expand beyond window borders
+     get stacked behind last card fit onto screen
+     - Adding to stack causes card to disappear? (FIX!!!)
+     - When clicking on a card in a stack bring to front then on mouse away push it back
+     - Clicking on card in stack and pulling stack away brought to foreground and disabled draggability
+     - Change mouse cursor to draggable when on top of stack remove text
      */
 
 
@@ -50,7 +55,8 @@ function Card(id) {
 
     $(".editor").draggable();
     $("#" + id).draggable({
-        handle: ".card-header"
+        handle: ".card-header",
+        containment: "window"
     });
     setCardDroppableEffects(id);
     setMouseOverEffects(id);
@@ -163,6 +169,7 @@ function moveStackEffects(latestAdd, base) {
     $("#" + base.id).draggable("destroy");
     $("#" + base.id).draggable({
         cancel: "text",
+        containment: "window",
         drag: function (event, ui) {
             var thing = this;
             var test = $(thing).parents("div").first(); // get bottom of stack drug
@@ -245,6 +252,8 @@ function setCardDroppableEffects(id) {
             $($(ui.draggable)[0]).addClass("Base");
             moveStackEffects($(ui.draggable)[0], getBottomStack($(this)));
             bottomStack = getBottomStack($(this));
+            console.log($(this));
+            document.body.appendChild($(ui.draggable)[0]);
             // if there is only 2 cards removes stackable drag effects
             if ($(this)[0].children.length === 2) {
                 $($(this)[0]).draggable("destroy");
@@ -253,12 +262,12 @@ function setCardDroppableEffects(id) {
                 });
             }
             $($(ui.draggable)[0]).draggable("option", "handle", ".card-header");
-            console.log(getBottomStack($(this)));
-            console.log($(ui.draggable));
+            //console.log(getBottomStack($(this)));
+            //console.log($(ui.draggable));
             var atBtm = isBottom($(ui.draggable), bottomStack);
             if (atBtm === false)
                 arrangeLowerCards(parent, ui);
-            document.body.appendChild($(ui.draggable)[0]);
+
 
         }
     });
@@ -267,8 +276,8 @@ function setCardDroppableEffects(id) {
 
 //Check if card being dragged is at the bottom to prevent rearranging cards on stack
 function isBottom(curCard, fromStack) {
-    var test = $("#" + fromStack.id);
-    if (test[0].lastChild.id === curCard[0].id)
+    var base = $("#" + fromStack.id);
+    if (base[0].lastChild.id === curCard[0].id)
         return true;
     else
         return false;
