@@ -7,6 +7,7 @@ function Card(id) {
     /*
      TODO:
      - Card Expansion
+     - Find out why card collapsing triggers doc.body.append
      */
 
 
@@ -27,7 +28,7 @@ function Card(id) {
     close_button.onclick = function () {
         var parentCard = $("#" + id);
         //When it is just the single card pulled out of stack
-        if (parentCard[0].children.length == 2 && parentCard[0].parentNode.classList.contains("container"))
+        if (parentCard[0].children.length === 2 && parentCard[0].parentNode.classList.contains("container"))
             $("#" + id).remove();
         else {
             alert("Can't delete card while in stack.");
@@ -59,26 +60,60 @@ function cardExpansion(id) {
     var test = $("#" + id);
     var base = getBottomStack(test, test);
     base = $("#" + base.id);
-
     $(base[0].children).each(function (idx) {
         if (this.classList.contains("Test")) {
-            console.log(base[0].style.left);
+            this.className += " Blocker";
+            $(this.firstChild).click(function () {
+                document.body.append(this.parentNode);
+            });
             $(this).css({
                 top: base[0].style.top,
                 left: parseInt(base[0].style.left) + (225 * (idx - 1))
             });
         }
     });
+    var collapseBtn = document.createElement("button");
+    collapseBtn.id = "collapseBtn" + id;
+    collapseBtn.className += " collapsableBtn" + id;
+    collapseBtn.innerHTML = "Collapse";
+    collapseBtn.onclick = function () {
+        collapseCards(id, base);
+        $("#collapseBtn" + id).remove();
+    };
+    base.append(collapseBtn);
+}
+
+
+function collapseCards(id, base) {
+    $(base[0].children).each(function (idx) {
+        if (this.classList.contains("Test")) {
+            $(this).removeClass("Blocker");
+            if (idx > 1) {
+                $(this).css({
+                    top: parseInt(base[0].style.top) + (40 * (idx - 1)),
+                    left: parseInt(base[0].style.left) + (10 * (idx - 1))
+                });
+            } else
+                $(this).css({
+                    top: parseInt(base[0].style.top) + (40 * (idx)),
+                    left: parseInt(base[0].style.left) + (10 * (idx))
+                });
+        }
+    });
+
 }
 
 // need to position button better
+// generates a button to appear on mouse over and disappear (attempted) on mouse exit
 function setMouseOverEffects(id) {
     $("#" + id).on('mouseenter', function () {
+        if (document.getElementById(id).parentNode.classList.contains("container"))
+            return; // prevent buttons from popping up on single card
         var div = document.createElement("div");
         var expandBtn = document.createElement("button");
         expandBtn.setAttribute("id", "expandBtn" + id);
+        expandBtn.innerHTML = "Expand";
         expandBtn.setAttribute("class", "expandableBtn");
-        expandBtn.setAttribute("position", "fixed");
         var parentCard = document.getElementById(id);
         if (document.getElementsByClassName("expandableBtn").length === 0) {
             if (parentCard.children.length !== 2)
@@ -88,6 +123,7 @@ function setMouseOverEffects(id) {
         }
         expandBtn.onclick = function () {
             cardExpansion(id);
+            $("#expandBtn" + id).remove();
         };
         console.log("You entered me!");
     }).on("mouseleave", function () {
@@ -95,7 +131,6 @@ function setMouseOverEffects(id) {
         setTimeout(function () {
             $("#expandBtn" + id).remove();
         }, 3000);
-
     });
 }
 
@@ -193,7 +228,7 @@ function setCardDroppableEffects(id) {
                 if (event.target.parentNode.classList.contains("Base")) {
                     $(ui.draggable).children(".card").each(function () {
                         if (found === false) {
-                            if (this.classList.contains("Test")) {
+                            if (this.classList.contains("Test") && !(this.classList.contains("Blocker"))) {
                                 document.body.appendChild(this);
                                 this.className += " Base";
                                 found = true;
@@ -229,6 +264,8 @@ function setCardDroppableEffects(id) {
     });
 }
 
+
+//Check if card being dragged is at the bottom to prevent rearranging cards on stack
 function isBottom(curCard, fromStack) {
     var test = $("#" + fromStack.id);
     if (test[0].lastChild.id === curCard[0].id)

@@ -26,6 +26,24 @@ div.card.card-header {
   cursor: move;
 }
 
+button.expandableBtn, button.collapsableBtn {
+    display: block;
+    float: right;
+    border-radius: 20px;
+    margin: 2px;
+    box-sizing: border-box;
+    height: 30px;
+    width: 50px;
+    background: rgba(30, 52, 142, 0.5);
+    color: #fff;
+    text-align: center;
+    line-height: 10px;
+    vertical-align: middle;
+    text-decoration: none;
+    transition: all 0.3s ease-out;
+}
+
+
 button.close {
   display: block;
   float: right;
