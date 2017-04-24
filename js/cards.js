@@ -3,6 +3,7 @@ function Card(id) {
     var div = document.createElement("div");
     div.setAttribute("class", "card");
     div.setAttribute("id", this.id);
+    var numOfBtns = 0;
 
 
     /*
@@ -53,14 +54,34 @@ function Card(id) {
         handle: ".card-header"
     });
     setCardDroppableEffects(id);
-    setMouseOverEffects(id);
+    setMouseOverEffects(id, numOfBtns);
 }
 
-function setMouseOverEffects(id) {
-    var expandBtn = document.createElement("button");
+
+function setMouseOverEffects(id, numOfBtns) {
     $("#" + id).on('mouseenter', function () {
-        $(this).find(":button").show();
+        console.log(numOfBtns)
+        var div = document.createElement("div");
+        var expandBtn = document.createElement("button");
+        expandBtn.setAttribute("id", "expandBtn" + id);
+        expandBtn.setAttribute("position", "fixed");
+        var parentCard = document.getElementById(id);
+        if (numOfBtns === 0) {
+            if (parentCard.children.length !== 2)
+                parentCard.lastElementChild.append(expandBtn);
+            else
+                parentCard.append(expandBtn);
+            numOfBtns++;
+        }
         console.log("You entered me!");
+    }).on("mouseleave", function () {
+        var removeBtn = $("#" + "expandBtn" + id);
+        $("#" + removeBtn[0].id).fadeOut(2000);
+        setTimeout(function () {
+            $("#expandBtn" + id).remove();
+            numOfBtns = 0;
+        }, 2000);
+
     });
 }
 
