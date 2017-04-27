@@ -4,7 +4,12 @@
   background:transparent;
 }
 
-body {padding:10px}
+body {
+  padding:10px;
+
+  position: relative;
+}
+
 
 #info-box {
   width:200px;
@@ -20,7 +25,7 @@ body {padding:10px}
 .cancelButton{
   height: auto;
   width: auto;
-  position: absolute;
+  position: fixed;
   background-color: #eb463b;
   align: center;
   right: 0;

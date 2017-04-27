@@ -4,14 +4,12 @@
   background:transparent;
 }
 
-body {padding:10px}
-
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
   background-color: #666;
   color: white;
-  position: relative;
+  position: fixed;
 }
 
 div.card.card-header {
@@ -27,6 +25,24 @@ div.card.card-header {
   position: static;
   cursor: move;
 }
+
+button.expandableBtn, button.collapsableBtn {
+    display: block;
+    float: right;
+    border-radius: 20px;
+    margin: 2px;
+    box-sizing: border-box;
+    height: 30px;
+    width: 50px;
+    background: rgba(30, 52, 142, 0.5);
+    color: #fff;
+    text-align: center;
+    line-height: 10px;
+    vertical-align: middle;
+    text-decoration: none;
+    transition: all 0.3s ease-out;
+}
+
 
 button.close {
   display: block;
