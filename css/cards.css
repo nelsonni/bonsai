@@ -34,7 +34,7 @@ button.expandableBtn, button.collapsableBtn {
     box-sizing: border-box;
     height: 30px;
     width: 50px;
-    background: rgba(30, 52, 142, 0.5);
+    background: rgba(30, 52, 142);
     color: #fff;
     text-align: center;
     line-height: 10px;
