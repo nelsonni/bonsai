@@ -5,8 +5,9 @@ function Card(id) {
     div.setAttribute("id", this.id);
 
     /*
-     - When clicking on a card in a stack bring to front then on mouse away push it back
+     - When clicking on a card in a stack bring to front then on mouse away, push it back
      - Change mouse cursor to draggable when on top of stack remove text
+     - We need some serious refactoring
      */
 
 
@@ -39,34 +40,33 @@ function Card(id) {
         containment: "window"
     });
     setCardDroppableEffects(id);
-    //   setMouseOverEffects(id);
 }
 
-function cardExpansion(id) {
+function cardExpansion(id, btn) {
     var test = $("#" + id);
+    btn.innerHTML = "Close";
+    $(btn).addClass("keepUp");
     var base = getBottomStack(test, test);
     base = $("#" + base.id);
     $(base[0].children).each(function (idx) {
         if (this.classList.contains("Test")) {
-            this.className += " Blocker";
-            $(this.firstChild).click(function () {
+            $(this.firstChild).click(function () { // some work can be done regarding editing cards while expanded
                 document.body.append(this.parentNode);
             });
             $(this).css({
                 top: base[0].style.top,
-                left: parseInt(base[0].style.left) + (225 * (idx - 1))
+                left: parseInt(base[0].style.left) + (225 * (idx))
             });
         }
     });
-    var collapseBtn = document.createElement("button");
-    collapseBtn.id = "collapseBtn" + id;
-    collapseBtn.className += " collapsableBtn" + id;
-    collapseBtn.innerHTML = "Collapse";
-    collapseBtn.onclick = function () {
+    btn.onclick = function () {
         collapseCards(id, base);
         $("#collapseBtn" + id).remove();
+        btn.innerHTML = "Expnd";
+        btn.onclick = function () {
+            cardExpansion(id, btn);
+        }
     };
-    base.append(collapseBtn);
 }
 
 
@@ -76,58 +76,28 @@ function collapseCards(id, base) {
             $(this).removeClass("Blocker");
             if (idx > 1) {
                 $(this).css({
-                    top: parseInt(base[0].style.top) + (40 * (idx - 1)),
-                    left: parseInt(base[0].style.left) + (10 * (idx - 1))
+                    top: parseInt(base[0].style.top) + (20 * (idx)),
+                    left: parseInt(base[0].style.left) + (5 * (idx))
                 });
             } else
                 $(this).css({
-                    top: parseInt(base[0].style.top) + (40 * (idx)),
-                    left: parseInt(base[0].style.left) + (10 * (idx))
+                    top: parseInt(base[0].style.top) + (20 * (idx)),
+                    left: parseInt(base[0].style.left) + (5 * (idx))
                 });
         }
     });
 
 }
 
-function setMouseOverEffects(id) {
-    $("#" + id).on('mouseenter', function () {
-        if (document.getElementById(id).parentNode.classList.contains("container"))
-            return; // prevent buttons from popping up on single card
-        var div = document.createElement("div");
-        var expandBtn = document.createElement("button");
-        expandBtn.setAttribute("id", "expandBtn" + id);
-        expandBtn.innerHTML = "Expand";
-        expandBtn.setAttribute("class", "expandableBtn");
-        var parentCard = document.getElementById(id);
-        if (document.getElementsByClassName("expandableBtn").length === 0) {
-            if (parentCard.children.length !== 2)
-                parentCard.lastElementChild.append(expandBtn);
-            else
-                parentCard.append(expandBtn);
-        }
-        expandBtn.onclick = function () {
-            cardExpansion(id);
-            $("#expandBtn" + id).remove();
-        };
-        console.log("You entered me!");
-    }).on("mouseleave", function () {
-        $("#expandBtn" + id).fadeOut(3000);
-        setTimeout(function () {
-            $("#expandBtn" + id).remove();
-        }, 3000);
-    });
-}
-
-function arrangeLowerCards(parent, ui) {
-    var btm = getBottomStack(parent);
+function arrangeLowerCards(cur, base) {
     var getCurPos = 0;
-    for (var i = 2; i < $(btm)[0].children.length; i++) //start at 2 to get past header and text box
-        if ($(btm)[0].children[i].id === ui[0].id)
+    for (var i = 0; i < $(base)[0].children.length; i++) //start at 2 to get past header and text box
+        if ($(base)[0].children[i].id === cur[0].id)
             getCurPos = i;
-    for (getCurPos++; getCurPos < $(btm)[0].children.length; getCurPos++) {
-        $("#" + $(btm)[0].children[getCurPos].id).css({ // move divs to prevent gaps in stack
-            top: parseInt($(btm)[0].children[getCurPos].style.top) - 20,
-            left: parseInt($(btm)[0].children[getCurPos].style.left) - 5
+    for (getCurPos++; getCurPos < $(base)[0].children.length; getCurPos++) {
+        $("#" + $(base)[0].children[getCurPos].id).css({ // move divs to prevent gaps in stack
+            top: parseInt($(base)[0].children[getCurPos].style.top) - 20,
+            left: parseInt($(base)[0].children[getCurPos].style.left) - 5
         });
     }
 }
@@ -142,18 +112,17 @@ function getBottomStack(element, ui) {
 function moveStackEffects(latestAdd, base) {
     console.log(base);
     var id = base;
-    if (base.classList.contains("highlightBox"))
+    if (base.classList.contains("highlightBox")) // hack to prevent
         id = base;
     else
         id = base.parentNode;
     $(id.children).each(function () {
         if (this.classList.contains("Test")) {
-            console.log("I made it in");
             $(this).draggable("destroy");
             $(this).draggable({
                 cancel: "text",
                 containment: "window",
-                drag: function (event, ui) {
+                drag: function (event, ui) { //upon dragging remove expandable Btn
                     $(document.getElementsByClassName("expandableBtn")).remove();
                     $(id.children).each(function () {
                         if (this.classList.contains("Test") &&
@@ -177,8 +146,8 @@ function moveStackEffects(latestAdd, base) {
 
 
 function setHighlightBox(base, curCard) {
-    if (!base.classList.contains("highlightBox")) {
-        var box = document.createElement("div");
+    if (!base.classList.contains("highlightBox")) { // if there is not a highlight box on the stack
+        var box = document.createElement("div"); //instantiate a highlight box
         box.setAttribute("id", "highlightBox" + base.id);
         $(box).addClass("highlightBox");
         document.body.appendChild(box);
@@ -186,29 +155,30 @@ function setHighlightBox(base, curCard) {
             position: "fixed",
             top: base.style.top,
             left: base.style.left,
-            width: 200 + ((base.children.length) * 7),
-            height: 280 + ((base.children.length) * 15)
+            width: 200 + ((base.children.length) * 10),
+            height: 280 + ((base.children.length) * 18)
         }).droppable({
-            hoverClass: "ui-state-highlight",
-            drop: function (event, ui) {
-                console.log("Fart");
-            }
-        }).hover(
+            hoverClass: "ui-state-highlight"
+        }).hover(// on highlight box mouseover
             function () {
                 $(this).css("background", "rgba(0, 246, 255, 0.20)");
                 var expandBtn = document.createElement("button");
                 expandBtn.setAttribute("class", "expandableBtn");
-                expandBtn.innerHTML = "Click me";
+                expandBtn.setAttribute("id", "expandableBtn");
+                expandBtn.innerHTML = "Expnd";
                 box.append(expandBtn);
-                $(".expandableBtn").css({
+                $("#expandableBtn").css({
                     position: "fixed",
                     top: parseInt(this.style.height) + parseInt(this.style.top) - 12,
                     left: parseInt(this.style.width) + parseInt(this.style.left) - 35
                 });
+                expandBtn.onclick = function () {
+                    cardExpansion(box.id, this)
+                }
             }, // on mouse out
             function () {
                 $(this).prop("style").removeProperty("background");
-                $(".expandableBtn").remove();
+                $("#expandableBtn").remove();
             }
         );
         $(box).append(base);
@@ -250,12 +220,10 @@ function shrinkBox(box) {
 function closeCard(id) {
     var card = $("#" + id)[0].parentNode.parentNode;
     //When it is just the single card pulled out of stack
-    console.log(card);
     if (!card.parentNode.classList.contains("highlightBox"))
         $(card).remove();
     else {
         alert("Can't delete card while in stack.");
-        //card.style.zIndex = card.nextElementSibling.style.zIndex;
     }
 
 }
@@ -296,6 +264,7 @@ function setClickEffects(cur, box, base) {
             }
             ;
         };
+
         cur.firstElementChild.onmousedown = function (event) {
             if (event.target.classList.contains("close")) {
                 closeCard(event.target.id);
@@ -309,7 +278,7 @@ function setClickEffects(cur, box, base) {
                 containment: "window"
             });
             $(cur).addClass("Base");
-            if (isBottom($(cur), base) === false)
+            if (isBottom($(cur), base) === false) // if the card is not the bottom card rearrange them
                 arrangeLowerCards($(cur), $(cur.parentNode));
             document.body.appendChild(cur);
             if ($(box).children("div").length === 1) {
@@ -343,14 +312,10 @@ function setCardDroppableEffects(id) {
                 var bottomStack = getBottomStack($(this));
                 if ($(ui.draggable)[0].parentNode.classList.contains("highlightBox")) {
                     var base = mergeStacks($(ui.draggable));
-                    $(ui.draggable).removeClass("Base");
-                    $(ui.draggable).addClass("Test");
                     setHighlightBox(bottomStack, $(base));
                     moveStackEffects($(base), bottomStack); // give cards the moving stackable effects
                     return;
                 }
-                $(ui.draggable).removeClass("Base");
-                $(ui.draggable).addClass("Test");
                 setHighlightBox(bottomStack, $(ui.draggable));
                 moveStackEffects($(ui.draggable)[0], bottomStack); // give cards the moving stackable effects
             }
@@ -403,7 +368,8 @@ function setDivPosition(div) {
         });
         return;
     } else {
-        //alert("Edit and move already spawned card first.");
+        //    alert("Edit and move already spawned card first.");
+        //return;
     }
 
     // Jesus christ this is ugly, refactor this at some point
