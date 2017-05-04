@@ -7,10 +7,65 @@
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
-  background-color: #666;
+    /*background-color: #666;*/
+    margin: auto;
   color: white;
   position: fixed;
 }
+
+.notransition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -ms-transition: none !important;
+    transition: none !important;
+}
+
+/* flip the card */
+.flipMe {
+    transform: rotateY(180deg);
+}
+
+div.card, .front, .back {
+    width: 200px;
+    height: 280px;
+}
+
+/* flip speed goes here */
+.card {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+    backface-visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+    /* for firefox 31 */
+    transform: rotateY(0deg);
+    background-color: blue;
+}
+
+/* back, initially hidden pane */
+.back {
+    background-color: red;
+    transform: rotateY(180deg);
+}
+
+
+
+
+
+
+
+
+
 
 div.card.card-header {
   height: 29px;
