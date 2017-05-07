@@ -39,7 +39,7 @@ function Card(id) {
 
 
     var front = document.createElement("div");
-    $(front).addClass("front modal-content");
+    $(front).addClass("front");
     $(front).attr('id', 'front' + id);
     header.appendChild(close_button);
     front.appendChild(header);
@@ -54,7 +54,7 @@ function Card(id) {
         var test = document.getElementById(id);
         test.classList.toggle('flipMe');
     };
-    div.appendChild(btn);
+    //  div.appendChild(btn);
     $(btn).css({
         position: "fixed",
         top: 200,
@@ -74,36 +74,47 @@ function Card(id) {
     });
     setCardDroppableEffects(id);
     var modal = document.createElement("button");
-    //modal.setAttribute("id", "test1");
     modal.onclick = function (e) {
-        getModal(div, modal);
+        toggleFullscreen(div, modal);
     };
-    //modal.setAttribute("href", "#" + id);
-    modal.innerHTML = "modal";
+    modal.innerHTML = "expnd";
     header.appendChild(modal);
     $(modal).css({
         height: 30,
-        width: 30,
-        top: 300,
-        left: 300
+        width: 30
     });
 
 
 }
 
-function getModal(div, btn) {
+function toggleFullscreen(div, btn) {
     console.log(div);
-    $(div).removeClass();
-    //$(div).addClass("trans");
-    $("#front1").css({
-        top: 0,
-        left: 0,
+    var curTop = $(div)[0].style.top;
+    var curLeft = $(div)[0].style.left;
+    $(div).removeClass("card");
+
+    $(div).css({
+        top: curTop,
+        left: curLeft
     });
-    console.log($(window).width());
-    $("#front1").toggleClass("fullscreen");
+    $(div.children).each(function () {
+        $(this).animate({top: "0px", left: "0px", width: "100%", height: "100%"}, 0.5);
+
+    });
+    $(div).animate({top: "0px", left: "0px", width: "100%", height: "100%"}, 0.5);
+
     btn.onclick = function () {
-        $("#front1").toggleClass("norm")
-    }
+        //setTimeout(function(){div.setAttribute("transform-style","preserve-3d")},500);
+        // strange bug where child div's positions are zero.. Problem?
+        $(div.children).each(function () {
+            $(this).animate({width: "200px", height: "280px"}, 0.5);
+            $(this).animate({top: 0, left: 0}, 0.5);
+        });
+        $(div).animate({width: "200px", height: "280px"}, 0.5);
+        $(div).animate({top: curTop, left: curLeft}, 0.5);
+        $(div).addClass("card");
+
+    };
 }
 
 
