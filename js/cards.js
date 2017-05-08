@@ -1,20 +1,18 @@
+/*
+ - Change mouse cursor to draggable when on top of stack remove text
+ - Be able to delete cards
+ - base cards not being on top when clicked
+ - pulled out cards need to be editable
+
+ -------------------------------------------------------------------------------------
+ - We need some serious refactoring
+ */
+
 function Card(id) {
     this.id = id;
     var div = document.createElement("div");
     div.setAttribute("class", "card");
     div.setAttribute("id", this.id);
-
-    /*
-     - When clicking on a card in a stack bring to front then on mouse away, push it back
-     - Change mouse cursor to draggable when on top of stack remove text
-     - Allow cards to be edited while fanned out.
-     - Be able to delete cards
-     - Implement flipping card
-     - Implement card zoom
-     -------------------------------------------------------------------------------------
-     - We need some serious refactoring
-     */
-
 
     var header = document.createElement('div');
     header.setAttribute("class", "card card-header");
@@ -25,43 +23,46 @@ function Card(id) {
     close_button.setAttribute("class", "close");
     close_button.setAttribute("value", "x");
     close_button.innerHTML = "x";
+    header.appendChild(close_button);
 
     var editor = document.createElement('textarea');
     editor.setAttribute("class", "editor");
+    editor.setAttribute("id", "editor" + id);
     editor.name = "code_editor";
     editor.maxLength = "5000";
     editor.cols = "25";
     editor.rows = "19";
 
-    var back = document.createElement("div");
-    back.innerHTML = "poop";
-    $(back).addClass("back");
-
-
     var front = document.createElement("div");
     $(front).addClass("front");
     $(front).attr('id', 'front' + id);
-    header.appendChild(close_button);
     front.appendChild(header);
     front.setAttribute("position", "fixed");
     front.appendChild(editor);
     div.appendChild(front);
+
+    var back = document.createElement("div");
+    back.innerHTML = "poop";
+    $(back).addClass("back");
     div.appendChild(back);
-    var btn = document.createElement("button");
-    btn.innerHTML = "flip";
-    btn.setAttribute("id", "flipBtn" + div.id);
-    btn.onclick = function () {
-        var test = document.getElementById(id);
-        test.classList.toggle('flipMe');
-    };
-    //  div.appendChild(btn);
-    $(btn).css({
+
+
+    var flipBtn = document.createElement("button");
+    flipBtn.innerHTML = "flip";
+    flipBtn.setAttribute("id", "flipBtn" + div.id);
+    $(flipBtn).addClass("flipBtn");
+    $(flipBtn).css({
         position: "fixed",
-        top: 200,
-        left: 200
+        top: 270,
+        left: 190,
     });
+    flipBtn.onclick = function () {
+        handleCardFlip(div, flipBtn);
+    };
+    div.appendChild(flipBtn);
+
     setDivPosition(div);
-    $(".editor").draggable();
+    $(div).draggable();
     $("#" + id).draggable({
         handle: ".card-header",
         containment: "window", // hack way to disable transition effects
@@ -73,50 +74,88 @@ function Card(id) {
         }
     });
     setCardDroppableEffects(id);
-    var modal = document.createElement("button");
-    modal.onclick = function (e) {
-        toggleFullscreen(div, modal);
+    var fullScreenBtn = document.createElement("button");
+    fullScreenBtn.onclick = function (e) {
+        toggleFullscreen(div, fullScreenBtn);
     };
-    modal.innerHTML = "expnd";
-    header.appendChild(modal);
-    $(modal).css({
-        height: 30,
-        width: 30
-    });
+    header.appendChild(fullScreenBtn);
+    $(fullScreenBtn)
+        .attr("id", "fullscreenBtn" + id)
+        .addClass("fullscreenBtn");
+    fullScreenBtn.innerHTML = "e";
 
 
+}
+
+function handleCardFlip(div, flipBtn) {
+    if (!div.classList.contains("flipMe")) {
+        document.body.appendChild(flipBtn);
+        // if the screen has been expanded
+        if (($("#front" + div.id)[0].style.width).toString() === "100%")
+            $(flipBtn).css({
+                top: "97.5%",
+                left: "97%",
+                zIndex: getHighestZIndexCard()
+            });
+        else // if is just the card.
+            $(flipBtn).css({
+                top: (parseInt(div.style.top) + 270).toString() + "px",
+                left: (parseInt(div.style.left) + 190).toString() + "px",
+                zIndex: getHighestZIndexCard()
+            });
+    } else {
+        setTimeout(function () { //wait for animation to complete before appending back
+            div.appendChild(flipBtn);
+            $(flipBtn).css({
+                position: "fixed",
+                top: "97.5%",
+                left: "97%"
+            });
+        }, 500);
+    }
+    $(div).toggleClass("flipMe");
 }
 
 function toggleFullscreen(div, btn) {
-    console.log(div);
     var curTop = $(div)[0].style.top;
     var curLeft = $(div)[0].style.left;
-    $(div).removeClass("card");
-
-    $(div).css({
-        top: curTop,
-        left: curLeft
-    });
-    $(div.children).each(function () {
-        $(this).animate({top: "0px", left: "0px", width: "100%", height: "100%"}, 0.5);
-
-    });
-    $(div).animate({top: "0px", left: "0px", width: "100%", height: "100%"}, 0.5);
-
-    btn.onclick = function () {
-        //setTimeout(function(){div.setAttribute("transform-style","preserve-3d")},500);
-        // strange bug where child div's positions are zero.. Problem?
-        $(div.children).each(function () {
-            $(this).animate({width: "200px", height: "280px"}, 0.5);
-            $(this).animate({top: 0, left: 0}, 0.5);
+    var tmp = document.createElement("div"); // hack to hide gap during transition
+    var header = document.createElement("div");
+    $(header).addClass("card card-header");
+    document.body.appendChild(tmp);
+    $(tmp)
+        .append(header)
+        .css({
+            top: curTop,
+            left: curLeft,
+            height: "280px",
+            width: "200px",
+            position: "fixed",
+            backgroundColor: "grey"
         });
-        $(div).animate({width: "200px", height: "280px"}, 0.5);
-        $(div).animate({top: curTop, left: curLeft}, 0.5);
-        $(div).addClass("card");
-
+    $(div)
+        .hide()
+        .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
+        .show();
+    $("#flipBtn" + div.id).animate({top: "97.5%", left: "97%"}, 0.1);
+    $(div.children).each(function () {
+        if (!this.classList.contains("flipBtn"))
+            $(this).animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.1);
+    });
+    $(tmp).remove();
+    btn.onclick = function () {
+        // strange bug where child div's positions to expanded card are zero.. Problem?
+        $(div).animate({width: "200px", height: "280px", top: curTop, left: curLeft}, 100);
+        $("#flipBtn" + div.id).animate({top: "270px", left: "190px"}, 400);
+        $(div.children).each(function () {
+            if (!this.classList.contains("flipBtn"))
+                $(this).animate({width: "200px", height: "280px"}, 100);
+        });
+        btn.onclick = function () {
+            toggleFullscreen(div, btn);
+        };
     };
 }
-
 
 
 function cardExpansion(id, btn) {
@@ -183,40 +222,48 @@ function getBottomStack(element, ui) {
     return element[0];
 }
 
+function hideButtons(parent) {
+    $(parent.children).each(function () {
+        var cur = this;
+        $($(cur).find("button")).each(function () {
+            $(this).hide();
+        });
+    });
+}
+
 
 function moveStackEffects(latestAdd, base) {
-    //console.log(base);
     var id = base;
-    if (base.classList.contains("highlightBox")) // hack to prevent
+    if (base.classList.contains("highlightBox"))
         id = base;
     else
         id = base.parentNode;
-    //console.log($(id.children));
+    hideButtons(id);
     $(id.children).each(function () {
         if (this.classList.contains("Test")) {
-            $(this).draggable("destroy");
-            $(this).draggable({
-                handle: ".card",
+            console.log(this);
+            //$(this).draggable("destroy");
+            $(this.firstElementChild).draggable({
+                cancel: "text",
+                handle: ".editor",
                 containment: "window",
                 drag: function (event, ui) {
-                    /*var turd = this;
-                     var temp = $(this)[0].parentNode; //parent
-                     var test = $(this)[0].nextElementSibling; // back
-                     console.log(test,temp);
-                     $([test, temp]).each(function() {
-                     var cur = this;
-                     $(cur).css({
-                     top: turd.style.top,
-                     left: turd.style.left
-                     }); //upon dragging remove expandable Btn
-                     })*/
+                    var temp = $(this)[0].parentNode; //parent
+                    var test = $(this)[0].nextElementSibling; // back
+                    console.log(test, temp);
+                    var par = $(this)[0];
+                    $([temp, test]).each(function () {
+                        var cur = this;
+                        $(cur).css({
+                            top: par.style.top,
+                            left: par.style.left
+                        });
+                    });
                     $(document.getElementsByClassName("expandableBtn")).remove();
                     $(id.children).each(function () {
-                        //console.log($(this));
                         if (this.classList.contains("Test") &&
                             $(this)[0].nextElementSibling !== null) {
                             console.log($(this));
-
                             var top = parseFloat($(this)[0].nextElementSibling.style.top) - 20;
                             var left = parseFloat($(this)[0].nextElementSibling.style.left) - 5;
                             this.style.top = top.toString() + "px";
@@ -227,6 +274,12 @@ function moveStackEffects(latestAdd, base) {
                         top: parseFloat(id.firstElementChild.style.top) - 5,
                         left: parseFloat(id.firstElementChild.style.left) - 5
                     });
+                },
+                start: function (event, ui) {
+                    $('.card').toggleClass('notransition');
+                },
+                stop: function () {
+                    $('.card').toggleClass('notransition');
                 }
             });
         }
@@ -271,7 +324,6 @@ function setHighlightBox(base, curCard) {
                 $("#expandableBtn").remove();
             }
         );
-        console.log(base);
         $(box).append(base);
         $(base).css({
             top: parseInt($(box)[0].style.top) + 5,
@@ -284,8 +336,16 @@ function setHighlightBox(base, curCard) {
             });
         else {
             $(box).append(curCard[0]);
+            var isDragging = false;
+            var firstHeader = base.firstElementChild.firstElementChild;
             setClickEffects(curCard[0], box, base);
+            firstHeader.onmousedown = function () {
+                cardPreview(base, firstHeader, box, base);
+            };
         }
+
+
+
     } else { // If there is already a box there
         var box = document.getElementById(base.id);
         document.body.appendChild(curCard[0]);
@@ -298,8 +358,40 @@ function setHighlightBox(base, curCard) {
         else
             box.append(curCard[0]);
         setClickEffects(curCard[0], box, base);
+
     }
 }
+
+function cardPreview(cur, firstHeader, box, base) {
+    var isDragging = false;
+    if (!$(cur)[0].parentNode.classList.contains("container") && !$(cur)[0].classList.contains("ui-draggable"))
+        $(cur.firstElementChild).draggable("destroy");
+    $(cur).draggable({
+        handle: ".card-header",
+        containment: "window",
+        start: function (event, ui) {
+            $('.card').toggleClass('notransition');
+            if (!cur.parentNode.classList.contains("container"))
+                breakOutOfBox(cur, box, base);
+            isDragging = true;
+        },
+        stop: function (event, ui) {
+            $('.card').toggleClass('notransition');
+        }
+    });
+    firstHeader.onmouseup = function () { // handle just click events.
+        var prevZIndex = cur.style.zIndex;
+        if (!isDragging) {
+            console.log("Just a click", cur);
+            cur.style.zIndex = getHighestZIndexCard();
+            $(cur).mouseleave(function () {
+                cur.style.zIndex = prevZIndex;
+            });
+            isDragging = false;
+        }
+    };
+}
+
 
 
 function shrinkBox(box) {
@@ -321,8 +413,50 @@ function closeCard(id) {
 
 }
 
+function addButtonsBack(curCard) {
+    $($(curCard).find("button")).each(function () {
+        $(this).show();
+    });
+}
+
+
+function breakOutOfBox(cur, box, base) {
+    console.log(cur);
+    if (event.target.classList.contains("close")) {
+        closeCard(event.target.id);
+        return;
+    }
+    shrinkBox(box);
+    cur.style.zIndex = getHighestZIndexCard();
+    //$(cur).draggable("destroy");
+    addButtonsBack(cur);
+    $(cur).addClass("Base");
+    if (isBottom($(cur), base) === false) // if the card is not the bottom card rearrange them
+        arrangeLowerCards($(cur), $(cur.parentNode));
+    document.body.appendChild(cur);
+    if ($(box).children("div").length === 1) {
+        console.log($(cur));
+
+        $(base.firstElementChild).draggable("destroy");
+        $(base).draggable({
+            handle: ".card-header",
+            containment: "window",
+            start: function (event, ui) {
+                $('.card').toggleClass('notransition');
+                console.log("here");
+                base.style.zIndex = getHighestZIndexCard();
+            },
+            stop: function (event, ui) {
+                $('.card').toggleClass('notransition');
+            }
+        });
+        addButtonsBack($(box)[0].firstElementChild);
+        document.body.appendChild($(box)[0].firstElementChild);
+        $(box).remove();
+    }
+}
+
 function setClickEffects(cur, box, base) {
-    console.log($(cur));
     if (cur.classList.contains("Test")) {
         $(cur).css({
             top: parseInt(cur.previousElementSibling.style.top) + 20,
@@ -331,89 +465,10 @@ function setClickEffects(cur, box, base) {
         $(box).append(cur);
         // when someone clicks on the header of a card
         var firstHeader = cur.firstElementChild.firstElementChild;
-        console.log($(firstHeader));
         if (firstHeader.classList.contains("close")) //hack for 2 card stacks
             firstHeader = firstHeader.parentNode;
         firstHeader.onmousedown = function () {
-            cur.style.zIndex = getHighestZIndexCard();
-
-            if (event.target.classList.contains("close")) {
-                closeCard(event.target.id);
-                return;
-            }
-            shrinkBox(box);
-            firstHeader.parentNode.parentNode.style.zIndex = getHighestZIndexCard();
-            $(firstHeader.parentNode.parentNode).draggable("destroy");
-            $(firstHeader.parentNode.parentNode).draggable({
-                handle: ".card-header",
-                containment: "window",
-                start: function (event, ui) {
-                    $('.card').toggleClass('notransition');
-                },
-                stop: function (event, ui) {
-                    $('.card').toggleClass('notransition');
-                }
-            });
-            $(base).addClass("Base");
-            document.body.appendChild(firstHeader.parentNode.parentNode);
-            console.log($(box));
-            if ($(box).children("div").length === 1) {
-                $(box.firstElementChild).draggable("destroy");
-                $(box.firstElementChild).draggable({
-                    handle: ".card-header",
-                    containment: "window",
-                    start: function (event, ui) {
-                        $('.card').toggleClass('notransition');
-                    },
-                    stop: function (event, ui) {
-                        $('.card').toggleClass('notransition');
-                    }
-                });
-                document.body.appendChild($(box)[0].firstElementChild);
-                $(box).remove();
-            }
-            ;
-        };
-        console.log(cur);
-        cur.firstElementChild.firstElementChild.onmousedown = function (event) {
-            if (event.target.classList.contains("close")) {
-                closeCard(event.target.id);
-                return;
-            }
-            shrinkBox(box);
-            console.log(cur);
-            cur.style.zIndex = getHighestZIndexCard();
-            console.log(cur);
-            //$(cur).draggable("destroy");
-            $(cur).draggable({
-                handle: ".card-header",
-                containment: "window",
-                start: function (event, ui) {
-                    $('.card').toggleClass('notransition');
-                },
-                stop: function (event, ui) {
-                    $('.card').toggleClass('notransition');
-                }
-            });
-            $(cur).addClass("Base");
-            if (isBottom($(cur), base) === false) // if the card is not the bottom card rearrange them
-                arrangeLowerCards($(cur), $(cur.parentNode));
-            document.body.appendChild(cur);
-            if ($(box).children("div").length === 1) {
-                $(box.firstElementChild).draggable("destroy");
-                $(box.firstElementChild).draggable({
-                    handle: ".card-header",
-                    containment: "window",
-                    start: function (event, ui) {
-                        $('.card').toggleClass('notransition');
-                    },
-                    stop: function (event, ui) {
-                        $('.card').toggleClass('notransition');
-                    }
-                });
-                document.body.appendChild($(box)[0].firstElementChild);
-                $(box).remove();
-            }
+            isDragging = cardPreview(cur, firstHeader, box, base)
         };
     }
 }
@@ -450,7 +505,7 @@ function setCardDroppableEffects(id) {
 
 //Check if card being dragged is at the bottom to prevent rearranging cards on stack
 function isBottom(curCard, fromStack) {
-    var base = $("#" + fromStack.id);
+    var base = $(fromStack);
     if (base[0].lastChild.previousSibling.id === curCard[0].id ||
         base[0].lastChild.id === curCard[0].id) // or clause for expandable btn
         return true;
@@ -493,7 +548,7 @@ function setDivPosition(div) {
         console.log($(div));
         div.firstElementChild.firstElementChild.onmousedown = function () {
             div.style.zIndex = getHighestZIndexCard();
-        }
+        };
         return;
     } else {
         //    alert("Edit and move already spawned card first.");
@@ -504,7 +559,7 @@ function setDivPosition(div) {
     for (var i = 0; i < cards.length; i += 2) { // +=2 to only get the cards not the headers
         if (cards[i].style.left == "10px" && cards[i].style.top == "35px") {
             eleAtStart = cards[i]; // get whoever is at the start at spawn point
-            $("#" + eleAtStart.id).append(div);
+            document.body.append(div);
             multiplier = eleAtStart.getElementsByTagName("div").length; //for offset
             $("#" + div.id).css({
                 top: 35 + (20 * (multiplier - 1)),
