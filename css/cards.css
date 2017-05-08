@@ -76,8 +76,9 @@ div.card, .front, .back {
     height: 280px;
 }
 
-
-
+button.flipBtn {
+    background: url("flip-icon.png");
+}
 
 
 
@@ -112,8 +113,7 @@ button.expandableBtn, button.collapsableBtn {
     transition: all 0.3s ease-out;
 }
 
-
-button.close {
+button.close, button.fullscreenBtn {
   display: block;
   float: right;
   margin: 2px;
