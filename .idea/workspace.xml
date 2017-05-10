@@ -27,10 +27,12 @@
       <file leaf-file-name="cards.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/cards.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="670">
-              <caret line="191" column="7" lean-forward="true" selection-start-line="191" selection-start-column="7" selection-end-line="191" selection-end-column="7" />
+            <state relative-caret-position="930">
+              <caret line="326" column="65" lean-forward="true" selection-start-line="326" selection-start-column="65" selection-end-line="326" selection-end-column="65" />
               <folding>
-                <element signature="n#!!doc" expanded="true" />
+                <element signature="n#!!block;n#closeCard#0" expanded="false" />
+                <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+                <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -88,9 +90,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>each</find>
-      <find>)</find>
-      <find>append</find>
       <find>Block</find>
       <find>fart</find>
       <find>this</find>
@@ -100,7 +99,6 @@
       <find>keepUp</find>
       <find>highlight</find>
       <find>setHighlightBox</find>
-      <find>setClick</find>
       <find>Blocker</find>
       <find>Blockerle</find>
       <find>closeCard</find>
@@ -118,6 +116,10 @@
       <find>console.log</find>
       <find>inStack</find>
       <find>breakOutOfBox</find>
+      <find>setClick</find>
+      <find>lastCard</find>
+      <find>shrinkBox</find>
+      <find>zIndex</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -318,7 +320,8 @@
       <workItem from="1493862998445" duration="16001000" />
       <workItem from="1494131167630" duration="28068000" />
       <workItem from="1494210998554" duration="13352000" />
-      <workItem from="1494261741819" duration="23472000" />
+      <workItem from="1494261741819" duration="28527000" />
+      <workItem from="1494431933699" duration="7712000" />
     </task>
     <task id="LOCAL-00001" summary="Cards can be moved as a stack by dragging text area still VERY buggy">
       <created>1492585864998</created>
@@ -460,11 +463,18 @@
       <option name="project" value="LOCAL" />
       <updated>1494391260736</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Card wrap around works properly!">
+      <created>1494398893628</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1494398893628</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="231705000" />
+    <option name="totallyTimeSpent" value="244472000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -482,7 +492,6 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23703703" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934928" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -496,6 +505,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -546,12 +556,13 @@
     <MESSAGE value="Card preview while in stack works, and dynamically added expansion and flip buttons work" />
     <MESSAGE value="Card expansion works, high light box scales, and buttons can be added dynamically with expansion" />
     <MESSAGE value="Stack dragging is back to working a third time!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Stack dragging is back to working a third time!" />
+    <MESSAGE value="Card wrap around works properly!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Card wrap around works properly!" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -561,7 +572,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -595,7 +608,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -629,7 +644,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -720,7 +737,9 @@
         <state relative-caret-position="2145">
           <caret line="143" column="0" lean-forward="true" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -730,7 +749,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -764,7 +785,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -798,7 +821,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -928,16 +953,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="952">
           <caret line="56" column="20" lean-forward="false" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/cards.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="670">
-          <caret line="191" column="7" lean-forward="true" selection-start-line="191" selection-start-column="7" selection-end-line="191" selection-end-column="7" />
+        <state relative-caret-position="930">
+          <caret line="326" column="65" lean-forward="true" selection-start-line="326" selection-start-column="65" selection-end-line="326" selection-end-column="65" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!block;n#closeCard#0" expanded="false" />
+            <element signature="n#!!block;n#addButtonsBack#0" expanded="false" />
+            <element signature="n#!!block;n#breakOutOfBox#0" expanded="false" />
           </folding>
         </state>
       </provider>
