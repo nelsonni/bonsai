@@ -27,11 +27,10 @@
       <file leaf-file-name="cards.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/cards.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1778">
-              <caret line="168" column="0" lean-forward="false" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
+            <state relative-caret-position="670">
+              <caret line="191" column="7" lean-forward="true" selection-start-line="191" selection-start-column="7" selection-end-line="191" selection-end-column="7" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
-                <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -89,7 +88,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>button</find>
       <find>each</find>
       <find>)</find>
       <find>append</find>
@@ -119,6 +117,7 @@
       <find>hideButtons</find>
       <find>console.log</find>
       <find>inStack</find>
+      <find>breakOutOfBox</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -319,7 +318,7 @@
       <workItem from="1493862998445" duration="16001000" />
       <workItem from="1494131167630" duration="28068000" />
       <workItem from="1494210998554" duration="13352000" />
-      <workItem from="1494261741819" duration="15849000" />
+      <workItem from="1494261741819" duration="23472000" />
     </task>
     <task id="LOCAL-00001" summary="Cards can be moved as a stack by dragging text area still VERY buggy">
       <created>1492585864998</created>
@@ -454,11 +453,18 @@
       <option name="project" value="LOCAL" />
       <updated>1494270647483</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Stack dragging is back to working a third time!">
+      <created>1494391260736</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1494391260736</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="224082000" />
+    <option name="totallyTimeSpent" value="231705000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -539,7 +545,8 @@
     <MESSAGE value="Card expansion and collapsing work" />
     <MESSAGE value="Card preview while in stack works, and dynamically added expansion and flip buttons work" />
     <MESSAGE value="Card expansion works, high light box scales, and buttons can be added dynamically with expansion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Card expansion works, high light box scales, and buttons can be added dynamically with expansion" />
+    <MESSAGE value="Stack dragging is back to working a third time!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Stack dragging is back to working a third time!" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -555,7 +562,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -590,7 +596,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -625,7 +630,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -717,7 +721,6 @@
           <caret line="143" column="0" lean-forward="true" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -728,7 +731,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -763,7 +765,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -798,7 +799,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -934,11 +934,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/cards.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1778">
-          <caret line="168" column="0" lean-forward="false" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
+        <state relative-caret-position="670">
+          <caret line="191" column="7" lean-forward="true" selection-start-line="191" selection-start-column="7" selection-end-line="191" selection-end-column="7" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#toggleFullscreen#0" expanded="false" />
           </folding>
         </state>
       </provider>

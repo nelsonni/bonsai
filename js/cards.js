@@ -163,23 +163,63 @@ function toggleFullscreen(div, btn) {
 
 function cardExpansion(id, btn) {
     btn.innerHTML = "Close";
+    console.log(window.innerWidth);
     var base = $("#" + id);
-    $(base[0].children).each(function (idx) { // possible bug since took away the click listener?
-        if (this.classList.contains("actualCard")) {
-            $(this).css({
-                top: parseInt(base[0].style.top) + 10,
-                left: parseInt(base[0].style.left) + (225 * (idx))
-            });
-        }
-    });
-    var newWidth = (parseInt(base[0].style.width) - 15) * (base[0].children.length - 1);
-    $(base)
-        .css({width: newWidth})
-        .addClass("expanded");
-    $(btn).css({left: newWidth});
+
+    cardWrapAround(base, btn);
     btn.onclick = function () {
         collapseCards(btn, base);
     };
+}
+
+
+function cardWrapAround(box, btn) {
+    var stackWindowDiff = window.innerWidth - parseInt(box[0].style.left);
+    var stackExpansionWidth = (parseInt(box[0].style.width) - 15) * (box[0].children.length - 1);
+    console.log(parseInt(box[0].style.left), window.innerWidth);
+    if (parseInt(box[0].style.left) + parseInt(box[0].style.width) + 200 >= window.innerWidth) {
+        alert("Can't expand at all");
+        return;
+    }
+    $(box[0].children).each(function (idx) { // possible bug since took away the click listener?
+        if (this.classList.contains("actualCard")) {
+            $(this).draggable("disable");
+            $(this).css({
+                top: parseInt(box[0].style.top) + 10,
+                left: parseInt(box[0].style.left) + (225 * (idx))
+            });
+        }
+    });
+    if (stackExpansionWidth >= stackWindowDiff) {
+        var lastFittingCard;
+        var nonFittingCards = [];
+        $(box[0].children).each(function (idx) {
+            if (parseInt(this.style.left) + 225 <= window.innerWidth && this.classList.contains("actualCard"))
+                lastFittingCard = this;
+            else
+                nonFittingCards.push(this);
+        });
+        $(nonFittingCards).each(function (idx) {
+            $(this).css({
+                zIndex: lastFittingCard.style.zIndex - (1 * (idx + 1)),
+                top: parseInt(lastFittingCard.style.top) - (20 * (idx + 1)),
+                left: parseInt(lastFittingCard.style.left) - (5 * (idx + 1))
+            })
+        });
+        $(box)  // adjust box to the width of the last fitting card
+            .css({width: parseInt(lastFittingCard.style.left) - parseInt(box[0].style.left) + 225})
+            .addClass("expanded");
+        $(btn).css({ //adjust expand/close button properly
+            left: parseInt(lastFittingCard.style.left) + 210,
+            top: parseInt(box[0].style.top) + parseInt(box[0].style.height) - 15
+        });
+    } else {
+        var newWidth = (parseInt(box[0].style.width)) * (box[0].children.length - 1);
+        $(box)
+            .css({width: newWidth})
+            .addClass("expanded");
+        $(btn).css({left: newWidth + (parseInt(box[0].style.left) - 15)});
+    }
 }
 
 
@@ -190,7 +230,9 @@ function collapseCards(btn, base) {
     $(btn).css({left: 200 + ((base.children.length) * 10)});
     $(base[0].children).each(function (idx) {
         if (this.classList.contains("actualCard")) {
+            $(this).draggable("enable");
             $(this).css({
+                zIndex: getHighestZIndexCard(),
                 top: parseInt(base[0].firstElementChild.style.top) + (20 * (idx)),
                 left: parseInt(base[0].style.left) + (5 * (idx + 1))
             });
@@ -332,19 +374,13 @@ function setHighlightBox(base, curCard) {
             top: parseInt($(box)[0].style.top) + 5,
             left: parseInt($(box)[0].style.left) + 5
         });
-        //console.log(curCard);
-        if (curCard[0].children.length > 3) // if there is just 1 card
-            $(curCard[0].children).each(function (idx) {
-                setClickEffects(this, box, base);
-            });
-        else {
+
             $(box).append(curCard[0]);
             var firstHeader = base.firstElementChild.firstElementChild;
             setClickEffects(curCard[0], box, base);
             firstHeader.onmousedown = function () {
                 cardPreview(base, firstHeader, box, base);
             };
-        }
     } else { // If there is already a highlightBox
         var box = document.getElementById(base.id);
         document.body.appendChild(curCard[0]);
@@ -375,8 +411,9 @@ function cardPreview(cur, firstHeader, box, base) {
         start: function (event, ui) {
             cur.style.zIndex = getHighestZIndexCard();
             $('.card').toggleClass('notransition');
+            console.log(this);
             if (!cur.parentNode.classList.contains("container"))
-                breakOutOfBox(cur, box, base);
+                breakOutOfBox(cur, box, base, this);
             isDragging = true;
         },
         stop: function (event, ui) {
@@ -390,7 +427,6 @@ function cardPreview(cur, firstHeader, box, base) {
                 closeCard(event.target.id);
                 return;
             }
-            //console.log("Just a click", cur);
             cur.style.zIndex = getHighestZIndexCard();
             $(cur).mouseleave(function () {
                 cur.style.zIndex = prevZIndex;
@@ -425,17 +461,15 @@ function addButtonsBack(curCard) { //show all buttons out of stack
 }
 
 
-function breakOutOfBox(cur, box, base) {
-    //console.log(cur);
+function breakOutOfBox(cur, box, base, cardToBeMoved) {
     shrinkBox(box);
     cur.style.zIndex = getHighestZIndexCard();
-    //$(cur).draggable("destroy");
     addButtonsBack(cur);
     $(cur).addClass("Base");
     if (isBottom($(cur), base) === false) // if the card is not the bottom card rearrange them
         arrangeLowerCards($(cur), $(cur.parentNode));
     document.body.appendChild(cur);
-    var baseHead = box.firstElementChild.firstElementChild;
+    var baseHead = box.firstElementChild;
     if ($(box).children("div").length === 1) {
         if (baseHead.classList.contains("ui-draggable"))
             $(baseHead).draggable("destroy");
@@ -541,12 +575,10 @@ function setDivPosition(div) {
     };
     // var first;
     var mult = 0; // searches for cards that have a direct position related to spawn point and calculates offset
-    for (var i = 0; i < cards.length; i++) {
-        //    if (cards[i].style.top === "35px" && cards[i].style.left === "10px")
-        //       first = cards[i];
+    for (var i = 0; i < cards.length; i++)  // add a class here called 'atSpawn' to track who is stacked
         if (cards[i].style.top == ((35 + (30 * (i))).toString() + "px"))
             mult += 1;
-    }
+
     $(div).css({
         top: ((35 + (30 * (mult))).toString() + "px"),
         left: ((10 + (5 * mult)).toString() + "px")
