@@ -33,6 +33,10 @@ div.card, .front, .back {
     height: 280px;
 }
 
+textarea.stackedEditor {
+    cursor: move;
+}
+
 /* flip speed goes here */
 .card {
     transition: 0.5s;
