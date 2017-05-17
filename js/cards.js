@@ -20,9 +20,8 @@ function Card(id) {
     var close_button = document.createElement("button");
     $(close_button).attr({
         id: "closeBtn" + id,
-        class: "close",
-        value: "x"
-    }).html("x").click(function () {
+        class: "close"
+    }).html("").click(function () {
         closeCard(id);
     });
     header.appendChild(close_button);
