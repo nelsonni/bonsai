@@ -50,13 +50,9 @@ function Card(id) {
     var flipBtn = document.createElement("button");
 
     $(flipBtn).attr("id", "flipBtn" + div.id)
-        .html("flip")
+        .html("")
         .addClass("flipBtn")
-        .css({
-            position: "fixed",
-            top: 270,
-            left: 190
-        }).click(function () {
+        .click(function () {
         handleCardFlip(div, flipBtn);
     });
     div.appendChild(flipBtn);
@@ -75,6 +71,7 @@ function Card(id) {
         }
     });
     setCardDroppableEffects(id);
+
     var fullScreenBtn = document.createElement("button");
     fullScreenBtn.onclick = function () {
         toggleFullscreen(div, fullScreenBtn);

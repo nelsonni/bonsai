@@ -7,10 +7,46 @@
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
-
-    margin: auto;
-  color: white;
+  background: black; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0)); /* Standard syntax */
+  /*
+    background-color: black;
+    background-image: url("../assets/close.svg");
+  */
+  color: rgba(171, 178, 191, 1.0);
+  margin: auto;
   position: fixed;
+  border: 0.5px solid rgba(24, 26, 31, 1.0);
+  border-radius: 5px;
+}
+
+div.card.card-header {
+  height: 29px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 0 0 3px;
+  background-color: rgba(33, 37, 43, 1.0);
+  line-height: 29px;
+  font-family: sans-serif;
+  vertical-align: middle;
+  position: static;
+  cursor: move;
+  border: 0.5px solid rgba(24, 26, 31, 1.0);
+  border-radius: 5px 5px 0 0;
+}
+
+div.card.card-header input[type="button"] {
+  display: block;
+  float: right;
+  margin: 2px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  background: rgba(30, 112, 142, 0.5);
 }
 
 .notransition {
@@ -81,23 +117,14 @@ textarea.stackedEditor {
 }
 
 button.flipBtn {
-    background: url("flip-icon.png");
-}
-
-
-
-div.card.card-header {
-  height: 29px;
-  width: 100%;
-  line-height: 29px;
-  vertical-align: middle;
-  font-family: sans-serif;
-  background-color: #385f88;
-  padding: 0 0 0 3px;
-  box-sizing: border-box;
-    /*top: 0; */
-  position: static;
-  cursor: move;
+    height: 25px;
+    width: 25px;
+    background: url("../assets/flip_white.svg");
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    position: fixed;
+    top: 270px;
+    left: 190px;
 }
 
 button.expandableBtn, button.collapsableBtn {
@@ -108,7 +135,7 @@ button.expandableBtn, button.collapsableBtn {
     box-sizing: border-box;
     height: 30px;
     width: 50px;
-    background: rgba(30, 52, 142);
+    background: rgba(30, 52, 142, 0.5);
     color: #fff;
     text-align: center;
     line-height: 10px;
@@ -117,7 +144,7 @@ button.expandableBtn, button.collapsableBtn {
     transition: all 0.3s ease-out;
 }
 
-button.close, button.fullscreenBtn {
+button.fullscreenBtn {
   display: block;
   float: right;
   margin: 2px;
@@ -125,7 +152,6 @@ button.close, button.fullscreenBtn {
   border-radius: 50%;
   height: 25px;
   width: 25px;
-  background: rgba(30, 52, 142, 0.5);
   color: #fff;
   text-align: center;
   line-height: 10px;
@@ -133,9 +159,25 @@ button.close, button.fullscreenBtn {
   text-decoration: none;
   transition: all 0.3s ease-out;
 }
-button.close:hover,
-button.close:focus,
-button.close:active {
+
+button.close {
+  display: block;
+  float: right;
+  margin: 2px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  background-image: url("../assets/close.svg");
+  color: #fff;
+  text-align: center;
+  line-height: 10px;
+  vertical-align: middle;
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+}
+
+button.close:hover, button.close:focus, button.close:active {
   background: rgba(255, 0, 0, 0.7);
   color: #fff;
   transition: all 0.5s ease-in;

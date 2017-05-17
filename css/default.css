@@ -1,57 +1,13 @@
 /* temporary fix to suppress Chromium error, issue is being tracked via
-    the following issue: https://github.com/electron/electron/issues/4420 */
+    the following issue: https://github.com/electron/electron/issues/4420
 ::selection {
   #background: transparent;
 }
+*/
 
 body {
   padding:10px;
-  background-image: url("./topography.png");
+  background: linear-gradient(rgba(105, 102, 96, 0.45), rgba(105, 102, 96, 0.45)),
+  url("../assets/topography.png");
   position: relative;
-}
-
-#info-box {
-  width:200px;
-  height:200px;
-  background-color:#385f88;
-}
-
-#codeArea{
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-.cancelButton{
-  height: auto;
-  width: auto;
-  position: fixed;
-  background-color: #eb463b;
-  align: center;
-  right: 0;
-  margin: 0 auto;
-  border-radius: 50%;
-}
-
-.header{
-  height: 20px;
-  width: 100%;
-  background-color: #696660;
-  top: 0;
-  border: 2px;
-  cursor: move;
-  border-color: #000;
-  border-bottom: solid;
-}
-
-.textArea {
-  display: inherit;
-  width: 71%;
-  height: 100%;
-  padding-bottom: 75%;
-  background-color:#e6e2da;
-  color:white;
-  border: 2px;
-  border-style: solid;
-  border-color: #000;
-  position:relative; /* important (all position that's not `static`) */
 }
