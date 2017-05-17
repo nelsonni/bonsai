@@ -15,80 +15,9 @@ div.card {
   position: fixed;
   border: 0.5px solid rgba(24, 26, 31, 1.0);
   border-radius: 5px;
+  transition: 0.5s; /* flip speed */
+  transform-style: preserve-3d;
 }
-
-.notransition {
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    -o-transition: none !important;
-    -ms-transition: none !important;
-    transition: none !important;
-}
-
-/* flip the card */
-.flipMe {
-    transform: rotateY(180deg);
-}
-
-div.card, .front, .back {
-    transition: 0.5s;
-
-    width: 200px;
-    height: 280px;
-}
-
-textarea.stackedEditor {
-    cursor: move;
-}
-
-/* flip speed goes here */
-.card {
-    transition: 0.5s;
-    transform-style: preserve-3d;
-}
-
-/* hide back of pane during swap */
-.front, .back {
-    transition: 0.5s;
-
-    backface-visibility: hidden;
-    position: fixed;
-}
-
-/* front pane, placed above back */
-.front {
-    /* for firefox 31 */
-    transform: rotateY(0deg);
-    background-color: #666;
-}
-
-/* back, initially hidden pane */
-.back {
-    background-color: lightgray;
-    transform: rotateY(180deg);
-}
-
-
-.fullscreen {
-    transition: 0.5s;
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-}
-
-.norm {
-    transition: 0.5s;
-
-    width: 200px;
-    height: 280px;
-}
-
-button.flipBtn {
-    background: url("flip-icon.png");
-}
-
-
 
 div.card.card-header {
   height: 29px;
@@ -107,128 +36,91 @@ div.card.card-header {
 }
 
 div.card.card-header button {
-  height: 20px;
-  width: 20px;
   background-size: contain;
   background-repeat: no-repeat;
   display: block;
   float: right;
-  margin: 3px;
   padding: 0;
   text-align: center;
   line-height: 10px;
   vertical-align: middle;
   box-sizing: border-box;
-  border-radius: 50%;
   border: none;
 }
 
 button.close {
+  height: 20px;
+  width: 20px;
+  margin: 3px;
   background: linear-gradient(
     rgba(0, 0, 0, 0),
     rgba(0, 0, 0, 0)),
     url("../assets/close_dark.svg");
+  border-radius: 50%;
 }
 
-button.close:hover, button.close:focus, button.close:active {
+button.close:hover, button.close:active {
   background-image: url("../assets/close_active.svg");
 }
 
 button.expand {
+  height: 18px;
+  width: 18px;
+  margin: 4px;
   background: linear-gradient(
     rgba(0, 0, 0, 0),
     rgba(0, 0, 0, 0)),
     url("../assets/expand_dark.svg");
+  border-radius: 0;
 }
 
-button.expand:hover, button.expand:focus, button.expand:active {
+button.expand:hover, button.expand:active {
   background-image: url("../assets/expand_active.svg");
 }
 
-button.expandableBtn, button.collapsableBtn {
-    display: block;
-    float: right;
-    border-radius: 20px;
-    margin: 2px;
-    box-sizing: border-box;
-    height: 30px;
-    width: 50px;
-    background: red;
-    color: #fff;
-    text-align: center;
-    line-height: 10px;
-    vertical-align: middle;
-    text-decoration: none;
-    transition: all 0.3s ease-out;
-}
-
-button.fullscreenBtn {
-  display: block;
-  float: right;
-  margin: 2px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
-  color: #fff;
-  text-align: center;
-  line-height: 10px;
-  vertical-align: middle;
-  text-decoration: none;
-  transition: all 0.3s ease-out;
-}
-
-.notransition {
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    -o-transition: none !important;
-    -ms-transition: none !important;
-    transition: none !important;
+button.flip {
+    height: 20px;
+    width: 20px;
+    border: none;
+    padding: 0;
+    background: url("../assets/flip_light.svg");
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    position: fixed;
+    top: 260px;
+    left: 180px;
 }
 
 /* flip the card */
 .flipMe {
-    transform: rotateY(180deg);
-}
-
-div.card, .front, .back {
-    transition: 0.5s;
-
-    width: 200px;
-    height: 280px;
-}
-
-textarea.stackedEditor {
-    cursor: move;
-}
-
-/* flip speed goes here */
-.card {
-    transition: 0.5s;
-    transform-style: preserve-3d;
+  transform: rotateY(180deg);
 }
 
 /* hide back of pane during swap */
 .front, .back {
-    transition: 0.5s;
-
-    backface-visibility: hidden;
-    position: fixed;
+  transition: 0.5s;
+  width: 200px;
+  height: 280px;
+  backface-visibility: hidden;
+  position: fixed;
 }
 
 /* front pane, placed above back */
 .front {
-    /* for firefox 31 */
-    transform: rotateY(0deg);
-    background-color: #666;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+  background: linear-gradient(
+    rgba(44, 50, 59, 1.0),
+    rgba(33, 37, 43, 1.0));
 }
 
 /* back, initially hidden pane */
 .back {
-    background-color: lightgray;
+  background: linear-gradient(
+    rgba(44, 50, 59, 1.0),
+    rgba(33, 37, 43, 1.0));
     transform: rotateY(180deg);
 }
-
 
 .fullscreen {
     transition: 0.5s;
@@ -240,20 +132,6 @@ textarea.stackedEditor {
 
 .norm {
     transition: 0.5s;
-
     width: 200px;
     height: 280px;
-}
-
-button.flipBtn {
-    height: 20px;
-    width: 20px;
-    border: none;
-    padding: 0;
-    background: url("../assets/flip_light.svg");
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    position: fixed;
-    top: 260px;
-    left: 180px;
 }

@@ -8,3 +8,7 @@ textarea.editor {
   border: 0px;
   border-radius: 0 0 5px 5px;
 }
+
+textarea.stackedEditor {
+    cursor: move;
+}

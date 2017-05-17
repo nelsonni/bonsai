@@ -14,8 +14,9 @@ function Card(id) {
 
     var header = document.createElement("div");
     $(header).attr({
+        id: "header_" + id,
         class: "card card-header"
-    }).html("id: " + id);
+    }).html("card: " + id);
 
     var close_button = document.createElement("button");
     $(close_button).attr({
@@ -46,15 +47,15 @@ function Card(id) {
     $(back).addClass("back").html("Stuff");
     $(div).append(front).append(back);
 
-    var flipBtn = document.createElement("button");
+    var flip_button = document.createElement("button");
 
-    $(flipBtn).attr("id", "flipBtn" + div.id)
+    $(flip_button).attr("id", "flip_button" + div.id)
         .html("")
-        .addClass("flipBtn")
+        .addClass("flip")
         .click(function () {
-        handleCardFlip(div, flipBtn);
+        handleCardFlip(div, flip_button);
     });
-    div.appendChild(flipBtn);
+    div.appendChild(flip_button);
 
     setDivPosition(div);
     $("#" + id).draggable({
@@ -81,26 +82,26 @@ function Card(id) {
         .addClass("expand");
 }
 
-function handleCardFlip(div, flipBtn) {
+function handleCardFlip(div, flip_button) {
     if (!div.classList.contains("flipMe")) {
-        document.body.appendChild(flipBtn); // append to body so it doesn't turn with card.
+        document.body.appendChild(flip_button); // append to body so it doesn't turn with card.
         // if the screen has been expanded
         if (($("#front" + div.id)[0].style.width).toString() === "100%")
-            $(flipBtn).css({ // keep it in bottom left of screen if card expanded
+            $(flip_button).css({ // keep it in bottom left of screen if card expanded
                 top: "97.5%",
                 left: "97%",
                 zIndex: getHighestZIndexCard()
             });
         else // if is just the card.
-            $(flipBtn).css({
+            $(flip_button).css({
                 top: (parseInt(div.style.top) + 270).toString() + "px",
                 left: (parseInt(div.style.left) + 190).toString() + "px",
                 zIndex: getHighestZIndexCard()
             });
     } else {
         setTimeout(function () { //wait for animation to complete before appending back
-            div.appendChild(flipBtn);
-            $(flipBtn).css({
+            div.appendChild(flip_button);
+            $(flip_button).css({
                 position: "fixed",
                 top: "97.5%",
                 left: "97%"
@@ -131,17 +132,17 @@ function toggleFullscreen(div, btn) {
         .hide()
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
-    $("#flipBtn" + div.id).animate({top: "97.5%", left: "97%"}, 0.1);
+    $("#flip_button" + div.id).animate({top: "97.5%", left: "97%"}, 0.1);
     $(div.children).each(function () {
-        if (!this.classList.contains("flipBtn"))
+        if (!this.classList.contains("flip"))
             $(this).animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.1);
     });
     $(tmp).remove(); // remove after animations have completed.
     btn.onclick = function () { // switch click to shrink the card back down to normal size and position.
         $(div).animate({width: "200px", height: "280px", top: curTop, left: curLeft}, 100);
-        $("#flipBtn" + div.id).animate({top: "270px", left: "190px"}, 400);
+        $("#flip_button" + div.id).animate({top: "270px", left: "190px"}, 400);
         $(div.children).each(function () {
-            if (!this.classList.contains("flipBtn"))
+            if (!this.classList.contains("flip"))
                 $(this).animate({width: "200px", height: "280px"}, 100);
         });
         btn.onclick = function () {
