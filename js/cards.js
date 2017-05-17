@@ -71,14 +71,14 @@ function Card(id) {
     });
     setCardDroppableEffects(id);
 
-    var fullScreenBtn = document.createElement("button");
-    fullScreenBtn.onclick = function () {
-        toggleFullscreen(div, fullScreenBtn);
+    var expand_button = document.createElement("button");
+    expand_button.onclick = function () {
+        toggleFullscreen(div, expand_button);
     };
-    header.appendChild(fullScreenBtn);
-    $(fullScreenBtn)
-        .attr("id", "fullscreenBtn" + id)
-        .addClass("fullscreenBtn").html("e");
+    header.appendChild(expand_button);
+    $(expand_button)
+        .attr("id", "expand_button" + id)
+        .addClass("expand");
 }
 
 function handleCardFlip(div, flipBtn) {

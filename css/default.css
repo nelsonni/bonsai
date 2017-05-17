@@ -7,7 +7,9 @@
 
 body {
   padding:10px;
-  background: linear-gradient(rgba(105, 102, 96, 0.45), rgba(105, 102, 96, 0.45)),
-  url("../assets/topography.png");
+  background: linear-gradient(
+    rgba(105, 102, 96, 0.45),
+    rgba(105, 102, 96, 0.45)),
+    url("../assets/topography.png");
   position: relative;
 }
