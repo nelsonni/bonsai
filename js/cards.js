@@ -1,8 +1,3 @@
-/*
- - Adjust highlight box when a card is removed.
- -------------------------------------------------------------------------------------
- - We need some serious refactoring
- */
 
 function Card(id, type) {
     if (typeof type !== 'string' && !(type instanceof String)) {
@@ -109,8 +104,10 @@ function toggleFullscreen(card, btn) {
             position: "fixed",
             backgroundColor: "grey"
         });
+    var prevZIndex = div.style.zIndex;
     $(card)
         .hide()
+        .css({zIndex: getHighestZIndexCard()})
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
     $("#flip_button" + card.id).animate({top: "97.5%", left: "97%"}, 0.1);
@@ -122,7 +119,8 @@ function toggleFullscreen(card, btn) {
     btn.onclick = function () { // switch click to shrink the card back down to normal size and position.
         $(btn).removeClass("expand");
         $(btn).addClass("collapse");
-        $(card).animate({width: "200px", height: "280px", top: curTop, left: curLeft}, 100);
+        $(card).animate({width: "200px", height: "280px", top: curTop, left: curLeft}, 100)
+          .css({zIndex:prevZIndex});
         $("#flip_button" + card.id).animate({top: "270px", left: "190px"}, 400);
         $(card.children).each(function () {
             if (!this.classList.contains("flip"))
@@ -175,7 +173,8 @@ function cardExpansion(id, btn) {
 function cardWrapAround(box, btn) {
     var stackWindowDiff = window.innerWidth - parseInt(box[0].style.left);
     var stackExpansionWidth = (parseInt(box[0].style.width) - 15) * (box[0].children.length - 1);
-    if (parseInt(box[0].style.left) + parseInt(box[0].style.width) + 200 >= window.innerWidth) {
+    if (parseInt(box[0].style.left) + parseInt(box[0].style.width) + 200 >= window.innerWidth
+        && !box[0].classList.contains("expanded")) {
         alert("Can't expand at all");
         return;
     }
@@ -184,7 +183,7 @@ function cardWrapAround(box, btn) {
         if (this.classList.contains("actualCard")) {
             $(this).css({
                 top: parseInt(box[0].style.top) + 10,
-                left: parseInt(box[0].style.left) + (225 * (idx))
+                left: parseInt(box[0].style.left) + (225 * (idx) + 5)
             }).find(".editor").removeClass("stackedEditor"); // to change cursor on hover.
         }
     });
@@ -235,9 +234,9 @@ function collapseCards(btn, base) {
             $(this)
                 .removeClass("Wrapped")
                 .css({
-                zIndex: getHighestZIndexCard(),
-                top: parseInt(base[0].firstElementChild.style.top) + (20 * (idx)),
-                left: parseInt(base[0].style.left) + (5 * (idx + 1))
+                    zIndex: getHighestZIndexCard(),
+                    top: parseInt(base[0].style.top) + (20 * (idx + 1)),
+                    left: parseInt(base[0].style.left) + (5 * (idx + 1))
                 }).find(".editor").addClass("stackedEditor"); // to change cursor on hover
         }
     });
@@ -370,7 +369,7 @@ function setHighlightBox(base, curCard, addToFront) {
         $(box).append(base);
         $(base).removeClass("atSpawn")
             .css({
-                top: parseInt($(box)[0].style.top) + 5,
+                top: parseInt($(box)[0].style.top) + 20,
                 left: parseInt($(box)[0].style.left) + 5
             });
         var firstHeader = base.firstElementChild.firstElementChild;
