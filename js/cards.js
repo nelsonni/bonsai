@@ -160,7 +160,6 @@ function cardExpansion(id, btn) {
     });
 }
 
-
 function cardWrapAround(box, btn) {
     var stackWindowDiff = window.innerWidth - parseInt(box[0].style.left);
     var stackExpansionWidth = (parseInt(box[0].style.width) - 15) * (box[0].children.length - 1);

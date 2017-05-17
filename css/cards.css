@@ -17,6 +17,79 @@ div.card {
   border-radius: 5px;
 }
 
+.notransition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -ms-transition: none !important;
+    transition: none !important;
+}
+
+/* flip the card */
+.flipMe {
+    transform: rotateY(180deg);
+}
+
+div.card, .front, .back {
+    transition: 0.5s;
+
+    width: 200px;
+    height: 280px;
+}
+
+textarea.stackedEditor {
+    cursor: move;
+}
+
+/* flip speed goes here */
+.card {
+    transition: 0.5s;
+    transform-style: preserve-3d;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+    transition: 0.5s;
+
+    backface-visibility: hidden;
+    position: fixed;
+}
+
+/* front pane, placed above back */
+.front {
+    /* for firefox 31 */
+    transform: rotateY(0deg);
+    background-color: #666;
+}
+
+/* back, initially hidden pane */
+.back {
+    background-color: lightgray;
+    transform: rotateY(180deg);
+}
+
+
+.fullscreen {
+    transition: 0.5s;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+.norm {
+    transition: 0.5s;
+
+    width: 200px;
+    height: 280px;
+}
+
+button.flipBtn {
+    background: url("flip-icon.png");
+}
+
+
+
 div.card.card-header {
   height: 29px;
   width: 100%;
@@ -103,19 +176,6 @@ button.fullscreenBtn {
   vertical-align: middle;
   text-decoration: none;
   transition: all 0.3s ease-out;
-}
-
-
-
-div.card.card-header input[type="button"] {
-  display: block;
-  float: right;
-  margin: 2px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
-  background: white;
 }
 
 .notransition {
