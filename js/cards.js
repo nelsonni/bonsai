@@ -129,7 +129,6 @@ function toggleFullscreen(card, btn) {
             toggleFullscreen(card, btn);
         };
     };
-  };
 }
 
 function handleCardFlip(card, flip_button) {
