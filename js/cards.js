@@ -4,14 +4,23 @@
  - We need some serious refactoring
  */
 
-function Card(id) {
-    this.id = id;
+function Card(id, type) {
+    if (typeof type !== 'string' && !(type instanceof String)) {
+      alert("Type Error: The type parameter in Card() must be 'String',"
+        + " is of type '" + typeof type + "' instead.");
+      return;
+    }
 
     var card = document.createElement("div");
     $(card).attr({
-        class: "card",
-        id: id
+        id: id,
+        type: type,
+        class: "card"
+        // state: "collapsed"
     });
+
+    // $(card).attr('customAttribute', 'something custom');
+    // alert($(card).attr('customAttribute')); // returns "something custom"
 
     var header = document.createElement("div");
     $(header).attr({
@@ -84,6 +93,8 @@ function Card(id) {
 function toggleFullscreen(card, btn) {
     var curTop = $(card)[0].style.top;
     var curLeft = $(card)[0].style.left;
+    // alert("state: " + card.id + ", top: " + curTop + ", left: " + curLeft);
+
     var tmp = document.createElement("div"); // hack to hide gap during transition
     var header = document.createElement("div");
     $(header).addClass("card card-header");
