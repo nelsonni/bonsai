@@ -9,10 +9,11 @@ function Card(id, type) {
     $(card).attr({
         id: id,
         type: type,
-        class: "card"
-        // state: "collapsed"
+        class: "card",
+        fullscreen: false
     });
 
+    // alert($(card).attr('content_state'));
     // $(card).attr('customAttribute', 'something custom');
     // alert($(card).attr('customAttribute')); // returns "something custom"
 
@@ -85,49 +86,37 @@ function Card(id, type) {
 }
 
 function toggleFullscreen(card, btn) {
-    var curTop = $(card)[0].style.top;
-    var curLeft = $(card)[0].style.left;
-    // alert("state: " + card.id + ", top: " + curTop + ", left: " + curLeft);
-
-    var tmp = document.createElement("div"); // hack to hide gap during transition
-    var header = document.createElement("div");
-    $(header).addClass("card card-header");
-    document.body.appendChild(tmp);
-    $(tmp) //tmp sits in position of card to hide weird animation effect
-        .append(header)
-        .css({
-            top: curTop,
-            left: curLeft,
-            height: card.height,
-            width: card.width,
-            position: "fixed",
-            backgroundColor: "grey"
-        });
-    var prevZIndex = div.style.zIndex;
-    $(card)
+    if ($(card).attr('fullscreen') === 'false') { // expand to fullscreen
+      $(card).attr('prevTop', $(card)[0].style.top);
+      $(card).attr('prevLeft', $(card)[0].style.left);
+      $(card).attr('prevZIndex', card.style.zIndex);
+      $(card)
         .hide()
         .css({zIndex: getHighestZIndexCard()})
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
-    $("#flip_button" + card.id).animate({top: "97.5%", left: "97%"}, 0.1);
-    $(card.children).each(function () {
+      $("#flip_button" + card.id).hide();
+      //$("#flip_button" + card.id).animate({top: "97.5%", left: "97%"}, 0.1);
+      $(card.children).each(function () {
         if (!this.classList.contains("flip"))
-            $(this).animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.1);
-    });
-    $(tmp).remove(); // remove after animations have completed.
-    btn.onclick = function () { // switch click to shrink the card back down to normal size and position.
-        $(btn).removeClass("expand");
-        $(btn).addClass("collapse");
-        $(card).animate({width: "200px", height: "280px", top: curTop, left: curLeft}, 100)
-          .css({zIndex:prevZIndex});
-        $("#flip_button" + card.id).animate({top: "270px", left: "190px"}, 400);
-        $(card.children).each(function () {
-            if (!this.classList.contains("flip"))
-                $(this).animate({width: "200px", height: "280px"}, 100);
-        });
-        btn.onclick = function () {
-            toggleFullscreen(card, btn);
-        };
+          $(this).animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.1);
+      });
+      $(btn).removeClass("expand");
+      $(btn).addClass("collapse");
+      $(card).attr('fullscreen', true);
+    } else {                                      // shrink to normal size
+      $(card)
+        .animate({ width: "200px", height: "280px",
+          top: $(card).attr('prevTop'), left: $(card).attr('prevLeft') }, 100)
+        .css({ zIndex: $(card).attr('prevZIndex') });
+      $(card.children).each(function () {
+      if (!this.classList.contains("flip"))
+        $(this).animate({width: "200px", height: "280px"}, 100);
+      });
+      $("#flip_button" + card.id).show();
+      $(btn).removeClass("collapse");
+      $(btn).addClass("expand");
+      $(card).attr('fullscreen', false);
     };
 }
 
