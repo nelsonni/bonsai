@@ -43,10 +43,7 @@ function Card(id, type) {
     $(fullscreen_button).attr({
         id: "fullscreen_button_" + id,
         class: "expand"
-    });
-    fullscreen_button.onclick = function () {
-        toggleFullscreen(card, fullscreen_button);
-    };
+    }).click(function() { toggleFullscreen(card, fullscreen_button); });
     header.appendChild(fullscreen_button);
 
     var front = document.createElement("div");
