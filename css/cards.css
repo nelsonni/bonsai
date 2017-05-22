@@ -98,12 +98,12 @@ button.flip {
     width: 20px;
     border: none;
     padding: 0;
-    background: url("../assets/flip_light.svg");
+    background: url("../assets/flip_dark.svg");
     background-size: 20px 20px;
     background-repeat: no-repeat;
     position: fixed;
-    top: 97.5%;
-    left: 97%;
+    top: 92%;
+    left: 89%;
 }
 
 /* flip the card */

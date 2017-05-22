@@ -7,43 +7,43 @@ function Card(id, type) {
 
     var card = document.createElement("div");
     $(card).attr({
-        id: id,
-        type: type,
-        class: "card",
-        fullscreen: false
+      id: id,
+      type: type,
+      class: "card",
+      fullscreen: false
     });
-
-    // alert($(card).attr('content_state'));
-    // $(card).attr('customAttribute', 'something custom');
-    // alert($(card).attr('customAttribute')); // returns "something custom"
 
     var header = document.createElement("div");
     $(header).attr({
-        id: "header_" + id,
-        class: "card card-header"
+      id: "header_" + id,
+      class: "card card-header"
     }).html("card: " + id);
 
     var editor = document.createElement("textarea");
     $(editor).attr({
-        class: "editor",
-        id: "editor" + id,
-        maxLength: "5000",
-        cols: "25",
-        rows: "19"
+      class: "editor",
+      id: "editor" + id,
+      maxLength: "5000",
+      cols: "25",
+      rows: "19"
     });
 
     var close_button = document.createElement("button");
     $(close_button).attr({
-        id: "close_button_" + id,
-        class: "close"
-    }).click(function() { closeCard(id); });
+      id: "close_button_" + id,
+      class: "close"
+    }).click(function() {
+      closeCard(id);
+    });
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement("button");
     $(fullscreen_button).attr({
-        id: "fullscreen_button_" + id,
-        class: "expand"
-    }).click(function() { toggleFullscreen(card, fullscreen_button); });
+      id: "fullscreen_button_" + id,
+      class: "expand"
+    }).click(function() {
+      toggleFullscreen(card, fullscreen_button);
+    });
     header.appendChild(fullscreen_button);
 
     var front = document.createElement("div");
@@ -51,8 +51,7 @@ function Card(id, type) {
             id: "front" + id,
             class: "front",
             position: "fixed"
-        }).append(header).append(editor);
-
+    }).append(header).append(editor);
     var back = document.createElement("div");
     $(back).addClass("back").html("Stuff");
     $(card).append(front).append(back);
@@ -84,23 +83,19 @@ function Card(id, type) {
 
 function toggleFullscreen(card, btn) {
     if ($(card).attr('fullscreen') === 'false') { // expand to fullscreen
-      $(card).attr('prevTop', $(card)[0].style.top);
-      $(card).attr('prevLeft', $(card)[0].style.left);
-      $(card).attr('prevZIndex', card.style.zIndex);
       $(card)
+        .attr({prevTop: $(card)[0].style.top, prevLeft: $(card)[0].style.left,
+          prevZIndex: card.style.zIndex, fullscreen: true})
         .hide()
         .css({zIndex: getHighestZIndexCard()})
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
       $("#flip_button" + card.id).hide();
-      //$("#flip_button" + card.id).animate({top: "97.5%", left: "97%"}, 0.1);
       $(card.children).each(function () {
         if (!this.classList.contains("flip"))
           $(this).animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.1);
       });
-      $(btn).removeClass("expand");
-      $(btn).addClass("collapse");
-      $(card).attr('fullscreen', true);
+      $(btn).removeClass("expand").addClass("collapse");
     } else {                                      // shrink to normal size
       $(card)
         .animate({ width: "200px", height: "280px",
@@ -111,8 +106,8 @@ function toggleFullscreen(card, btn) {
         $(this).animate({width: "200px", height: "280px"}, 100);
       });
       $("#flip_button" + card.id).show();
-      $(btn).removeClass("collapse");
-      $(btn).addClass("expand");
+      $(btn).removeClass("collapse").addClass("expand");
+      $(card).removeAttr('prevTop prevLeft prevZIndex');
       $(card).attr('fullscreen', false);
     };
 }
@@ -123,23 +118,23 @@ function handleCardFlip(card, flip_button) {
         // if the screen has been expanded
         if (($("#front" + card.id)[0].style.width).toString() === "100%")
             $(flip_button).css({ // keep it in bottom left of screen if card expanded
-                top: "97.5%",
-                left: "97%",
-                zIndex: getHighestZIndexCard()
+              top: '92%',
+              left: '89%',
+              zIndex: getHighestZIndexCard()
             });
         else // if is just the card.
             $(flip_button).css({
-                top: (parseInt(card.style.top) + 270).toString() + "px",
-                left: (parseInt(card.style.left) + 190).toString() + "px",
-                zIndex: getHighestZIndexCard()
+              top: (parseInt(card.style.top) + 270).toString() + "px",
+              left: (parseInt(card.style.left) + 190).toString() + "px",
+              zIndex: getHighestZIndexCard()
             });
     } else {
         setTimeout(function () { //wait for animation to complete before appending back
             card.appendChild(flip_button);
             $(flip_button).css({
                 position: "fixed",
-                top: "97.5%",
-                left: "97%"
+                top: '92%',
+                left: '89%'
             });
         }, 500);
     }
