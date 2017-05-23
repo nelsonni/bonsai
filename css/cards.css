@@ -19,7 +19,7 @@ div.card {
   transform-style: preserve-3d;
 }
 
-div.card.card-header {
+div.card-header {
   height: 29px;
   width: 100%;
   background-color: rgba(33, 37, 43, 1.0);
@@ -33,9 +33,10 @@ div.card.card-header {
   cursor: move;
   border: 0.5px solid rgba(24, 26, 31, 1.0);
   border-radius: 5px 5px 0 0;
+  transform-style: preserve-3d;
 }
 
-div.card.card-header button {
+div.card-header button {
   background-size: contain;
   background-repeat: no-repeat;
   display: block;
