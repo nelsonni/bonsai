@@ -53,6 +53,10 @@ class Card {
     this.setDroppable();
   }
 
+  getID() {
+    console.log("this.id");
+  }
+
   setDraggable() {
     $(this.card).draggable({
       handle: '.card-header',
@@ -71,8 +75,7 @@ class Card {
         'ui-droppable-hover': 'highlight'
       },
       drop: function(event, ui) {
-        console.log("dropped card ");
-        console.log("dropped on " + this.id);
+        console.log("dropped card " + $(ui.draggable).attr('id') + " on to card " + $(this).attr('id'));
       }
     });
   }
