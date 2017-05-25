@@ -5,6 +5,7 @@ textarea.editor {
   color: rgba(171, 178, 191, 1.0);
   padding: 0;
   resize: none;
+  cursor: text;
   border: 0px;
   border-radius: 0 0 5px 5px;
 }
@@ -22,4 +23,16 @@ div.editor {
   resize: none;
   border: 0px;
   border-radius: 0 0 5px 5px;
+}
+
+div.editor:hover .slick-next,
+div.editor:hover .slick-prev,
+div.editor:hover .slick-dots {
+  display: block;
+}
+
+textarea.editor:focus .slick-next,
+textarea.editor:focus .slick-prev,
+textarea.editor:focus .slick-dots {
+  display: block;
 }

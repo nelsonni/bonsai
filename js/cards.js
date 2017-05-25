@@ -3,97 +3,76 @@ class Card {
     this.id = id;
 
     var card = document.createElement('div');
-    $(card).attr({
-      id: id,
-      type: type,
-      class: "card",
-      fullscreen: false
-    }).css('zIndex', getHighestZIndex() + 1);
+    $(card).attr({id: id, type: type, class: "card", fullscreen: false});
     this.card = card;
 
     var header = document.createElement('div');
-    $(header).attr({
-      id: "header_" + id,
-      class: "card-header"
-    }).html("card: " + id);
+    $(header).attr({id: "header_" + id, class: "card-header"});
+    $(header).html("card: " + id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({
-      id: "close_button_" + id,
-      class: "close"
-    }).click(function() { // arrow function cannot be used here; bind required
-      this.closest('.card').remove(); // 'this' refers to Card class instance
-    });
+    $(close_button).attr({id: "close_button_" + id, class: "close"});
+    $(close_button).click(function() {this.closest('.card').remove();});
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({
-      id: "fullscreen_button_" + id,
-      class: "expand"
-    }).click(() => this.toggleFullScreen());
+    $(fullscreen_button).attr({id: "fullscreen_button_" + id, class: "expand"});
+    $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
     var content = document.createElement('div');
-    $(content).attr({
-      class: "editor",
-      id: "editor_" + id
-    });
+    $(content).attr({class: "editor", id: "editor_" + id});
     var face1 = document.createElement('div');
     var face1_editor = document.createElement('textarea');
-    $(face1_editor).attr({
-      class: "editor",
-      id: "editor_1",
-      maxLength: "5000",
-      cols: "25",
-      rows: "19"
-    });
+    $(face1_editor).attr({class: "editor", id: "editor_1", maxLength: "5000",
+      cols: "25", rows: "19"});
     face1.appendChild(face1_editor);
     var face2 = document.createElement('div');
     var face2_editor = document.createElement('textarea');
-    $(face2_editor).attr({
-      class: "editor",
-      id: "editor_2",
-      maxLength: "5000",
-      cols: "25",
-      rows: "19"
-    });
+    $(face2_editor).attr({class: "editor", id: "editor_2", maxLength: "5000",
+      cols: "25", rows: "19"});
     face2.appendChild(face2_editor);
     var face3 = document.createElement('div');
     var face3_editor = document.createElement('textarea');
-    $(face3_editor).attr({
-      class: "editor",
-      id: "editor_3",
-      maxLength: "5000",
-      cols: "25",
-      rows: "19"
-    });
+    $(face3_editor).attr({class: "editor", id: "editor_3", maxLength: "5000",
+      cols: "25", rows: "19"});
     face3.appendChild(face3_editor);
     content.appendChild(face1);
     content.appendChild(face2);
     content.appendChild(face3);
     $(content).slick({
-      dots: true
+      dots: true,
+      accessiblity: true,
+      focusOnSelect: true
     });
 
     card.appendChild(header);
     card.appendChild(content);
     document.body.appendChild(card);
     this.setDraggable();
+    this.setDroppable();
   }
 
   setDraggable() {
     $(this.card).draggable({
       handle: '.card-header',
       containment: 'window', // disable transition effects
+      stack: '.card', // bring the currently dragged item to the front
       start: function(event, ui) {
-        var zIndex = parseInt($(this).css('zIndex'), 10);
-        var highest = getHighestZIndex();
-        if (zIndex < highest) $(this).css('zIndex', highest + 1);
-        $(this).toggleClass('notransition');
         $(this.card).removeClass('atSpawn');
+      }
+    });
+  }
+
+  setDroppable() {
+    $(this.card).droppable({
+      accept: '.card',
+      classes: {
+        'ui-droppable-hover': 'highlight'
       },
-      stop: function(event, ui) {
-        $(this).toggleClass('notransition');
+      drop: function(event, ui) {
+        console.log("dropped card ");
+        console.log("dropped on " + this.id);
       }
     });
   }

@@ -10,7 +10,14 @@ div.card {
   border: 0.5px solid rgba(24, 26, 31, 1.0);
   border-radius: 5px;
   transform-style: preserve-3d;
-  z-index: 0;
+  /*z-index: 0;*/
+  user-select: none;
+}
+
+.highlight {
+  border: 15px solid yellow;
+  background-color: yellow;
+  outline: 1px solid #c00;
 }
 
 div.card-header {
@@ -41,6 +48,11 @@ div.card-header button {
   vertical-align: middle;
   box-sizing: border-box;
   border: none;
+}
+
+div.card-header button:hover,
+div.card-header button:focus {
+  outline: none;
 }
 
 button.close {
