@@ -1,0 +1,20 @@
+div.stack {
+  height: calc((280px * 1.25) + 5px);
+  width: calc((200px * 1.25) + 28px);
+  background-color: rgba(10, 210, 50, 0.4);
+  color: rgba(33, 37, 43, 1.0);
+  position: fixed;
+  cursor: move;
+  border: 0.5px solid rgba(24, 26, 31, 1.0);
+  border-radius: 5px;
+}
+
+div.xCard {
+  height: 280px;
+  width: 200px;
+  background-color: rgba(50, 50, 50, 1.0);
+  color: rgba(171, 178, 191, 1.0);
+  border: 0.5px solid rgba(24, 26, 31, 1.0);
+  position: absolute;
+  border-radius: 5px;
+}

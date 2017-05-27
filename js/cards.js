@@ -1,27 +1,29 @@
 class Card {
-  constructor(id, type) {
-    this.id = id;
+  constructor(type) {
+    this.id = (++cardCounter);
 
     var card = document.createElement('div');
-    $(card).attr({id: id, type: type, class: "card", fullscreen: false});
+    $(card).attr({id: "card_" + this.id, type: type, class: "card",
+      fullscreen: false});
     this.card = card;
 
     var header = document.createElement('div');
-    $(header).attr({id: "header_" + id, class: "card-header"});
-    $(header).html("card: " + id);
+    $(header).attr({id: "header_" + this.id, class: "card-header"});
+    $(header).html("card: " + this.id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_" + id, class: "close"});
+    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
     $(close_button).click(function() {this.closest('.card').remove();});
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({id: "fullscreen_button_" + id, class: "expand"});
+    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
+      class: "expand"});
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
     var content = document.createElement('div');
-    $(content).attr({class: "editor", id: "editor_" + id});
+    $(content).attr({class: "editor", id: "editor_" + this.id});
     var face1 = document.createElement('div');
     var face1_editor = document.createElement('textarea');
     $(face1_editor).attr({class: "editor", id: "editor_1", maxLength: "5000",
@@ -49,12 +51,9 @@ class Card {
     card.appendChild(header);
     card.appendChild(content);
     document.body.appendChild(card);
+
     this.setDraggable();
     this.setDroppable();
-  }
-
-  getID() {
-    console.log("this.id");
   }
 
   setDraggable() {
@@ -75,7 +74,8 @@ class Card {
         'ui-droppable-hover': 'highlight'
       },
       drop: function(event, ui) {
-        console.log("dropped card " + $(ui.draggable).attr('id') + " on to card " + $(this).attr('id'));
+        console.log("dropped " + $(ui.draggable).attr('id') + " on to " + $(this).attr('id'));
+        var stack = new Stack($(this), $(ui.draggable));
       }
     });
   }

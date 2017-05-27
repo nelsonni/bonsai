@@ -15,9 +15,7 @@ div.card {
 }
 
 .highlight {
-  border: 15px solid yellow;
-  background-color: yellow;
-  outline: 1px solid #c00;
+  outline: 1px solid yellow;
 }
 
 div.card-header {

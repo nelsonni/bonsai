@@ -18,10 +18,12 @@
     <link rel="stylesheet" type="text/css" href="css/canvas.css">
     <link rel="stylesheet" type="text/css" href="css/cards.css">
     <link rel="stylesheet" type="text/css" href="css/editor.css">
+    <link rel="stylesheet" type="text/css" href="css/stacks.css">
 
     <script>
-        var idCounter = 0;
-        function newCard() {var card = new Card(++idCounter, "editor");}
+        let cardCounter = 0;
+        let stackCounter = 0;
+        function newCard() {var card = new Card("editor");}
         function Testing() {document.location.href="tests/test.html"}
     </script>
 </head>
