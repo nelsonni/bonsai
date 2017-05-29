@@ -4,18 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Bonsai IDE</title>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/cards.js"></script>
+    <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="libs/jquery/jquery-ui.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
 
-    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <script type="text/javascript" src="libs/slick/slick.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
+
+    <script type="text/javascript" src="js/canvas.js"></script>
+    <script type="text/javascript" src="js/cards.js"></script>
+    <script type="text/javascript" src="js/stacks.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/canvas.css">
     <link rel="stylesheet" type="text/css" href="css/cards.css">
     <link rel="stylesheet" type="text/css" href="css/editor.css">
-    
+    <link rel="stylesheet" type="text/css" href="css/stacks.css">
+
     <script>
-        var idCounter = 0;
-        function newCard() {var card = new Card(++idCounter, "editor");}
-        function Testing(){document.location.href="test.html"}
+        let cardCounter = 0;
+        let stackCounter = 0;
+        function newCard() {var card = new Card("editor");}
+        function Testing() {document.location.href="tests/test.html"}
     </script>
 </head>
 
@@ -27,7 +36,7 @@
   <button id="saveFile">Save</button>
   <button onclick="Testing()">Test Suite</button>
   <button onClick="versionNotice()">Version</button>
-  <button onClick="newCard()">Create Card</button>
+  <button onclick="newCard()">Create Card</button>
 </div>
 
 </body>
