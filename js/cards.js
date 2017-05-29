@@ -90,14 +90,18 @@ class Card {
           prevZIndex: $(this.card).css('zIndex'),
           fullscreen: true})
         .hide()
-        .css({zIndex: 100})
+        .css({zIndex: 1000})
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
       $("#flip_button_" + this.id).hide();
+
       $(this.card.children).each(function () {
-        if(!this.classList.contains("flip"))
+        if ($(this).hasClass('card-header')) {
+          $(this).animate({top: 0, left: 0, width: '100%'}, 0.10);
+        } else {
           $(this).animate({top: 0, left: 0, width: "100%", height: "100%"},
             0.10);
+        }
       });
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
     // handle fullscreen card transitioning to unexpanded
