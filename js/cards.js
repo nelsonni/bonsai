@@ -30,75 +30,75 @@ class Card {
     this.buildFaces(card, type);
     this.setDraggable();
     this.setDroppable();
-    }
+  }
 
-    setDraggable() {
-      $(this.card).draggable({
-        handle: '.card-header',
-        containment: 'window',
-        stack: '.card', // bring the currently dragged item to the front
-        start: function(event, ui) {
-          $(this.card).removeClass('atSpawn');
-        }
+  setDraggable() {
+    $(this.card).draggable({
+      handle: '.card-header',
+      containment: 'window',
+      stack: '.card', // bring the currently dragged item to the front
+      start: function(event, ui) {
+        $(this.card).removeClass('atSpawn');
+      }
+    });
+  }
+
+  setDroppable() {
+    $(this.card).droppable({
+      accept: '.card',
+      classes: {
+        'ui-droppable-hover': 'highlight'
+      },
+      drop: function(event, ui) {
+        var stack = new Stack($(this), $(ui.draggable));
+      }
+    });
+  }
+
+  buildFaces(card, type) {
+    var eleTypeToCreate = "";
+    if (type === "editor")
+      eleTypeToCreate = "textarea";
+    else if (type === "sketch")
+      eleTypeToCreate = "div";
+
+    var content = document.createElement('div');
+    $(content).attr({class: "editor", id: card.id + "_editor_" + this.id});
+    var face1 = document.createElement('div');
+    var face1_editor = document.createElement(eleTypeToCreate);
+    face1.appendChild(face1_editor);
+    var face2 = document.createElement('div');
+    var face2_editor = document.createElement(eleTypeToCreate);
+    face2.appendChild(face2_editor);
+    var face3 = document.createElement('div');
+    var face3_editor = document.createElement(eleTypeToCreate);
+    face3.appendChild(face3_editor);
+
+    if (type === "editor")
+      $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+        $(this).attr({
+          class: "editor", id: card.id + "textEditor_" + idx, maxLength: "5000",
+          cols: "25", rows: "19"
+        });
       });
-    }
-
-    setDroppable() {
-      $(this.card).droppable({
-        accept: '.card',
-        classes: {
-          'ui-droppable-hover': 'highlight'
-        },
-        drop: function(event, ui) {
-          var stack = new Stack($(this), $(ui.draggable));
-        }
+    else if (type === "sketch")
+      $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+        $(this).attr({class: "sketchEditor", id: card.id + "sketch_" + idx});
       });
-    }
 
-    buildFaces(card, type) {
-      var eleTypeToCreate = "";
-      if (type === "editor")
-        eleTypeToCreate = "textarea";
-      else if (type === "sketch")
-        eleTypeToCreate = "div";
-
-      var content = document.createElement('div');
-      $(content).attr({class: "editor", id: card.id + "_editor_" + this.id});
-      var face1 = document.createElement('div');
-      var face1_editor = document.createElement(eleTypeToCreate);
-      face1.appendChild(face1_editor);
-      var face2 = document.createElement('div');
-      var face2_editor = document.createElement(eleTypeToCreate);
-      face2.appendChild(face2_editor);
-      var face3 = document.createElement('div');
-      var face3_editor = document.createElement(eleTypeToCreate);
-      face3.appendChild(face3_editor);
-
-      if (type === "editor")
-          $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
-              $(this).attr({
-                  class: "editor", id: card.id + "textEditor_" + idx, maxLength: "5000",
-                  cols: "25", rows: "19"
-              });
-          });
-      else if (type === "sketch")
-          $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
-              $(this).attr({class: "sketchEditor", id: card.id + "sketch_" + idx});
-          });
-
-      content.appendChild(face1);
-      content.appendChild(face2);
-      content.appendChild(face3);
-      let swipable = true;
-      if (type === "sketch")
-          swipable = false;
-      $(content).slick({
-          dots: true,
-          swipe: swipable,
-          accessiblity: true,
-          focusOnSelect: true
-      });
-      card.appendChild(content);
+    content.appendChild(face1);
+    content.appendChild(face2);
+    content.appendChild(face3);
+    let swipable = true;
+    if (type === "sketch")
+      swipable = false;
+    $(content).slick({
+      dots: true,
+      swipe: swipable,
+      accessiblity: true,
+      focusOnSelect: true
+    });
+    card.appendChild(content);
   }
 
   toggleFullScreen() {
