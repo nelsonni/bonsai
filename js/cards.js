@@ -1,83 +1,109 @@
 class Card {
-  constructor(type) {
-    this.id = (++cardCounter);
+    constructor(type) {
+        this.id = (++cardCounter);
+        var card = document.createElement('div');
+        $(card).attr({
+            id: "card_" + this.id, type: type, class: "card",
+            fullscreen: false
+        });
+        this.card = card;
 
-    var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card",
-      fullscreen: false});
-    this.card = card;
+        var header = document.createElement('div');
+        $(header).attr({id: "header_" + this.id, class: "card-header"});
+        $(header).html("card: " + this.id);
 
-    var header = document.createElement('div');
-    $(header).attr({id: "header_" + this.id, class: "card-header"});
-    $(header).html("card: " + this.id);
+        var close_button = document.createElement('button');
+        $(close_button).attr({id: "close_button_" + this.id, class: "close"});
+        $(close_button).click(function () {
+            this.closest('.card').remove();
+        });
+        header.appendChild(close_button);
 
-    var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
-    $(close_button).click(function() {this.closest('.card').remove();});
-    header.appendChild(close_button);
+        var fullscreen_button = document.createElement('button');
+        $(fullscreen_button).attr({
+            id: "fullscreen_button_" + this.id,
+            class: "expand"
+        });
+        $(fullscreen_button).click(() => this.toggleFullScreen());
+        header.appendChild(fullscreen_button);
 
-    var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
-      class: "expand"});
-    $(fullscreen_button).click(() => this.toggleFullScreen());
-    header.appendChild(fullscreen_button);
 
-    var content = document.createElement('div');
-    $(content).attr({class: "editor", id: "editor_" + this.id});
-    var face1 = document.createElement('div');
-    var face1_editor = document.createElement('textarea');
-    $(face1_editor).attr({class: "editor", id: "editor_1", maxLength: "5000",
-      cols: "25", rows: "19"});
-    face1.appendChild(face1_editor);
-    var face2 = document.createElement('div');
-    var face2_editor = document.createElement('textarea');
-    $(face2_editor).attr({class: "editor", id: "editor_2", maxLength: "5000",
-      cols: "25", rows: "19"});
-    face2.appendChild(face2_editor);
-    var face3 = document.createElement('div');
-    var face3_editor = document.createElement('textarea');
-    $(face3_editor).attr({class: "editor", id: "editor_3", maxLength: "5000",
-      cols: "25", rows: "19"});
-    face3.appendChild(face3_editor);
-    content.appendChild(face1);
-    content.appendChild(face2);
-    content.appendChild(face3);
-    $(content).slick({
-      dots: true,
-      accessiblity: true,
-      focusOnSelect: true
-    });
+        card.appendChild(header);
 
-    card.appendChild(header);
-    card.appendChild(content);
-    document.body.appendChild(card);
+        document.body.appendChild(card);
+        this.buildFaces(card, type);
+        this.setDraggable();
+        this.setDroppable();
+    }
 
-    this.setDraggable();
-    this.setDroppable();
-  }
+    setDraggable() {
+      $(this.card).draggable({
+        handle: '.card-header',
+        containment: 'window',
+        stack: '.card', // bring the currently dragged item to the front
+        start: function(event, ui) {
+          $(this.card).removeClass('atSpawn');
+        }
+      });
+    }
 
-  setDraggable() {
-    $(this.card).draggable({
-      handle: '.card-header',
-      containment: 'window',
-      stack: '.card', // bring the currently dragged item to the front
-      start: function(event, ui) {
-        $(this.card).removeClass('atSpawn');
-      }
-    });
-  }
+    setDroppable() {
+      $(this.card).droppable({
+        accept: '.card',
+        classes: {
+          'ui-droppable-hover': 'highlight'
+        },
+        drop: function(event, ui) {
+          var stack = new Stack($(this), $(ui.draggable));
+        }
+      });
+    }
 
-  setDroppable() {
-    $(this.card).droppable({
-      accept: '.card',
-      classes: {
-        'ui-droppable-hover': 'highlight'
-      },
-      drop: function(event, ui) {
-        var stack = new Stack($(this), $(ui.draggable));
-      }
-    });
-  }
+    buildFaces(card, type) {
+        var eleTypeToCreate = "";
+        if (type === "editor")
+            eleTypeToCreate = "textarea";
+        else if (type === "sketch")
+            eleTypeToCreate = "div";
+
+        var content = document.createElement('div');
+        $(content).attr({class: "editor", id: card.id + "_editor_" + this.id});
+        var face1 = document.createElement('div');
+        var face1_editor = document.createElement(eleTypeToCreate);
+        face1.appendChild(face1_editor);
+        var face2 = document.createElement('div');
+        var face2_editor = document.createElement(eleTypeToCreate);
+        face2.appendChild(face2_editor);
+        var face3 = document.createElement('div');
+        var face3_editor = document.createElement(eleTypeToCreate);
+        face3.appendChild(face3_editor);
+
+        if (type === "editor")
+            $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+                $(this).attr({
+                    class: "editor", id: card.id + "textEditor_" + idx, maxLength: "5000",
+                    cols: "25", rows: "19"
+                });
+            });
+        else if (type === "sketch")
+            $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+                $(this).attr({class: "sketchEditor", id: card.id + "sketch_" + idx});
+            });
+
+        content.appendChild(face1);
+        content.appendChild(face2);
+        content.appendChild(face3);
+        let swipable = true;
+        if (type === "sketch")
+            swipable = false;
+        $(content).slick({
+            dots: true,
+            swipe: swipable,
+            accessiblity: true,
+            focusOnSelect: true
+        });
+        card.appendChild(content);
+    }
 
   toggleFullScreen() {
     // handle unexpanded card transitioning to fullscreen
@@ -125,5 +151,4 @@ class Card {
       $(this.card).attr('fullscreen', false);
     }
   }
-
 }
