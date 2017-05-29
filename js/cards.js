@@ -59,7 +59,7 @@ class Card {
   setDraggable() {
     $(this.card).draggable({
       handle: '.card-header',
-      containment: 'window', // disable transition effects
+      containment: 'window',
       stack: '.card', // bring the currently dragged item to the front
       start: function(event, ui) {
         $(this.card).removeClass('atSpawn');
@@ -74,13 +74,13 @@ class Card {
         'ui-droppable-hover': 'highlight'
       },
       drop: function(event, ui) {
-        console.log("dropped " + $(ui.draggable).attr('id') + " on to " + $(this).attr('id'));
         var stack = new Stack($(this), $(ui.draggable));
       }
     });
   }
 
   toggleFullScreen() {
+    // handle unexpanded card transitioning to fullscreen
     if ($(this.card).attr('fullscreen') === 'false') {
       $(this.card).attr({
           prevWidth: $(this.card).width(),
@@ -100,6 +100,7 @@ class Card {
             0.10);
       });
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
+    // handle fullscreen card transitioning to unexpanded
     } else {
       $(this.card)
         .animate({

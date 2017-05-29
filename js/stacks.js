@@ -1,7 +1,7 @@
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
   constructor(...cards) {
-    this.cards = cards;
+    this.cards = [];
 
     var stack = document.createElement('div');
     $(stack).attr({id: "stack_" + (++stackCounter), class: "stack"})
@@ -11,63 +11,107 @@ class Stack {
       });
     this.stack = stack;
     document.body.appendChild(stack);
-    this.orderCards();
-    this.resizeStack();
     this.setDraggable();
     this.setDroppable();
+
+    cards.forEach(card => this.addCard(card));
+    this.cascadeCards();
+    this.resizeStack();
+  }
+
+  destructor() {
+    this.cards.forEach(card => this.removeCard(card));
+    $(this.stack).remove();
+  }
+
+  // returns all cards currently in the stack
+  allCards() {
+    console.log('cards() function called');
+    // return this.cards;
+  }
+
+  // add individual card to the top of the stack
+  addCard(card) {
+    this.cards.push(card);
+    this.stack.appendChild($(card)[0]);
+    card.droppable('disable');
+  }
+
+  // remove individual card from the stack
+  removeCard(card) {
+    // grep returning only cards that do not contain the target id
+    this.cards = $.grep(this.cards, function(n) {
+      return n.attr('id') !== card.attr('id');
+    });
+    $(card).css({
+      top: $(card).offset().top,
+      left: $(card).offset().left
+    }).droppable('enable');
+    document.body.appendChild($(card)[0]);
   }
 
   setDraggable() {
     $(this.stack).draggable({
       containment: 'window',
-      start: $.proxy(function(event, ui) {
-        $(this.stack).removeClass('atSpawn');
-        console.log("cards: " + this.cards.length);
-      }, this)
+      drag: (event, ui) => {
+        $(this.stack.children).each((index, card) => {
+          $(card).css({
+            top: $(this.stack).offset().top + ((index + 1) * 25),
+            left: $(this.stack).offset().left + ((index + 1) * 25)
+          })
+        });
+      }
     });
   }
 
   setDroppable() {
     $(this.stack).droppable({
-      accept: '.card',
+      accept: '.card, .stack',
       classes: {
         'ui-droppable-hover': 'highlight'
       },
       drop: (event, ui) => {
-        var card = $(ui.draggable);
-        this.cards.push(card);
-        this.orderCards();
-        this.resizeStack();
+        // handle card-to-stack drop event
+        if ($(ui.draggable).hasClass('card')) {
+          this.addCard($(ui.draggable));
+          this.cascadeCards();
+          this.resizeStack();
+        }
+        // handle stack-to-stack drop event
+        if ($(ui.draggable).hasClass('stack')) {
+          ui.draggable.children().each((index, card) => {
+            this.addCard($(card));
+          });
+          this.cascadeCards();
+          this.resizeStack();
+          $(ui.draggable).remove();
+        }
       },
       out: (event, ui) => {
-        var card = $(ui.draggable);
+        this.removeCard($(ui.draggable));
 
-        this.cards = $.grep(this.cards, function(n) {
-          return n.attr('id') !== card.attr('id');
-        });
+        if (this.cards.length < 2) {
+          this.destructor();
+          return;
+        };
 
-        $(card).css({position: 'fixed'});
-        $(card).droppable('enable');
-        // remove the stack if <2 cards remain
-
-        document.body.appendChild($(card)[0]);
-
-        this.orderCards();
+        this.cascadeCards();
         this.resizeStack();
       }
     });
   }
 
-  orderCards() {
-    var self = this;
-    $(this.cards).each(function (index) {
-      self.stack.appendChild($(this)[0]);
-      $(this).css({top: (index + 1) * 25, left: (index + 1) * 25,
-        position: 'absolute'});
-      $(this).droppable('disable');
+  // position all stacked cards according to their index within the stack
+  cascadeCards() {
+    this.cards.forEach((card, index) => {
+      $(card).css({
+        top: $(this.stack).offset().top + ((index + 1) * 25),
+        left: $(this.stack).offset().left + ((index + 1) * 25)
+      });
     });
   }
 
+  // resize the size of the containing stack div to contain all stacked cards
   resizeStack() {
     var top_card = this.cards[this.cards.length - 1];
     var bottom_card = this.cards[0];
