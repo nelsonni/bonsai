@@ -1,0 +1,44 @@
+<html>
+<head>
+    <script type="text/javascript" src="./../libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="./../libs/sketching/raphael.min.js"></script>
+    <script type="text/javascript" src="./../libs/sketching/raphael.sketchpad.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var sketchpad = Raphael.sketchpad("editor", {
+                height: "100%",
+                width: "90%",
+                editing: true
+
+            });
+
+            // When the sketchpad changes, update the input field.
+            sketchpad.change(function () {
+                $("#data").val(sketchpad.json());
+            });
+
+            function select(element1, element2) {
+                $(element1).addClass("selected");
+                $(element2).removeClass("selected");
+            }
+
+            $("#editor_red").click(function () {
+                select("#editor_red", "#editor_black");
+                sketchpad.pen().color("#f00");
+            });
+        });
+
+    </script>
+</head>
+<body>
+<input type="hidden" id="data"/>
+<div id="editor" style="border: 1px solid #aaa; "></div>
+
+<h1> Testing</h1>
+<button id="editor_red">Change Color</button>
+
+
+</body>
+</html>
