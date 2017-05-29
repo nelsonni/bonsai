@@ -24,12 +24,6 @@ class Stack {
     $(this.stack).remove();
   }
 
-  // returns all cards currently in the stack
-  allCards() {
-    console.log('cards() function called');
-    // return this.cards;
-  }
-
   // add individual card to the top of the stack
   addCard(card) {
     this.cards.push(card);
