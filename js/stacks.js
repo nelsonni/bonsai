@@ -47,6 +47,7 @@ class Stack {
   setDraggable() {
     $(this.stack).draggable({
       containment: 'window',
+      stack: '.stack, .card',
       drag: (event, ui) => {
         $(this.stack.children).each((index, card) => {
           $(card).css({
@@ -100,7 +101,8 @@ class Stack {
     this.cards.forEach((card, index) => {
       $(card).css({
         top: $(this.stack).offset().top + ((index + 1) * 25),
-        left: $(this.stack).offset().left + ((index + 1) * 25)
+        left: $(this.stack).offset().left + ((index + 1) * 25),
+        'z-index': (index + 1)
       });
     });
   }

@@ -36,7 +36,7 @@ class Card {
     $(this.card).draggable({
       handle: '.card-header',
       containment: 'window',
-      stack: '.card', // bring the currently dragged item to the front
+      stack: '.card, .stack',
       start: function(event, ui) {
         $(this.card).removeClass('atSpawn');
       }
@@ -45,12 +45,23 @@ class Card {
 
   setDroppable() {
     $(this.card).droppable({
-      accept: '.card',
+      accept: '.card, .stack',
       classes: {
         'ui-droppable-hover': 'highlight'
       },
       drop: function(event, ui) {
-        var stack = new Stack($(this), $(ui.draggable));
+        // handle card-to-card drop event
+        if ($(ui.draggable).hasClass('card')) {
+          new Stack($(this), $(ui.draggable));
+        }
+        // handle stack-to-card drop event
+        if ($(ui.draggable).hasClass('stack')) {
+          var stack = new Stack($(this));
+          ui.draggable.children().each((index, card) => stack.addCard($(card)));
+          stack.cascadeCards();
+          stack.resizeStack();
+          $(ui.draggable).remove();
+        }
       }
     });
   }
