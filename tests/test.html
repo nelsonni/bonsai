@@ -16,7 +16,6 @@
   <script src="js/bililiteRange.js"></script>
   <script src="js/jquery.simulate.js"> </script>
   <script src="js/jquery.simulate.ext.js"></script>
-  <script src="js/jquery.simulate.drag-n-drop.js"></script>
   <script src="js/jquery.simulate.key-sequence.js"></script>
   <script src="js/cards.js"></script>
 
@@ -29,12 +28,12 @@
       var blocker = false;
       function newCard() {
           if (blocker !== true)
-              Card(++idCounter);
+              Card(++idCounter,"editor");
           return;
 
       }
 
-      function returnCard(idCounter){return $("#" + idCounter);}
+      function returnCard(){return $("#" + idCounter);}
 
   </script>
   <script src="js/cards.test.js"></script>

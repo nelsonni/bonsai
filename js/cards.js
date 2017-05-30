@@ -16,12 +16,12 @@ class Card {
     $(close_button).click(function () {
       this.closest('.card').remove();
     });
+
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
     $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
-      class: "expand"
-    });
+      class: "expand"});
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -115,6 +115,7 @@ class Card {
         .css({zIndex: 1000})
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
+
       $("#flip_button_" + this.id).hide();
 
       $(this.card.children).each(function () {
