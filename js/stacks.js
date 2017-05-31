@@ -1,15 +1,22 @@
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
   constructor(...cards) {
+    this.id = this.nextId();
     this.cards = [];
 
     var stack = document.createElement('div');
-    $(stack).attr({id: "stack_" + (++stackCounter), class: "stack"})
+    $(stack).attr({id: "stack_" + this.id, class: "stack"})
       .css({
         top: $(cards[0]).offset().top - 25,
         left: $(cards[0]).offset().left - 25
       });
     this.stack = stack;
+
+    // var close_button = document.createElement('button');
+    // $(close_button).attr({id: "stclose_button_" + this.id, class: "stack_close"});
+    // $(close_button).click(() => this.destructor());
+    // this.stack.appendChild(close_button);
+
     document.body.appendChild(stack);
     this.setDraggable();
     this.setDroppable();
@@ -56,18 +63,27 @@ class Stack {
     document.body.appendChild($(card)[0]);
   }
 
+  nextId() {
+    var ids = $.map($('.stack'), function(stack) {
+      return parseInt($(stack).attr('id').split("_")[1]);
+    });
+    if (ids.length < 1) return 1; // no stacks on the canvas yet
+
+    var next = 1;
+    while(ids.indexOf(next += 1) > -1);
+    return next;
+  }
+
   setDraggable() {
     $(this.stack).draggable({
       containment: 'window',
       stack: '.stack, .card',
       drag: (event, ui) => {
-        $(this.stack.children).each((index, card) => {
-          if ($(card).hasClass('card')) {
-            $(card).css({
-              top: $(this.stack).offset().top + ((index + 1) * 25),
-              left: $(this.stack).offset().left + ((index + 1) * 25)
-            });
-          }
+        $(this.stack).children('.card').each((index, card) => {
+          $(card).css({
+            top: $(this.stack).offset().top + ((index + 1) * 25),
+            left: $(this.stack).offset().left + ((index + 1) * 25)
+          })
         });
       }
     });
@@ -112,6 +128,7 @@ class Stack {
 
   // position all stacked cards according to their index within the stack
   cascadeCards() {
+    console.log("stack " + this.id + ": " + this.cards.length + " cards")
     this.cards.forEach((card, index) => {
       $(card).css({
         top: $(this.stack).offset().top + ((index + 1) * 25) + 'px',

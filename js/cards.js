@@ -1,6 +1,6 @@
 class Card {
   constructor(type) {
-    this.id = (++cardCounter);
+    this.id = this.nextId();
 
     var card = document.createElement('div');
     $(card).attr({id: "card_" + this.id, type: type, class: "card",
@@ -16,7 +16,6 @@ class Card {
     $(close_button).click(function () {
       this.closest('.card').remove();
     });
-
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
@@ -30,6 +29,17 @@ class Card {
     this.buildFaces(card, type);
     this.setDraggable();
     this.setDroppable();
+  }
+
+  nextId() {
+    var ids = $.map($('.card'), function(card) {
+      return parseInt($(card).attr('id').split("_")[1]);
+    });
+    if (ids.length < 1) return 1; // no cards on the canvas yet
+
+    var next = 1;
+    while(ids.indexOf(next += 1) > -1);
+    return next;
   }
 
   setDraggable() {
