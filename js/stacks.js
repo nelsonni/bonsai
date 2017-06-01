@@ -17,6 +17,13 @@ class Stack {
     cards.forEach(card => this.addCard(card));
     this.cascadeCards();
     this.resizeStack();
+
+    var annotation = document.createElement('textarea');
+    $(annotation).attr({class:"annotation"})
+      .on('change keyup paste', () => this.checkScroll());
+    this.annotation = annotation;
+    this.stack.appendChild(annotation);
+
   }
 
   destructor() {
@@ -115,10 +122,19 @@ class Stack {
     var bottom_card = this.cards[0];
     var boundary_top = bottom_card.offset().top;
     var boundary_right = top_card.offset().left + top_card.width() + 50;
-    var boundary_bottom = top_card.offset().top + top_card.height() + 50;
+    var boundary_bottom = top_card.offset().top + top_card.height() + 70;
     var boundary_left = bottom_card.offset().left;
 
     $(this.stack).css({width: boundary_right - boundary_left,
       height: boundary_bottom - boundary_top});
+  }
+
+  //keep characters contained within textarea container
+  checkScroll(){
+    if($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
+      while($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
+        this.annotation.value = this.annotation.value.substr(0, this.annotation.value.length - 1);
+      }
+    }
   }
 }
