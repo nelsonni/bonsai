@@ -100,8 +100,8 @@ class Stack {
   cascadeCards() {
     this.cards.forEach((card, index) => {
       $(card).css({
-        top: $(this.stack).offset().top + ((index + 1) * 25),
-        left: $(this.stack).offset().left + ((index + 1) * 25),
+        top: $(this.stack).offset().top + ((index + 1) * 25) + 'px',
+        left: $(this.stack).offset().left + ((index + 1) * 25) + 'px',
         'z-index': (index + 1)
       });
     });
