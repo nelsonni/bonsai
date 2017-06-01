@@ -50,10 +50,12 @@ class Stack {
       stack: '.stack, .card',
       drag: (event, ui) => {
         $(this.stack.children).each((index, card) => {
-          $(card).css({
-            top: $(this.stack).offset().top + ((index + 1) * 25),
-            left: $(this.stack).offset().left + ((index + 1) * 25)
-          })
+          if ($(card).hasClass('card')) {
+            $(card).css({
+              top: $(this.stack).offset().top + ((index + 1) * 25),
+              left: $(this.stack).offset().left + ((index + 1) * 25)
+            });
+          }
         });
       }
     });
