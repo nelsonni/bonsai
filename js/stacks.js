@@ -13,7 +13,8 @@ class Stack {
     this.stack = stack;
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "stclose_button_" + this.id, class: "stack_close"});
+    $(close_button).attr({id: "close_button_stack_" + this.id,
+      class: "stack_close"});
     $(close_button).click(() => this.destructor());
     this.stack.appendChild(close_button);
 
@@ -26,7 +27,7 @@ class Stack {
     this.resizeStack();
 
     var annotation = document.createElement('textarea');
-    $(annotation).attr({class:"annotation"})
+    $(annotation).attr({id: "annotation_stack_" + this.id, class:"annotation"})
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
@@ -97,7 +98,7 @@ class Stack {
         }
         // handle stack-to-stack drop event
         if ($(ui.draggable).hasClass('stack')) {
-          ui.draggable.children().each((index, card) => {
+          $(ui.draggable).children('.card').each((index, card) => {
             this.addCard($(card));
           });
           this.cascadeCards();
