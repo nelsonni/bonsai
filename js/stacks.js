@@ -33,6 +33,11 @@ class Stack {
 
   // add individual card to the top of the stack
   addCard(card) {
+    var ids = jQuery.map(this.cards, function(stackCard) {
+      return parseInt($(stackCard).attr('id').split("_")[1]);
+    });
+    var new_id = parseInt($(card).attr('id').split("_")[1]);
+    if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(card);
     this.stack.appendChild($(card)[0]);
     card.droppable('disable');
