@@ -12,10 +12,10 @@ class Stack {
       });
     this.stack = stack;
 
-    // var close_button = document.createElement('button');
-    // $(close_button).attr({id: "stclose_button_" + this.id, class: "stack_close"});
-    // $(close_button).click(() => this.destructor());
-    // this.stack.appendChild(close_button);
+    var close_button = document.createElement('button');
+    $(close_button).attr({id: "stclose_button_" + this.id, class: "stack_close"});
+    $(close_button).click(() => this.destructor());
+    this.stack.appendChild(close_button);
 
     document.body.appendChild(stack);
     this.setDraggable();
@@ -30,7 +30,6 @@ class Stack {
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
-
   }
 
   destructor() {
@@ -45,6 +44,7 @@ class Stack {
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
+
     this.cards.push(card);
     this.stack.appendChild($(card)[0]);
     card.droppable('disable');
@@ -78,16 +78,7 @@ class Stack {
     $(this.stack).draggable({
       containment: 'window',
       stack: '.stack, .card',
-      drag: (event, ui) => {
-        $(this.stack.children).each((index, card) => {
-          if ($(card).hasClass('card')) {
-            $(card).css({
-              top: $(this.stack).offset().top + ((index + 1) * 25),
-              left: $(this.stack).offset().left + ((index + 1) * 25)
-            });
-          }
-        });
-      }
+      drag: (event, ui) => this.cascadeCards()
     });
   }
 
@@ -130,7 +121,6 @@ class Stack {
 
   // position all stacked cards according to their index within the stack
   cascadeCards() {
-    console.log("stack " + this.id + ": " + this.cards.length + " cards")
     this.cards.forEach((card, index) => {
       $(card).css({
         top: $(this.stack).offset().top + ((index + 1) * 25) + 'px',
@@ -153,11 +143,12 @@ class Stack {
       height: boundary_bottom - boundary_top});
   }
 
-  //keep characters contained within textarea container
-  checkScroll(){
-    if($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
-      while($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
-        this.annotation.value = this.annotation.value.substr(0, this.annotation.value.length - 1);
+  // keep all characters visible within annotation textarea
+  checkScroll() {
+    var annot = this.annotation;
+    if ($(annot).prop('scrollHeight') > annot.offsetHeight) {
+      while ($(this.annotation).prop('scrollHeight') > annot.offsetHeight) {
+        annot.value = annot.value.substr(0, annot.value.length - 1);
       }
     }
   }
