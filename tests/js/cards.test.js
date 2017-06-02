@@ -20,7 +20,6 @@
         var ogBack = $(curCard).find(".back")[0].innerHTML;
 
 
-
         $(curCard).find(".editor").simulate("drag", {dx: 100, dy: 100});
         assert.equal($(curCard)[0].style.top, "135px", "Card didn't move on attempted editor drag");
         $(curCard.find(".card-header")).simulate("drag", {dx: 5000});
@@ -31,16 +30,19 @@
         assert.notEqual(curCard[0].style.top, "5135px", "Card successfully stayed on canvas window going up");
         $(curCard.find(".card-header")).simulate("drag", {dy: -10000});
         assert.notEqual(curCard[0].style.top, "-5135px", "Card successfully stayed on canvas window going down");
-        setTimeout(() => {
+        setTimeout(function(){
             $(curCard).find(".editor").simulate("key-sequence", {
-                sequence: "asdfasdf"
-            });
-            assert.equal($(curCard).find(".editor")[0].value, "asdfasdf", "Text value found in text box");
-            assert.notEqual(ogBack, $(curCard).find(".back")[0].innerHTML, "Updated time value after altering text box");
-            $(curCard).find(".close").simulate("click");
-            assert.equal(document.getElementsByClassName("card").length, 0, "Card successfully deleted from canvas");
-            done();
-        }, 2000);
+            sequence: "asdfasdf"
+        });
+        assert.equal($(curCard).find(".editor")[0].value, "asdfasdf", "Text value found in text box");
+        assert.notEqual(ogBack, $(curCard).find(".back")[0].innerHTML, "Updated time value after altering text box");
+        $(curCard).find(".close").simulate("click");
+        assert.equal(document.getElementsByClassName("card").length, 0, "Card successfully deleted from canvas");
+        done();
+    },
+        2000
+        )
+        ;
         done();
     });
     test("Card Flip effect", function (assert) {
