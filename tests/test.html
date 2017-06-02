@@ -34,15 +34,14 @@
 
   <script>
       var cardCounter= 0;
-      var blocker = false;
-      function newCard() {
-          if (blocker !== true)
-              new Card("editor");
-          return;
+      let stackCounter = 0;
 
+
+      function newCard() {
+              new Card("editor");
       }
 
-      function returnCard(){return $("#" + cardCounter);}
+      function returnCard(){return $("#card_" + cardCounter);}
 
   </script>
 </head>
