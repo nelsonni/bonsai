@@ -28,14 +28,13 @@ class sketchCard extends Card {
             id: "pen_erase" + cur.id
         }).addClass("eraser");
         $(cur.card).find(".editor").append(erase);
-        $(erase).on("click", function () {
+        $(erase).on("click", function (){
             for (let i in cur.sketches) {
                 if (cur.sketches[i].getState().editing === true)
                     cur.sketches[i].editing("erase");
                 else
                     cur.sketches[i].editing(true);
-            }
-            ;
+            };
         });
     }
 

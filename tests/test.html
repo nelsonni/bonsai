@@ -23,6 +23,7 @@
   <script src="js/jquery.simulate.key-sequence.js"></script>
   <script src="./../js/cards.js"></script>
   <script src="./../js/stacks.js"></script>
+  <script src="./../js/canvas.js"></script>
   <link rel="Stylesheet" media="screen" href="css/qunit.css" />
   <script src="js/qunit.js"></script>
   <script src="js/cards.test.js"></script>
@@ -35,13 +36,12 @@
   <script>
       var cardCounter= 0;
       let stackCounter = 0;
-
-
       function newCard() {
               new Card("editor");
       }
 
       function returnCard(){return $("#card_" + cardCounter);}
+
 
   </script>
 </head>

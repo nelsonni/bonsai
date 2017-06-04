@@ -6,30 +6,6 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            var sketchpad = Raphael.sketchpad("editor", {
-                height: "100%",
-                width: "90%",
-                editing: true
-
-            });
-
-            // When the sketchpad changes, update the input field.
-            sketchpad.change(function () {
-                $("#data").val(sketchpad.json());
-            });
-
-            function select(element1, element2) {
-                $(element1).addClass("selected");
-                $(element2).removeClass("selected");
-            }
-
-            $("#editor_red").click(function () {
-                select("#editor_red", "#editor_black");
-                sketchpad.pen().color("#f00");
-            });
-        });
-
     </script>
 </head>
 <body>

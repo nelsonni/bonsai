@@ -8,6 +8,12 @@
         var curCard = returnCard();
         var cardHeader = $(curCard[0].firstElementChild);
         assert.equal(document.getElementsByClassName("card").length, 1, "Card found on canvas");
+        var e = $.Event("keydown", { keyCode: 69});
+        $(curCard).find("#" + curCard[0].id + "textEditor_0").trigger("click");
+        $(curCard).find("#" + curCard[0].id + "textEditor_0").trigger(e);
+        assert.equal($(curCard).find("#" + curCard[0].id + "textEditor_0")[0].value, "e", "Text value found in text box");
+        $(curCard).find(".editor").simulate("drag", {dx: 100, dy: 100});
+        assert.equal($(curCard)[0].style.top, "", "Card didn't move on attempted editor drag");
         assert.ok(cardHeader[0].classList.contains("ui-draggable-handle"), "Draggable element found on card header");
         $(cardHeader).simulate("drag", {
             dx: 100,
@@ -19,8 +25,6 @@
 //        var ogBack = $(curCard).find(".back")[0].innerHTML;
 
 
-        $(curCard).find(".editor").simulate("drag", {dx: 100, dy: 100});
-        assert.equal($(curCard)[0].style.top, "395.062px", "Card didn't move on attempted editor drag");
         $(curCard.find(".card-header")).simulate("drag", {dx: 5000});
         assert.notEqual(curCard[0].style.left, "5135px", "Card successfully stayed on canvas window going right");
         $(curCard.find(".card-header")).simulate("drag", {dx: -10000});
@@ -30,10 +34,7 @@
         $(curCard.find(".card-header")).simulate("drag", {dy: -10000});
         assert.notEqual(curCard[0].style.top, "-5135px", "Card successfully stayed on canvas window going down");
         setTimeout(function(){
-            $(curCard).find("#" + curCard[0].id + "textEditor_0").simulate("key-sequence", {
-            sequence: "asdfasdf"
-        });
-        assert.equal($(curCard).find("#" + curCard[0].id + "textEditor_0")[0].value, "asdfasdf", "Text value found in text box");
+
         //assert.notEqual(ogBack, $(curCard).find(".back")[0].innerHTML, "Updated time value after altering text box");
         $(curCard).find(".close").simulate("click");
         assert.equal(document.getElementsByClassName("card").length, 0, "Card successfully deleted from canvas");
@@ -49,6 +50,8 @@
         $(card).find(".editor").simulate("key-sequence", {
             sequence: "fart"
         });
+        let ogEditorSize = $(card).find(".editor").height();
+
         assert.equal($(card).find(".editor")[0].value, "fart", "Text field editable in expansion");
         $(card).find(".expand").simulate("click");
         setTimeout(function () {
@@ -57,9 +60,13 @@
             assert.equal(card[0].style.top, "0px", "Card has been set to top position 0px");
             assert.equal(card[0].style.left, "0px", "Card has been set to left position 0px");
             setTimeout(function () {
-                $(card).find(".close").simulate("click");
-                assert.equal(document.getElementsByClassName("card").length, 0, "Card successfully deleted from canvas");
-                done();
+                $(card).find(".collapse").simulate("click");
+                setTimeout(function(){
+                    assert.equal(ogEditorSize, $(card).find(".editor").height(), "Card editor resized appropriately on collapse");
+                    $(card).find(".close").simulate("click");
+                    assert.equal(document.getElementsByClassName("card").length, 0, "Card successfully deleted from canvas");
+                    done();
+                },500);
             }, 510);
             done();
         }, 210);
@@ -68,7 +75,6 @@
 
     // -------------------------------------------------------------------------------------------------------------------
     QUnit.module("Two Stack Tests");
-
     test("Merge two stacks together", function (assert) {
         done = assert.async();
         $("#createCard").simulate("click");
@@ -79,21 +85,22 @@
         var thirdCard = returnCard();
         $("#createCard").simulate("click");
         var fourthCard = returnCard();
-        $(secondCard.find(".card-header")).simulate("drag", {dy: 500});
-        assert.equal(secondCard[0].style.top, "570px", "Second card pulled away from stack");
+        $(secondCard.find(".card-header")).simulate("drag", {dx: 500});
         $(thirdCard.find(".card-header")).simulate("drag", {goto: secondCard});
+        $(fourthCard.find(".card-header")).simulate("drag", {dx: 5});
+        assert.equal(document.getElementsByClassName("stack").length, 2, "2 stacks now on canvas");
         var box1 = $(secondCard[0].parentNode);
-        assert.equal(box1[0].id, "highlightBox" + secondCard[0].id, "First highlight box found on canvas");
+        assert.equal(box1[0].id, "stack_1", "First highlight box found on canvas");
         assert.equal(box1[0].firstElementChild, secondCard[0], "Base card is card #2");
-        assert.equal(box1[0].lastElementChild, thirdCard[0], "Last card is card #3");
+        assert.equal(box1[0].firstElementChild.nextElementSibling, thirdCard[0], "Last card is card #3");
         stackOK(box1, assert);
-        $(fourthCard.find(".card-header")).simulate("drag", {goto: firstCard});
         var box2 = $(firstCard[0].parentNode);
-        assert.equal(box2[0].id, "highlightBox" + firstCard[0].id, "Second highlight box found on canvas");
+        assert.equal(box2[0].id, "stack_2" , "Second highlight box found on canvas");
         assert.equal(box2[0].firstElementChild, firstCard[0], "Base card is card #1");
-        assert.equal(box2[0].lastElementChild, fourthCard[0], "Last card is card #4");
+        assert.equal(box2[0].firstElementChild.nextElementSibling, fourthCard[0], "Last card is card #4");
         stackOK(box2, assert);
-        $(thirdCard.find(".editor")).simulate("drag", {goto: fourthCard, moves: 50});
+        $(thirdCard.find(".editor")).simulate("drag", {dx: -500, moves: 50});
+        assert.equal(document.getElementsByClassName("stack").length, 1, "1 stack now on canvas");
         box1 = $(firstCard[0].parentNode);
         stackOK(box1, assert);
         assert.equal(box1[0].children[0], firstCard[0], "First card in merge is card #1");
@@ -105,6 +112,7 @@
         done();
     });
 
+
     test("Push stack onto a single card", function (assert) {
         done = assert.async();
         $("#createCard").simulate("click");
@@ -114,11 +122,12 @@
         $("#createCard").simulate("click");
         var thirdCard = returnCard();
         $(firstCard.find(".card-header")).simulate("drag", {dx: 500});
-        $(secondCard.find(".card-header")).simulate("drag", {goto: thirdCard});
+        $(secondCard.find(".card-header")).simulate("drag", {dx: 500});
         var t = firstCard.find(".editor");
         $(secondCard.find(".editor")).simulate("drag", {goto: firstCard, moves: 100});
         var box = $(firstCard[0].parentNode);
-        assert.equal(box[0].style.top, "25px", "highlightBox positioned properly");
+        let prev = box[0].style.top;
+        assert.notEqual(box[0].style.top, prev, "highlightBox positioned properly");
         stackOK(box, assert);
         assert.equal(box[0].children[0], firstCard[0], "First card in stack is card #1");
         assert.equal(box[0].children[1], thirdCard[0], "Second card in stack is card #3");
@@ -129,32 +138,33 @@
         done();
     });
 
-
     QUnit.module("Stacked Cards");
     QUnit.test("Simple Card stacking and moving", function (assert) {
         done = assert.async();
         var firstCard = createAndReturnCard();
         var secondCard = createAndReturnCard();
-        var highlightBox = document.getElementsByClassName("highlightBox");
-        assert.equal(secondCard[0].style.zIndex, getHighestZIndexCard() - 1, "Newest card has highest zIndex");
-        assert.equal(document.getElementsByClassName("highlightBox").length, 0, "No highlight box found on canvas");
-        $(secondCard.find(".card-header")).simulate("drag", {goto: firstCard});
-        assert.equal(highlightBox.length, 1, "Highlight box found after stacking cards");
-        assert.equal(highlightBox[0].firstElementChild, firstCard[0], "First child of highlight box is first card spawned");
-        assert.equal(highlightBox[0].lastElementChild, secondCard[0], "Last child of highlight box is second card spawned");
-        stackOK(highlightBox, assert);
+        assert.equal(stackCounter, 0, "No highlight box found on canvas");
+        $(secondCard.find(".card-header")).simulate("drag", {dx: 50});
+        let stack = document.getElementById("stack_1");
+        assert.equal(stackCounter, 1, "Highlight box found after stacking cards");
+        assert.equal(stack.firstElementChild, firstCard[0], "First child of highlight box is first card spawned");
+        assert.equal(stack.firstElementChild.nextElementSibling, secondCard[0], "Last child of highlight box is second card spawned");
+        console.log(stack);
+        stackOK($(stack), assert);
+
 
         $(secondCard.find(".editor")).simulate("drag", {dx: 200, moves: 500});
-        assert.equal(highlightBox[0].style.left, "210px",
+        assert.equal(stack.style.left, "193px",
             "Highlight box is moved left properly");
-        assert.equal(highlightBox[0].style.top, "35px",
+        let prevStackTop = stack.style.top;
+        assert.notEqual(stack.style.top, prevStackTop,
             "Highlight box is moved top properly");
-        stackOK(highlightBox, assert);
+        stackOK($(stack), assert);
 
-        $(firstCard.find(".card-header")).simulate("drag", {dy: 500});
+        $(firstCard.find(".card-header")).simulate("drag", {dy: -500});
         var secondCardTopBeforeMove = secondCard[0].style.top;
         assert.equal(document.getElementsByClassName("highlightBox").length, 0, "highlightBox not found on canvas");
-        assert.equal(firstCard[0].style.top, "555px", "First card pulled away from canvas successfully.");
+        assert.equal(firstCard[0].style.top, "145px", "First card pulled away from canvas successfully.");
         assert.equal(secondCard[0].style.top, secondCardTopBeforeMove, "Second card still in original position");
         $(firstCard.find(".close")).simulate("click");
         assert.equal($(document.getElementById(firstCard[0].id)).length, 0, "First card successfully deleted");
@@ -166,8 +176,8 @@
         done = assert.async();
         var firstCard = createAndReturnCard();
         var secondCard = createAndReturnCard();
-        $(secondCard.find(".card-header")).simulate("drag", {goto: firstCard});
-        var box = document.getElementsByClassName("highlightBox");
+        $(secondCard.find(".card-header")).simulate("drag", {dx: 5});
+        var box = document.getElementsByClassName("stack");
         stackOK(box, assert);
         $(secondCard.find(".editor")).simulate("drag", {dx: 5000});
         assert.notEqual(box[0].style.left, "5135px", "Card successfully stayed on canvas window going right");
@@ -180,7 +190,7 @@
         $(box).remove();
         done();
     });
-
+/*
     QUnit.test("Card Expansion Tests (No Wrap)", function (assert) {
         done = assert.async();
         var firstCard = createAndReturnCard();
@@ -235,21 +245,22 @@
         $(box).remove();
         done();
     });
-
+*/
     QUnit.test("Card repositioning in stack tests", function (assert) {
+        $(".card, .stack").remove();
         done = assert.async();
         var firstCard = createAndReturnCard();
         var secondCard = createAndReturnCard();
         var thirdCard = createAndReturnCard();
         var fourthCard = createAndReturnCard();
-        var box = document.getElementsByClassName("highlightBox");
-        $(fourthCard.find(".card-header")).simulate("drag", {goto: thirdCard});
-        $(fourthCard.find(".editor")).simulate("drag", {goto: secondCard});
-        $(fourthCard.find(".editor")).simulate("drag", {goto: firstCard});
-        var box = document.getElementsByClassName("highlightBox");
+
+        $(firstCard.find(".card-header")).simulate("drag", {dx: 5});
+        $(secondCard.find(".card-header")).simulate("drag", {dx: 5});
+        var box = document.getElementsByClassName("stack");
         var ogBoxHeight = box[0].style.height;
         var ogBoxWidth = box[0].style.width;
-        $(thirdCard.find(".card-header")).simulate("drag", {goto: fourthCard}); // pull 3rd card to last card
+        $(thirdCard.find(".card-header")).simulate("drag", {dx: 5}); // pull 3rd card to last card
+        $(fourthCard.find(".card-header")).simulate("drag", {dx: 5});
         stackOK(box, assert);
         assert.equal(box[0].style.width, ogBoxWidth, "Box width has stayed the same");
         assert.equal(box[0].style.height, ogBoxHeight, "Box height has stayed the same");
@@ -349,13 +360,14 @@
 
 
     function stackOK(box, assert) {
+        console.log(box);
         assert.ok(true, "----------------------INSIDE OF STACK OK FUNCTION!!!----------------------------");
         for (var i = 0; i < box[0].children.length; i++) {
-            if (box[0].children[i].classList.contains("actualCard")) {
+            if (box[0].children[i].classList.contains("card")) {
                 var curCard = box[0].children[i];
-                assert.equal(curCard.style.top, (parseInt(box[0].style.top) + (20 * (i + 1))).toString() + "px",
+                assert.equal(parseInt(curCard.style.top).toString() + "px", (parseInt(box[0].style.top) + (25 * (i + 1))).toString() + "px",
                     i.toString() + " Card top position OK");
-                assert.equal(curCard.style.left, (parseInt(box[0].style.left) + (5 * (i + 2))).toString() + "px",
+                assert.equal(curCard.style.left, (parseInt(box[0].style.left) + (25 * (i + 1))).toString() + "px",
                     i.toString() + " Card left position OK");
                 if (i !== 0 && !curCard.classList.contains("expandableBtn"))
                     assert.ok(parseInt(curCard.style.zIndex) > parseInt(curCard.previousElementSibling.style.zIndex), i.toString() +
