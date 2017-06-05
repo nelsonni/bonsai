@@ -67,7 +67,8 @@ class Card {
         // handle stack-to-card drop event
         if ($(ui.draggable).hasClass('stack')) {
           var stack = new Stack($(this));
-          ui.draggable.children().each((index, card) => stack.addCard($(card)));
+          ui.draggable.children('.card')
+            .each((index, card) => stack.addCard($(card)));
           stack.cascadeCards();
           stack.resizeStack();
           $(ui.draggable).remove();
