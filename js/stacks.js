@@ -49,6 +49,9 @@ class Stack {
     this.cards.push(card);
     this.stack.appendChild($(card)[0]);
     card.droppable('disable');
+    $(card).find('.card-header').find('button').each((index, button) => {
+      $(button).attr('disabled', true);
+    });
   }
 
   // remove individual card from the stack
@@ -62,6 +65,9 @@ class Stack {
       left: $(card).offset().left
     }).droppable('enable');
     document.body.appendChild($(card)[0]);
+    $(card).find('.card-header').find('button').each((index, button) => {
+      $(button).attr('disabled', false);
+    });
   }
 
   nextId() {

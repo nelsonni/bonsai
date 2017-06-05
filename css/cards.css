@@ -51,6 +51,10 @@ div.card-header button:focus {
   outline: none;
 }
 
+div.card-header button:disabled {
+  display: none;
+}
+
 button.close {
   height: 20px;
   width: 20px;
