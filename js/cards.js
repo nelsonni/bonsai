@@ -127,10 +127,8 @@ class Card {
         .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
         .show();
 
-      $(".ace_editor").css({
-          height: screen.height,
-          width: screen.width
-      });
+      $("#flip_button_" + this.id).hide();
+
       $(this.card.children).each(function () {
         if ($(this).hasClass('card-header')) {
           $(this).animate({top: 0, left: 0, width: '100%'}, 0.10);
@@ -155,10 +153,6 @@ class Card {
             width: $(this.card).attr('prevWidth'),
             height: $(this.card).attr('prevHeight')}, 100);
       });
-        $(".ace_editor").css({
-            height: "250px",
-            width: "197px"
-        });
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
       $("#flip_button_" + this.id).show();
       $(this.card).removeAttr('prevWidth prevHeight prevTop prevLeft prevZIndex');
