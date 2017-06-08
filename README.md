@@ -14,5 +14,6 @@ Packaging Electron apps for release is platform-specific and requires the use of
 
 <b>Note</b>: For the `electron-packager` command, the `--platform` can be set to `all`, or one or more of: `darwin` for MacOS, `linux` for Linux, `win32` for Windows, or `mas`. Possibly need to include the `--overwrite` command if previous builds have already been generated.
 
-Contributors: Nicholas Nelson (@nelsonni), Brandon Dring (@El_Dringo_Brannde), Lauren Gastineau (@laurengastineau)
+<b>Contributors:</b><br>
+Nicholas Nelson ([https://github.com/nelsonni](@nelsonni)), Brandon Dring ([https://github.com/El-Dringo-Brannde](@El_Dringo_Brannde)), Lauren Gastineau ([https://github.com/laurengastineau](@laurengastineau))
 
