@@ -3,8 +3,7 @@ class Card {
     this.id = this.nextId();
 
     var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card",
-      fullscreen: false});
+    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
     this.card = card;
 
     var header = document.createElement('div');
@@ -124,43 +123,17 @@ class Card {
   }
 
   toggleFullScreen() {
-    // handle unexpanded card transitioning to fullscreen
-    if ($(this.card).attr('fullscreen') === 'false') {
-      $(this.card).attr({
-          prevWidth: $(this.card).width(),
-          prevHeight: $(this.card).height(),
-          prevTop: $(this.card).offset().top,
-          prevLeft: $(this.card).offset().left,
-          prevZIndex: $(this.card).css('zIndex'),
-          fullscreen: true})
-        .hide()
-        .css({zIndex: 1000})
-        .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
-        .show();
-
-      $("#flip_button_" + this.id).hide();
-
-      $(this.card.children).each(function () {
-        if ($(this).hasClass('card-header')) {
-          $(this).animate({top: 0, left: 0, width: '100%'}, 0.10);
-        } else {
-          $(this).animate({top: 0, left: 0, width: "100%", height: "100%"},
-            0.10);
-        }
-      });
+    if (!$(this.card).hasClass('fullscreen')) {  // transtion to fullscreen
+      $(this.card).attr({prevStyle: $(this.card)[0].style.cssText});
+      $(this.card).toggleClass('fullscreen').removeAttr('style');
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-    // handle fullscreen card transitioning to unexpanded
-    } else {
-      $(this.card).animate({
-          width: $(this.card).attr('prevWidth'),
-          height: $(this.card).attr('prevHeight'),
-          top: $(this.card).attr('prevTop'),
-          left: $(this.card).attr('prevLeft')}, 300)
-        .css({zIndex: $(this.card).attr('prevZIndex')});
+
+    } else {  // transition back from fullscreen
+      $(this.card).toggleClass("fullscreen");
+      $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-      $(this.card).removeAttr('prevWidth prevHeight prevTop prevLeft prevZIndex');
-      $(this.card).attr('fullscreen', false);
+      $(this.card).removeAttr('prevStyle');
     }
   }
 }
