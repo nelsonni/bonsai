@@ -151,21 +151,14 @@ class Card {
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
     // handle fullscreen card transitioning to unexpanded
     } else {
-      $(this.card)
-        .animate({
+      $(this.card).animate({
           width: $(this.card).attr('prevWidth'),
           height: $(this.card).attr('prevHeight'),
           top: $(this.card).attr('prevTop'),
-          left: $(this.card).attr('prevLeft')}, 100)
+          left: $(this.card).attr('prevLeft')}, 300)
         .css({zIndex: $(this.card).attr('prevZIndex')});
-      $(this.card.children).each(function () {
-        if (!this.classList.contains("flip"))
-          $(this).animate({
-            width: $(this.card).attr('prevWidth'),
-            height: $(this.card).attr('prevHeight')}, 100);
-      });
+      $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-      $("#flip_button_" + this.id).show();
       $(this.card).removeAttr('prevWidth prevHeight prevTop prevLeft prevZIndex');
       $(this.card).attr('fullscreen', false);
     }
