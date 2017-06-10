@@ -40,7 +40,9 @@ class Stack {
 
     // add individual card to the top of the stack
     addCard(card) {
+        console.log(card);
         let cur = this.getCardObject(card);
+        console.log(cur, card);
         this.cardObjects[cur.id] = cur;
         this.cards.push(card);
         this.stack.appendChild($(card)[0]);
@@ -61,8 +63,11 @@ class Stack {
 
     getCardObject(card) {
         let id = (card[0].id).split("_");
+        console.log(id);
         let last = parseInt(id[id.length - 1]);
+        console.log(last, currentCards);
         let obj = currentCards[last]
+        console.log(this.cardObjects);
         return obj;
     }
 
@@ -71,9 +76,11 @@ class Stack {
         let id = (card[0].id).split("_");
         let cleanID = parseInt(id[id.length - 1]);
         let cardObject = this.cardObjects[cleanID];
-        delete this.cardObjects[cleanID]
+
         console.log(cardObject, this.cardObjects);
-        this.enableSketchCards(cardObject)
+        if (cardObject.type == "sketch")
+            this.enableSketchCards(cardObject)
+        delete this.cardObjects[cleanID]
         // grep returning only cards that do not contain the target id
         this.cards = $.grep(this.cards, function(n) {
             return n.attr('id') !== card.attr('id');
