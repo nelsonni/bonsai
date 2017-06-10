@@ -407,8 +407,35 @@
         assert.equal(stacks.length, 1, "2 stacks found on canvas");
         assert.equal(stacks[0].value, "LSDKFJLKDFSJKL", "Bottom stack annotation correctly applied to merge stack");
         $(".card, .stack").remove();
-        $("li").show();
         done()
+    });
+
+    QUnit.test("Proper card face switched on dragging to stack", function(assert) {
+        $(".card, .stack").remove();
+        done = assert.async();
+        var firstCard = createAndReturnCard();
+        $(firstCard.find(".editor")).simulate("drag", {
+            dx: 25
+        });
+        let lastEditor = $(firstCard.find("#" + firstCard[0].id + "textEditor_2"))
+        console.log(lastEditor)
+        assert.equal($(lastEditor)[0].parentNode.classList.contains("slick-active"), true, "Last card face showing");
+        console.log($(firstCard));
+
+
+        $(firstCard.find(".card-header")).simulate("drag", {
+            dx: 200
+        });
+        var secondCard = createAndReturnCard();
+        $(firstCard.find(".card-header")).simulate("drag", {
+            dx: -200
+        });
+        assert.equal($(".stack").length, 1, "stack found on canvas");
+        assert.equal($(lastEditor)[0].parentNode.classList.contains("slick-active"), false, "Last card face not showing after stack");
+
+        $(".card, .stack").remove();
+        $("li").show();
+        done();
     });
 
 
