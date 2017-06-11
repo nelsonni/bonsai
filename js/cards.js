@@ -98,8 +98,7 @@ class Card {
     if (type === "editor")
       $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
         $(this).attr({
-          class: "editor", id: card.id + "textEditor_" + idx, maxLength: "5000",
-          cols: "25", rows: "19"
+          id: card.id + "textEditor_" + idx, class: "editor"
         });
       });
     else if (type === "sketch")
@@ -124,16 +123,21 @@ class Card {
 
   toggleFullScreen() {
     if (!$(this.card).hasClass('fullscreen')) {  // transtion to fullscreen
-      $(this.card).attr({prevStyle: $(this.card)[0].style.cssText});
-      $(this.card).toggleClass('fullscreen').removeAttr('style');
-      $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-
+      $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
+      $(this.card).addClass('fullscreen').removeAttr('style');
+      $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
+      // $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+      //   $(this).attr({cols: "25", rows: "19"});
+      // });
     } else {  // transition back from fullscreen
-      $(this.card).toggleClass("fullscreen");
+      $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
-      $(this.card.children).each((index, child) => $(child).removeAttr('style'));
-      $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
       $(this.card).removeAttr('prevStyle');
+      $(this.card.children).each((index, child) => $(child).removeAttr('style'));
+      $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
+      // $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+      //   $(this).attr({cols: "25", rows: "19", maxLength: "5000"});
+      // });
     }
   }
 }
