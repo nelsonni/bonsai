@@ -1,7 +1,7 @@
 div.stack {
   height: calc((280px * 1.25) + 100px);
   width: calc((200px * 1.25) + 28px);
-  background-color: rgba(10, 210, 50, 0.4);
+  background-color: rgba(10, 210, 50, 0.2);
   color: rgba(33, 37, 43, 1.0);
   position: fixed;
   cursor: move;
@@ -9,14 +9,27 @@ div.stack {
   border-radius: 5px;
 }
 
-div.xCard {
-  height: 280px;
-  width: 200px;
-  background-color: rgba(50, 50, 50, 1.0);
-  color: rgba(171, 178, 191, 1.0);
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
-  position: absolute;
-  border-radius: 5px;
+div.stack button.stack_close {
+  /*background-size: auto;*/
+  /*background-repeat: no-repeat;*/
+  /*display: block;*/
+  /*float: right;*/
+  /*padding: 0;*/
+  /*text-align: center;*/
+  /*line-height: 10px;*/
+  /*vertical-align: middle;*/
+  /*box-sizing: border-box;*/
+  /*border: none;*/
+  background: url("../assets/close_light.svg") no-repeat top left;
+  background-size: contain;
+  height: 18px;
+  width: 18px;
+  border: none;
+  margin: 4px;
+  /*margin: 4px;*/
+  /*background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+    url("../assets/close_light.svg");*/
+  /*border-radius: 0;*/
 }
 
 textarea.annotation{
@@ -30,3 +43,30 @@ textarea.annotation{
   overflow: hidden;
   resize: none;
 }
+/*div.stack button.stack_close:hover,
+div.stack button.stack_close:focus {
+  outline: none;
+}*/
+
+/*button.stack_close {
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: block;
+  float: right;
+  padding: 0;
+  text-align: center;
+  line-height: 10px;
+  vertical-align: middle;
+  box-sizing: border-box;
+  border: none;
+  height: 18px;
+  width: 18px;
+  margin: 4px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+    url("../assets/close_light.svg");
+  border-radius: 0;
+}*/
+
+/*button.stack_close:hover, button.stack_close:active {
+  background-image: url("../assets/close_active.svg");
+}*/

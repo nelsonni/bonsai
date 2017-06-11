@@ -1,17 +1,22 @@
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
   constructor(...cards) {
+    this.id = this.nextId();
     this.cards = [];
     var stack = document.createElement('div');
-    $(stack).attr({
-        id: "stack_" + (++stackCounter),
-        class: "stack"
-      })
+    $(stack).attr({id: "stack_" + this.id, class: "stack"})
       .css({
         top: $(cards[0]).offset().top - 25,
         left: $(cards[0]).offset().left - 25
       });
     this.stack = stack;
+
+    var close_button = document.createElement('button');
+    $(close_button).attr({id: "close_button_stack_" + this.id,
+      class: "stack_close"});
+    $(close_button).click(() => this.destructor());
+    this.stack.appendChild(close_button);
+
     document.body.appendChild(stack);
     this.setDraggable();
     this.setDroppable();
@@ -21,13 +26,10 @@ class Stack {
     this.resizeStack();
 
     var annotation = document.createElement('textarea');
-    $(annotation).attr({
-        class: "annotation"
-      })
+    $(annotation).attr({id: "annotation_stack_" + this.id, class:"annotation"})
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
-
   }
 
   destructor() {
@@ -38,12 +40,18 @@ class Stack {
 
   // add individual card to the top of the stack
   addCard(card) {
-    let cur = this.getCardObject(card);
-    this.cards.push(cur);
-    this.stack.appendChild(cur.card);
-    if (cur.type == "sketch")
-      this.disableSketchCards(cur);
+    var ids = jQuery.map(this.cards, function(stackCard) {
+      return parseInt($(stackCard).attr('id').split("_")[1]);
+    });
+    var new_id = parseInt($(card).attr('id').split("_")[1]);
+    if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
+
+    this.cards.push(card);
+    this.stack.appendChild($(card)[0]);
     card.droppable('disable');
+    $(card).find('.card-header').find('button').each((index, button) => {
+      $(button).attr('disabled', true);
+    });
   }
 
   disableSketchCards(cur) {
@@ -81,22 +89,27 @@ class Stack {
       left: $(card).offset().left
     }).droppable('enable');
     document.body.appendChild($(card)[0]);
+    $(card).find('.card-header').find('button').each((index, button) => {
+      $(button).attr('disabled', false);
+    });
+  }
+
+  nextId() {
+    var ids = $.map($('.stack'), function(stack) {
+      return parseInt($(stack).attr('id').split("_")[1]);
+    });
+    if (ids.length < 1) return 1; // no stacks on the canvas yet
+
+    var next = 1;
+    while(ids.indexOf(next += 1) > -1);
+    return next;
   }
 
   setDraggable() {
     $(this.stack).draggable({
       containment: 'window',
       stack: '.stack, .card',
-      drag: (event, ui) => {
-        $(this.stack.children).each((index, card) => {
-          if ($(card).hasClass('card')) {
-            $(card).css({
-              top: $(this.stack).offset().top + ((index + 1) * 25),
-              left: $(this.stack).offset().left + ((index + 1) * 25)
-            });
-          }
-        });
-      }
+      drag: (event, ui) => this.cascadeCards()
     });
   }
 
@@ -115,7 +128,7 @@ class Stack {
         }
         // handle stack-to-stack drop event
         if ($(ui.draggable).hasClass('stack')) {
-          ui.draggable.children().each((index, card) => {
+          $(ui.draggable).children('.card').each((index, card) => {
             this.addCard($(card));
           });
           this.cascadeCards();
@@ -162,11 +175,12 @@ class Stack {
     });
   }
 
-  //keep characters contained within textarea container
+  // keep all characters visible within annotation textarea
   checkScroll() {
-    if ($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
-      while ($(this.annotation).prop('scrollHeight') > this.annotation.offsetHeight) {
-        this.annotation.value = this.annotation.value.substr(0, this.annotation.value.length - 1);
+    var annot = this.annotation;
+    if ($(annot).prop('scrollHeight') > annot.offsetHeight) {
+      while ($(this.annotation).prop('scrollHeight') > annot.offsetHeight) {
+        annot.value = annot.value.substr(0, annot.value.length - 1);
       }
     }
   }

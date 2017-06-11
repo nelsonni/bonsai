@@ -13,3 +13,7 @@ Packaging Electron apps for release is platform-specific and requires the use of
 * `electron-packager . bonsai --platform=all --arch=x64`
 
 <b>Note</b>: For the `electron-packager` command, the `--platform` can be set to `all`, or one or more of: `darwin` for MacOS, `linux` for Linux, `win32` for Windows, or `mas`. Possibly need to include the `--overwrite` command if previous builds have already been generated.
+
+<b>Contributors:</b><br>
+Nicholas Nelson ([@nelsonni](https://github.com/nelsonni)), Brandon Dring ([@El_Dringo_Brannde](https://github.com/El-Dringo-Brannde)), Lauren Gastineau ([@laurengastineau](https://github.com/laurengastineau))
+
