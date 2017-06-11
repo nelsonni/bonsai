@@ -3,31 +3,56 @@ class Card {
     this.id = this.nextId();
 
     var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
+    $(card).attr({
+      id: "card_" + this.id,
+      type: type,
+      class: "card"
+    });
     this.card = card;
 
     var header = document.createElement('div');
-    $(header).attr({id: "header_" + this.id, class: "card-header"});
+    $(header).attr({
+      id: "header_" + this.id,
+      class: "card-header"
+    });
     $(header).html("card: " + this.id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
-    $(close_button).click(function () {
+    $(close_button).attr({
+      id: "close_button_" + this.id,
+      class: "close"
+    });
+    $(close_button).click(function() {
+      let card = this.closest(".card");
+      let id = (card.id).split("_");
+      let cleanID = parseInt(id[id.length - 1]);
+      delete currentCards[cleanID]
       this.closest('.card').remove();
     });
     header.appendChild(close_button);
-
-    var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
-      class: "expand"});
-    $(fullscreen_button).click(() => this.toggleFullScreen());
-    header.appendChild(fullscreen_button);
 
     card.appendChild(header);
     document.body.appendChild(card);
     this.buildFaces(card, type);
     this.setDraggable();
     this.setDroppable();
+  }
+  getCardObject(card) {
+    let id = (card[0].id).split("_");
+    let last = parseInt(id[id.length - 1]);
+    let obj = currentCards[last]
+    return obj;
+  }
+
+  setDraggable() {
+    $(this.card).draggable({
+      handle: '.card-header',
+      containment: 'window',
+      stack: '.card, .stack',
+      start: function(event, ui) {
+        $(this.card).removeClass('atSpawn');
+      }
+    });
   }
 
   nextId() {
@@ -37,7 +62,7 @@ class Card {
     if (ids.length < 1) return 1; // no cards on the canvas yet
 
     var next = 1;
-    while(ids.indexOf(next += 1) > -1);
+    while (ids.indexOf(next += 1) > -1);
     return next;
   }
 
@@ -76,6 +101,7 @@ class Card {
     });
   }
 
+
   buildFaces(card, type) {
     var eleTypeToCreate = "";
     if (type === "editor")
@@ -84,7 +110,10 @@ class Card {
       eleTypeToCreate = "div";
 
     var content = document.createElement('div');
-    $(content).attr({class: "editor", id: card.id + "_editor_" + this.id});
+    $(content).attr({
+      class: "editor",
+      id: card.id + "_editor_" + this.id
+    });
     var face1 = document.createElement('div');
     var face1_editor = document.createElement(eleTypeToCreate);
     face1.appendChild(face1_editor);
@@ -96,14 +125,18 @@ class Card {
     face3.appendChild(face3_editor);
 
     if (type === "editor")
-      $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+      $([face1_editor, face2_editor, face3_editor]).each(function(idx) {
         $(this).attr({
-          id: card.id + "textEditor_" + idx, class: "editor"
+          id: card.id + "textEditor_" + idx,
+          class: "editor"
         });
       });
     else if (type === "sketch")
-      $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
-        $(this).attr({class: "sketchEditor", id: card.id + "sketch_" + idx});
+      $([face1_editor, face2_editor, face3_editor]).each(function(idx) {
+        $(this).attr({
+          class: "sketchEditor",
+          id: card.id + "sketch_" + idx
+        });
       });
 
     content.appendChild(face1);
@@ -122,14 +155,14 @@ class Card {
   }
 
   toggleFullScreen() {
-    if (!$(this.card).hasClass('fullscreen')) {  // transtion to fullscreen
+    if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       // $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
       //   $(this).attr({cols: "25", rows: "19"});
       // });
-    } else {  // transition back from fullscreen
+    } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');

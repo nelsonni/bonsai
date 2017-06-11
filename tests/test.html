@@ -4,36 +4,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Brandon Rulez</title>
-  <script src="js/jquery.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="./../css/cards.css">
+  <link rel="stylesheet" type="text/css" href="./../css/editor.css">
+  <link rel="stylesheet" type="text/css" href="./../css/canvas.css">
+  <link rel="stylesheet" type="text/css" href="./../css/stacks.css">
+
+                        <!-- Jquery -->
+  <script src="./../libs/jquery/jquery.min.js" type="text/javascript"></script>
+  <script src="./../libs/jquery/jquery-ui.js"></script>
+  <link rel="stylesheet" href="./../libs/jquery/jquery-ui.css">
 
 
-  <link rel="stylesheet" type="text/css" href="css/cards.css">
-  <link rel="stylesheet" type="text/css" href="css/editor.css">
-  <link rel="stylesheet" type="text/css" href="css/default.css">
-  <script src="js/jquery.min.js" type="text/javascript"></script>
-  <script src="js/jquery-ui.js"></script>
-  <link rel="stylesheet" href="css/jquery-ui.css">
+                        <!-- Testing Stuff-->
   <script src="js/bililiteRange.js"></script>
   <script src="js/jquery.simulate.js"> </script>
   <script src="js/jquery.simulate.ext.js"></script>
   <script src="js/jquery.simulate.key-sequence.js"></script>
-  <script src="js/cards.js"></script>
+  <script src="./../js/cards.js"></script>
+  <script src="./../js/stacks.js"></script>
+  <script src="./../js/canvas.js"></script>
+  <link rel="Stylesheet" media="screen" href="css/qunit.css" />
+  <script src="js/qunit.js"></script>
 
-    <link rel="Stylesheet" media="screen" href="css/qunit.css" />
-    <script src="js/qunit.js"></script>
 
+                          <!-- Slick.js library -->
+  <script type="text/javascript" src="./../libs/slick/slick.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./../libs/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="./../libs/slick/slick-theme.css"/>
 
   <script>
-      var idCounter = 0;
-      var blocker = false;
+      var cardCounter= 0;
+      let stackCounter = 0;
+      let currentCards = {}
       function newCard() {
-          if (blocker !== true)
-              Card(++idCounter,"editor");
-          return;
+              let card = new Card("editor");
 
+              currentCards[card.id] = card;
       }
 
-      function returnCard(){return $("#" + idCounter);}
+      function returnCard(){return $("#card_" + cardCounter);}
+
 
   </script>
   <script src="js/cards.test.js"></script>

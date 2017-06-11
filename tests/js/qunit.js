@@ -9,12 +9,12 @@
  * Date: 2016-04-12T17:29Z
  */
 
-( function( global ) {
+( function (global) {
 
     var QUnit = {};
 
     var Date = global.Date;
-    var now = Date.now || function() {
+    var now = Date.now || function () {
             return new Date().getTime();
         };
 
@@ -27,19 +27,19 @@
     var defined = {
         document: window && window.document !== undefined,
         setTimeout: setTimeout !== undefined,
-        sessionStorage: ( function() {
+        sessionStorage: ( function () {
             var x = "qunit-test-string";
             try {
-                sessionStorage.setItem( x, x );
-                sessionStorage.removeItem( x );
+                sessionStorage.setItem(x, x);
+                sessionStorage.removeItem(x);
                 return true;
-            } catch ( e ) {
+            } catch (e) {
                 return false;
             }
         }() )
     };
 
-    var fileName = ( sourceFromStacktrace( 0 ) || "" ).replace( /(:\d+)+\)?/, "" ).replace( /.+\//, "" );
+    var fileName = ( sourceFromStacktrace(0) || "" ).replace(/(:\d+)+\)?/, "").replace(/.+\//, "");
     var globalStartCalled = false;
     var runStarted = false;
 
@@ -47,14 +47,14 @@
         hasOwn = Object.prototype.hasOwnProperty;
 
 // Returns a new Array with the elements that are in a but not in b
-    function diff( a, b ) {
+    function diff(a, b) {
         var i, j,
             result = a.slice();
 
-        for ( i = 0; i < result.length; i++ ) {
-            for ( j = 0; j < b.length; j++ ) {
-                if ( result[ i ] === b[ j ] ) {
-                    result.splice( i, 1 );
+        for (i = 0; i < result.length; i++) {
+            for (j = 0; j < b.length; j++) {
+                if (result[i] === b[j]) {
+                    result.splice(i, 1);
                     i--;
                     break;
                 }
@@ -64,13 +64,13 @@
     }
 
 // From jquery.js
-    function inArray( elem, array ) {
-        if ( array.indexOf ) {
-            return array.indexOf( elem );
+    function inArray(elem, array) {
+        if (array.indexOf) {
+            return array.indexOf(elem);
         }
 
-        for ( var i = 0, length = array.length; i < length; i++ ) {
-            if ( array[ i ] === elem ) {
+        for (var i = 0, length = array.length; i < length; i++) {
+            if (array[i] === elem) {
                 return i;
             }
         }
@@ -85,30 +85,30 @@
      * @param {Object} obj
      * @return {Object} New object with only the own properties (recursively).
      */
-    function objectValues ( obj ) {
+    function objectValues(obj) {
         var key, val,
-            vals = QUnit.is( "array", obj ) ? [] : {};
-        for ( key in obj ) {
-            if ( hasOwn.call( obj, key ) ) {
-                val = obj[ key ];
-                vals[ key ] = val === Object( val ) ? objectValues( val ) : val;
+            vals = QUnit.is("array", obj) ? [] : {};
+        for (key in obj) {
+            if (hasOwn.call(obj, key)) {
+                val = obj[key];
+                vals[key] = val === Object(val) ? objectValues(val) : val;
             }
         }
         return vals;
     }
 
-    function extend( a, b, undefOnly ) {
-        for ( var prop in b ) {
-            if ( hasOwn.call( b, prop ) ) {
+    function extend(a, b, undefOnly) {
+        for (var prop in b) {
+            if (hasOwn.call(b, prop)) {
 
                 // Avoid "Member not found" error in IE8 caused by messing with window.constructor
                 // This block runs on every environment, so `global` is being used instead of `window`
                 // to avoid errors on node.
-                if ( prop !== "constructor" || a !== global ) {
-                    if ( b[ prop ] === undefined ) {
-                        delete a[ prop ];
-                    } else if ( !( undefOnly && typeof a[ prop ] !== "undefined" ) ) {
-                        a[ prop ] = b[ prop ];
+                if (prop !== "constructor" || a !== global) {
+                    if (b[prop] === undefined) {
+                        delete a[prop];
+                    } else if (!( undefOnly && typeof a[prop] !== "undefined" )) {
+                        a[prop] = b[prop];
                     }
                 }
             }
@@ -117,22 +117,22 @@
         return a;
     }
 
-    function objectType( obj ) {
-        if ( typeof obj === "undefined" ) {
+    function objectType(obj) {
+        if (typeof obj === "undefined") {
             return "undefined";
         }
 
         // Consider: typeof null === object
-        if ( obj === null ) {
+        if (obj === null) {
             return "null";
         }
 
-        var match = toString.call( obj ).match( /^\[object\s(.*)\]$/ ),
-            type = match && match[ 1 ];
+        var match = toString.call(obj).match(/^\[object\s(.*)\]$/),
+            type = match && match[1];
 
-        switch ( type ) {
+        switch (type) {
             case "Number":
-                if ( isNaN( obj ) ) {
+                if (isNaN(obj)) {
                     return "nan";
                 }
                 return "number";
@@ -147,47 +147,47 @@
             case "Symbol":
                 return type.toLowerCase();
         }
-        if ( typeof obj === "object" ) {
+        if (typeof obj === "object") {
             return "object";
         }
     }
 
 // Safe object type checking
-    function is( type, obj ) {
-        return QUnit.objectType( obj ) === type;
+    function is(type, obj) {
+        return QUnit.objectType(obj) === type;
     }
 
 // Doesn't support IE6 to IE9, it will return undefined on these browsers
 // See also https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error/Stack
-    function extractStacktrace( e, offset ) {
+    function extractStacktrace(e, offset) {
         offset = offset === undefined ? 4 : offset;
 
         var stack, include, i;
 
-        if ( e.stack ) {
-            stack = e.stack.split( "\n" );
-            if ( /^error$/i.test( stack[ 0 ] ) ) {
+        if (e.stack) {
+            stack = e.stack.split("\n");
+            if (/^error$/i.test(stack[0])) {
                 stack.shift();
             }
-            if ( fileName ) {
+            if (fileName) {
                 include = [];
-                for ( i = offset; i < stack.length; i++ ) {
-                    if ( stack[ i ].indexOf( fileName ) !== -1 ) {
+                for (i = offset; i < stack.length; i++) {
+                    if (stack[i].indexOf(fileName) !== -1) {
                         break;
                     }
-                    include.push( stack[ i ] );
+                    include.push(stack[i]);
                 }
-                if ( include.length ) {
-                    return include.join( "\n" );
+                if (include.length) {
+                    return include.join("\n");
                 }
             }
-            return stack[ offset ];
+            return stack[offset];
 
             // Support: Safari <=6 only
-        } else if ( e.sourceURL ) {
+        } else if (e.sourceURL) {
 
             // Exclude useless self-reference for generated Error objects
-            if ( /qunit.js$/.test( e.sourceURL ) ) {
+            if (/qunit.js$/.test(e.sourceURL)) {
                 return;
             }
 
@@ -196,20 +196,20 @@
         }
     }
 
-    function sourceFromStacktrace( offset ) {
+    function sourceFromStacktrace(offset) {
         var error = new Error();
 
         // Support: Safari <=7 only, IE <=10 - 11 only
         // Not all browsers generate the `stack` property for `new Error()`, see also #636
-        if ( !error.stack ) {
+        if (!error.stack) {
             try {
                 throw error;
-            } catch ( err ) {
+            } catch (err) {
                 error = err;
             }
         }
 
-        return extractStacktrace( error, offset );
+        return extractStacktrace(error, offset);
     }
 
     /**
@@ -264,53 +264,53 @@
     };
 
 // Push a loose unnamed module to the modules collection
-    config.modules.push( config.currentModule );
+    config.modules.push(config.currentModule);
 
     var loggingCallbacks = {};
 
 // Register logging callbacks
-    function registerLoggingCallbacks( obj ) {
+    function registerLoggingCallbacks(obj) {
         var i, l, key,
-            callbackNames = [ "begin", "done", "log", "testStart", "testDone",
-                "moduleStart", "moduleDone" ];
+            callbackNames = ["begin", "done", "log", "testStart", "testDone",
+                "moduleStart", "moduleDone"];
 
-        function registerLoggingCallback( key ) {
-            var loggingCallback = function( callback ) {
-                if ( objectType( callback ) !== "function" ) {
+        function registerLoggingCallback(key) {
+            var loggingCallback = function (callback) {
+                if (objectType(callback) !== "function") {
                     throw new Error(
                         "QUnit logging methods require a callback function as their first parameters."
                     );
                 }
 
-                config.callbacks[ key ].push( callback );
+                config.callbacks[key].push(callback);
             };
 
             // DEPRECATED: This will be removed on QUnit 2.0.0+
             // Stores the registered functions allowing restoring
             // at verifyLoggingCallbacks() if modified
-            loggingCallbacks[ key ] = loggingCallback;
+            loggingCallbacks[key] = loggingCallback;
 
             return loggingCallback;
         }
 
-        for ( i = 0, l = callbackNames.length; i < l; i++ ) {
-            key = callbackNames[ i ];
+        for (i = 0, l = callbackNames.length; i < l; i++) {
+            key = callbackNames[i];
 
             // Initialize key collection of logging callback
-            if ( objectType( config.callbacks[ key ] ) === "undefined" ) {
-                config.callbacks[ key ] = [];
+            if (objectType(config.callbacks[key]) === "undefined") {
+                config.callbacks[key] = [];
             }
 
-            obj[ key ] = registerLoggingCallback( key );
+            obj[key] = registerLoggingCallback(key);
         }
     }
 
-    function runLoggingCallbacks( key, args ) {
+    function runLoggingCallbacks(key, args) {
         var i, l, callbacks;
 
-        callbacks = config.callbacks[ key ];
-        for ( i = 0, l = callbacks.length; i < l; i++ ) {
-            callbacks[ i ]( args );
+        callbacks = config.callbacks[key];
+        for (i = 0, l = callbacks.length; i < l; i++) {
+            callbacks[i](args);
         }
     }
 
@@ -320,18 +320,18 @@
     function verifyLoggingCallbacks() {
         var loggingCallback, userCallback;
 
-        for ( loggingCallback in loggingCallbacks ) {
-            if ( QUnit[ loggingCallback ] !== loggingCallbacks[ loggingCallback ] ) {
+        for (loggingCallback in loggingCallbacks) {
+            if (QUnit[loggingCallback] !== loggingCallbacks[loggingCallback]) {
 
-                userCallback = QUnit[ loggingCallback ];
+                userCallback = QUnit[loggingCallback];
 
                 // Restore the callback function
-                QUnit[ loggingCallback ] = loggingCallbacks[ loggingCallback ];
+                QUnit[loggingCallback] = loggingCallbacks[loggingCallback];
 
                 // Assign the deprecated given callback
-                QUnit[ loggingCallback ]( userCallback );
+                QUnit[loggingCallback](userCallback);
 
-                if ( global.console && global.console.warn ) {
+                if (global.console && global.console.warn) {
                     global.console.warn(
                         "QUnit." + loggingCallback + " was replaced with a new value.\n" +
                         "Please, check out the documentation on how to apply logging callbacks.\n" +
@@ -342,8 +342,8 @@
         }
     }
 
-    ( function() {
-        if ( !defined.document ) {
+    ( function () {
+        if (!defined.document) {
             return;
         }
 
@@ -354,24 +354,24 @@
         // Cover uncaught exceptions
         // Returning true will suppress the default browser handler,
         // returning false will let it run.
-        window.onerror = function( error, filePath, linerNr ) {
+        window.onerror = function (error, filePath, linerNr) {
             var ret = false;
-            if ( onErrorFnPrev ) {
-                ret = onErrorFnPrev( error, filePath, linerNr );
+            if (onErrorFnPrev) {
+                ret = onErrorFnPrev(error, filePath, linerNr);
             }
 
             // Treat return value as window.onerror itself does,
             // Only do our handling if not suppressed.
-            if ( ret !== true ) {
-                if ( QUnit.config.current ) {
-                    if ( QUnit.config.current.ignoreGlobalErrors ) {
+            if (ret !== true) {
+                if (QUnit.config.current) {
+                    if (QUnit.config.current.ignoreGlobalErrors) {
                         return true;
                     }
-                    QUnit.pushFailure( error, filePath + ":" + linerNr );
+                    QUnit.pushFailure(error, filePath + ":" + linerNr);
                 } else {
-                    QUnit.test( "global failure", extend( function() {
-                        QUnit.pushFailure( error, filePath + ":" + linerNr );
-                    }, { validTest: true } ) );
+                    QUnit.test("global failure", extend(function () {
+                        QUnit.pushFailure(error, filePath + ":" + linerNr);
+                    }, {validTest: true}));
                 }
                 return false;
             }
@@ -386,15 +386,15 @@
 // Expose the current QUnit version
     QUnit.version = "1.23.1";
 
-    extend( QUnit, {
+    extend(QUnit, {
 
         // Call on start of module test to prepend name to all tests
-        module: function( name, testEnvironment, executeNow ) {
+        module: function (name, testEnvironment, executeNow) {
             var module, moduleFns;
             var currentModule = config.currentModule;
 
-            if ( arguments.length === 2 ) {
-                if ( objectType( testEnvironment ) === "function" ) {
+            if (arguments.length === 2) {
+                if (objectType(testEnvironment) === "function") {
                     executeNow = testEnvironment;
                     testEnvironment = undefined;
                 }
@@ -402,11 +402,11 @@
 
             // DEPRECATED: handles setup/teardown functions,
             // beforeEach and afterEach should be used instead
-            if ( testEnvironment && testEnvironment.setup ) {
+            if (testEnvironment && testEnvironment.setup) {
                 testEnvironment.beforeEach = testEnvironment.setup;
                 delete testEnvironment.setup;
             }
-            if ( testEnvironment && testEnvironment.teardown ) {
+            if (testEnvironment && testEnvironment.teardown) {
                 testEnvironment.afterEach = testEnvironment.teardown;
                 delete testEnvironment.teardown;
             }
@@ -414,46 +414,46 @@
             module = createModule();
 
             moduleFns = {
-                beforeEach: setHook( module, "beforeEach" ),
-                afterEach: setHook( module, "afterEach" )
+                beforeEach: setHook(module, "beforeEach"),
+                afterEach: setHook(module, "afterEach")
             };
 
-            if ( objectType( executeNow ) === "function" ) {
-                config.moduleStack.push( module );
-                setCurrentModule( module );
-                executeNow.call( module.testEnvironment, moduleFns );
+            if (objectType(executeNow) === "function") {
+                config.moduleStack.push(module);
+                setCurrentModule(module);
+                executeNow.call(module.testEnvironment, moduleFns);
                 config.moduleStack.pop();
                 module = module.parentModule || currentModule;
             }
 
-            setCurrentModule( module );
+            setCurrentModule(module);
 
             function createModule() {
                 var parentModule = config.moduleStack.length ?
-                    config.moduleStack.slice( -1 )[ 0 ] : null;
+                    config.moduleStack.slice(-1)[0] : null;
                 var moduleName = parentModule !== null ?
-                    [ parentModule.name, name ].join( " > " ) : name;
+                    [parentModule.name, name].join(" > ") : name;
                 var module = {
                     name: moduleName,
                     parentModule: parentModule,
                     tests: [],
-                    moduleId: generateHash( moduleName )
+                    moduleId: generateHash(moduleName)
                 };
 
                 var env = {};
-                if ( parentModule ) {
-                    extend( env, parentModule.testEnvironment );
+                if (parentModule) {
+                    extend(env, parentModule.testEnvironment);
                     delete env.beforeEach;
                     delete env.afterEach;
                 }
-                extend( env, testEnvironment );
+                extend(env, testEnvironment);
                 module.testEnvironment = env;
 
-                config.modules.push( module );
+                config.modules.push(module);
                 return module;
             }
 
-            function setCurrentModule( module ) {
+            function setCurrentModule(module) {
                 config.currentModule = module;
             }
 
@@ -470,20 +470,20 @@
 
         // DEPRECATED: The functionality of QUnit.start() will be altered in QUnit 2.0.
         // In QUnit 2.0, invoking it will ONLY affect the `QUnit.config.autostart` blocking behavior.
-        start: function( count ) {
+        start: function (count) {
             var globalStartAlreadyCalled = globalStartCalled;
 
-            if ( !config.current ) {
+            if (!config.current) {
                 globalStartCalled = true;
 
-                if ( runStarted ) {
-                    throw new Error( "Called start() outside of a test context while already started" );
-                } else if ( globalStartAlreadyCalled || count > 1 ) {
-                    throw new Error( "Called start() outside of a test context too many times" );
-                } else if ( config.autostart ) {
-                    throw new Error( "Called start() outside of a test context when " +
-                        "QUnit.config.autostart was true" );
-                } else if ( !config.pageLoaded ) {
+                if (runStarted) {
+                    throw new Error("Called start() outside of a test context while already started");
+                } else if (globalStartAlreadyCalled || count > 1) {
+                    throw new Error("Called start() outside of a test context too many times");
+                } else if (config.autostart) {
+                    throw new Error("Called start() outside of a test context when " +
+                        "QUnit.config.autostart was true");
+                } else if (!config.pageLoaded) {
 
                     // The page isn't completely loaded yet, so bail out and let `QUnit.load` handle it
                     config.autostart = true;
@@ -495,28 +495,28 @@
                 config.current.semaphore -= count || 1;
 
                 // If semaphore is non-numeric, throw error
-                if ( isNaN( config.current.semaphore ) ) {
+                if (isNaN(config.current.semaphore)) {
                     config.current.semaphore = 0;
 
                     QUnit.pushFailure(
                         "Called start() with a non-numeric decrement.",
-                        sourceFromStacktrace( 2 )
+                        sourceFromStacktrace(2)
                     );
                     return;
                 }
 
                 // Don't start until equal number of stop-calls
-                if ( config.current.semaphore > 0 ) {
+                if (config.current.semaphore > 0) {
                     return;
                 }
 
                 // Throw an Error if start is called more often than stop
-                if ( config.current.semaphore < 0 ) {
+                if (config.current.semaphore < 0) {
                     config.current.semaphore = 0;
 
                     QUnit.pushFailure(
                         "Called start() while already started (test's semaphore was 0 already)",
-                        sourceFromStacktrace( 2 )
+                        sourceFromStacktrace(2)
                     );
                     return;
                 }
@@ -526,11 +526,11 @@
         },
 
         // DEPRECATED: QUnit.stop() will be removed in QUnit 2.0.
-        stop: function( count ) {
+        stop: function (count) {
 
             // If there isn't a test running, don't allow QUnit.stop() to be called
-            if ( !config.current ) {
-                throw new Error( "Called stop() outside of a test context" );
+            if (!config.current) {
+                throw new Error("Called stop() outside of a test context");
             }
 
             // If a test is running, adjust its semaphore
@@ -547,40 +547,40 @@
 
         extend: extend,
 
-        load: function() {
+        load: function () {
             config.pageLoaded = true;
 
             // Initialize the configuration options
-            extend( config, {
-                stats: { all: 0, bad: 0 },
-                moduleStats: { all: 0, bad: 0 },
+            extend(config, {
+                stats: {all: 0, bad: 0},
+                moduleStats: {all: 0, bad: 0},
                 started: 0,
                 updateRate: 1000,
                 autostart: true,
                 filter: ""
-            }, true );
+            }, true);
 
             config.blocking = false;
 
-            if ( config.autostart ) {
+            if (config.autostart) {
                 resumeProcessing();
             }
         },
 
-        stack: function( offset ) {
+        stack: function (offset) {
             offset = ( offset || 0 ) + 2;
-            return sourceFromStacktrace( offset );
+            return sourceFromStacktrace(offset);
         }
-    } );
+    });
 
-    registerLoggingCallbacks( QUnit );
+    registerLoggingCallbacks(QUnit);
 
     function begin() {
         var i, l,
             modulesLog = [];
 
         // If the test run hasn't officially begun yet
-        if ( !config.started ) {
+        if (!config.started) {
 
             // Record the time of the test run's beginning
             config.started = now();
@@ -588,52 +588,53 @@
             verifyLoggingCallbacks();
 
             // Delete the loose unnamed module if unused.
-            if ( config.modules[ 0 ].name === "" && config.modules[ 0 ].tests.length === 0 ) {
+            if (config.modules[0].name === "" && config.modules[0].tests.length === 0) {
                 config.modules.shift();
             }
 
             // Avoid unnecessary information by not logging modules' test environments
-            for ( i = 0, l = config.modules.length; i < l; i++ ) {
-                modulesLog.push( {
-                    name: config.modules[ i ].name,
-                    tests: config.modules[ i ].tests
-                } );
+            for (i = 0, l = config.modules.length; i < l; i++) {
+                modulesLog.push({
+                    name: config.modules[i].name,
+                    tests: config.modules[i].tests
+                });
             }
 
             // The test run is officially beginning now
-            runLoggingCallbacks( "begin", {
+            runLoggingCallbacks("begin", {
                 totalTests: Test.count,
                 modules: modulesLog
-            } );
+            });
         }
 
         config.blocking = false;
-        process( true );
+        process(true);
     }
 
-    function process( last ) {
+    function process(last) {
         function next() {
-            process( last );
+            process(last);
         }
+
         var start = now();
         config.depth = ( config.depth || 0 ) + 1;
 
-        while ( config.queue.length && !config.blocking ) {
-            if ( !defined.setTimeout || config.updateRate <= 0 ||
-                ( ( now() - start ) < config.updateRate ) ) {
-                if ( config.current ) {
+        while (config.queue.length && !config.blocking) {
+            if (!defined.setTimeout || config.updateRate <= 0 ||
+                ( ( now() - start ) < config.updateRate )) {
+                if (config.current) {
 
                     // Reset async tracking for each phase of the Test lifecycle
                     config.current.usedAsync = false;
                 }
                 config.queue.shift()();
             } else {
-                setTimeout( next, 13 );
+                setTimeout(next, 13);
                 break;
             }
         }
         config.depth--;
-        if ( last && !config.blocking && !config.queue.length && config.depth === 0 ) {
+        if (last && !config.blocking && !config.queue.length && config.depth === 0) {
             done();
         }
     }
@@ -641,17 +642,17 @@
     function pauseProcessing() {
         config.blocking = true;
 
-        if ( config.testTimeout && defined.setTimeout ) {
-            clearTimeout( config.timeout );
-            config.timeout = setTimeout( function() {
-                if ( config.current ) {
+        if (config.testTimeout && defined.setTimeout) {
+            clearTimeout(config.timeout);
+            config.timeout = setTimeout(function () {
+                if (config.current) {
                     config.current.semaphore = 0;
-                    QUnit.pushFailure( "Test timed out", sourceFromStacktrace( 2 ) );
+                    QUnit.pushFailure("Test timed out", sourceFromStacktrace(2));
                 } else {
-                    throw new Error( "Test timed out" );
+                    throw new Error("Test timed out");
                 }
                 resumeProcessing();
-            }, config.testTimeout );
+            }, config.testTimeout);
         }
     }
 
@@ -659,17 +660,17 @@
         runStarted = true;
 
         // A slight delay to allow this iteration of the event loop to finish (more assertions, etc.)
-        if ( defined.setTimeout ) {
-            setTimeout( function() {
-                if ( config.current && config.current.semaphore > 0 ) {
+        if (defined.setTimeout) {
+            setTimeout(function () {
+                if (config.current && config.current.semaphore > 0) {
                     return;
                 }
-                if ( config.timeout ) {
-                    clearTimeout( config.timeout );
+                if (config.timeout) {
+                    clearTimeout(config.timeout);
                 }
 
                 begin();
-            }, 13 );
+            }, 13);
         } else {
             begin();
         }
@@ -681,36 +682,36 @@
         config.autorun = true;
 
         // Log the last module results
-        if ( config.previousModule ) {
-            runLoggingCallbacks( "moduleDone", {
+        if (config.previousModule) {
+            runLoggingCallbacks("moduleDone", {
                 name: config.previousModule.name,
                 tests: config.previousModule.tests,
                 failed: config.moduleStats.bad,
                 passed: config.moduleStats.all - config.moduleStats.bad,
                 total: config.moduleStats.all,
                 runtime: now() - config.moduleStats.started
-            } );
+            });
         }
         delete config.previousModule;
 
         runtime = now() - config.started;
         passed = config.stats.all - config.stats.bad;
 
-        runLoggingCallbacks( "done", {
+        runLoggingCallbacks("done", {
             failed: config.stats.bad,
             passed: passed,
             total: config.stats.all,
             runtime: runtime
-        } );
+        });
     }
 
-    function setHook( module, hookName ) {
-        if ( module.testEnvironment === undefined ) {
+    function setHook(module, hookName) {
+        if (module.testEnvironment === undefined) {
             module.testEnvironment = {};
         }
 
-        return function( callback ) {
-            module.testEnvironment[ hookName ] = callback;
+        return function (callback) {
+            module.testEnvironment[hookName] = callback;
         };
     }
 
@@ -718,47 +719,48 @@
     var priorityCount = 0;
     var unitSampler;
 
-    function Test( settings ) {
+    function Test(settings) {
         var i, l;
 
         ++Test.count;
 
-        extend( this, settings );
+        extend(this, settings);
         this.assertions = [];
         this.semaphore = 0;
         this.usedAsync = false;
         this.module = config.currentModule;
-        this.stack = sourceFromStacktrace( 3 );
+        this.stack = sourceFromStacktrace(3);
 
         // Register unique strings
-        for ( i = 0, l = this.module.tests; i < l.length; i++ ) {
-            if ( this.module.tests[ i ].name === this.testName ) {
+        for (i = 0, l = this.module.tests; i < l.length; i++) {
+            if (this.module.tests[i].name === this.testName) {
                 this.testName += " ";
             }
         }
 
-        this.testId = generateHash( this.module.name, this.testName );
+        this.testId = generateHash(this.module.name, this.testName);
 
-        this.module.tests.push( {
+        this.module.tests.push({
             name: this.testName,
             testId: this.testId
-        } );
+        });
 
-        if ( settings.skip ) {
+        if (settings.skip) {
 
             // Skipped tests will fully ignore any sent callback
-            this.callback = function() {};
+            this.callback = function () {
+            };
             this.async = false;
             this.expected = 0;
         } else {
-            this.assert = new Assert( this );
+            this.assert = new Assert(this);
         }
     }
 
     Test.count = 0;
 
     Test.prototype = {
-        before: function() {
+        before: function () {
             if (
 
                 // Emit moduleStart when we're switching from one module to another
@@ -768,142 +770,142 @@
             // yet exist it means this is the first test in a suite that isn't wrapped in a
             // module, in which case we'll just emit a moduleStart event for 'undefined'.
             // Without this, reporters can get testStart before moduleStart  which is a problem.
-            !hasOwn.call( config, "previousModule" )
+            !hasOwn.call(config, "previousModule")
             ) {
-                if ( hasOwn.call( config, "previousModule" ) ) {
-                    runLoggingCallbacks( "moduleDone", {
+                if (hasOwn.call(config, "previousModule")) {
+                    runLoggingCallbacks("moduleDone", {
                         name: config.previousModule.name,
                         tests: config.previousModule.tests,
                         failed: config.moduleStats.bad,
                         passed: config.moduleStats.all - config.moduleStats.bad,
                         total: config.moduleStats.all,
                         runtime: now() - config.moduleStats.started
-                    } );
+                    });
                 }
                 config.previousModule = this.module;
-                config.moduleStats = { all: 0, bad: 0, started: now() };
-                runLoggingCallbacks( "moduleStart", {
+                config.moduleStats = {all: 0, bad: 0, started: now()};
+                runLoggingCallbacks("moduleStart", {
                     name: this.module.name,
                     tests: this.module.tests
-                } );
+                });
             }
 
             config.current = this;
 
-            if ( this.module.testEnvironment ) {
+            if (this.module.testEnvironment) {
                 delete this.module.testEnvironment.beforeEach;
                 delete this.module.testEnvironment.afterEach;
             }
-            this.testEnvironment = extend( {}, this.module.testEnvironment );
+            this.testEnvironment = extend({}, this.module.testEnvironment);
 
             this.started = now();
-            runLoggingCallbacks( "testStart", {
+            runLoggingCallbacks("testStart", {
                 name: this.testName,
                 module: this.module.name,
                 testId: this.testId
-            } );
+            });
 
-            if ( !config.pollution ) {
+            if (!config.pollution) {
                 saveGlobal();
             }
         },
 
-        run: function() {
+        run: function () {
             var promise;
 
             config.current = this;
 
-            if ( this.async ) {
+            if (this.async) {
                 QUnit.stop();
             }
 
             this.callbackStarted = now();
 
-            if ( config.notrycatch ) {
-                runTest( this );
+            if (config.notrycatch) {
+                runTest(this);
                 return;
             }
 
             try {
-                runTest( this );
-            } catch ( e ) {
-                this.pushFailure( "Died on test #" + ( this.assertions.length + 1 ) + " " +
-                    this.stack + ": " + ( e.message || e ), extractStacktrace( e, 0 ) );
+                runTest(this);
+            } catch (e) {
+                this.pushFailure("Died on test #" + ( this.assertions.length + 1 ) + " " +
+                    this.stack + ": " + ( e.message || e ), extractStacktrace(e, 0));
 
                 // Else next test will carry the responsibility
                 saveGlobal();
 
                 // Restart the tests if they're blocking
-                if ( config.blocking ) {
+                if (config.blocking) {
                     QUnit.start();
                 }
             }
 
-            function runTest( test ) {
-                promise = test.callback.call( test.testEnvironment, test.assert );
-                test.resolvePromise( promise );
+            function runTest(test) {
+                promise = test.callback.call(test.testEnvironment, test.assert);
+                test.resolvePromise(promise);
             }
         },
 
-        after: function() {
+        after: function () {
             checkPollution();
         },
 
-        queueHook: function( hook, hookName ) {
+        queueHook: function (hook, hookName) {
             var promise,
                 test = this;
             return function runHook() {
                 config.current = test;
-                if ( config.notrycatch ) {
+                if (config.notrycatch) {
                     callHook();
                     return;
                 }
                 try {
                     callHook();
-                } catch ( error ) {
-                    test.pushFailure( hookName + " failed on " + test.testName + ": " +
-                        ( error.message || error ), extractStacktrace( error, 0 ) );
+                } catch (error) {
+                    test.pushFailure(hookName + " failed on " + test.testName + ": " +
+                        ( error.message || error ), extractStacktrace(error, 0));
                 }
 
                 function callHook() {
-                    promise = hook.call( test.testEnvironment, test.assert );
-                    test.resolvePromise( promise, hookName );
+                    promise = hook.call(test.testEnvironment, test.assert);
+                    test.resolvePromise(promise, hookName);
                 }
             };
         },
 
         // Currently only used for module level hooks, can be used to add global level ones
-        hooks: function( handler ) {
+        hooks: function (handler) {
             var hooks = [];
 
-            function processHooks( test, module ) {
-                if ( module.parentModule ) {
-                    processHooks( test, module.parentModule );
+            function processHooks(test, module) {
+                if (module.parentModule) {
+                    processHooks(test, module.parentModule);
                 }
-                if ( module.testEnvironment &&
-                    QUnit.objectType( module.testEnvironment[ handler ] ) === "function" ) {
-                    hooks.push( test.queueHook( module.testEnvironment[ handler ], handler ) );
+                if (module.testEnvironment &&
+                    QUnit.objectType(module.testEnvironment[handler]) === "function") {
+                    hooks.push(test.queueHook(module.testEnvironment[handler], handler));
                 }
             }
 
             // Hooks are ignored on skipped tests
-            if ( !this.skip ) {
-                processHooks( this, this.module );
+            if (!this.skip) {
+                processHooks(this, this.module);
             }
             return hooks;
         },
 
-        finish: function() {
+        finish: function () {
             config.current = this;
-            if ( config.requireExpects && this.expected === null ) {
-                this.pushFailure( "Expected number of assertions to be defined, but expect() was " +
-                    "not called.", this.stack );
-            } else if ( this.expected !== null && this.expected !== this.assertions.length ) {
-                this.pushFailure( "Expected " + this.expected + " assertions, but " +
-                    this.assertions.length + " were run", this.stack );
-            } else if ( this.expected === null && !this.assertions.length ) {
-                this.pushFailure( "Expected at least one assertion, but none were run - call " +
-                    "expect(0) to accept zero assertions.", this.stack );
+            if (config.requireExpects && this.expected === null) {
+                this.pushFailure("Expected number of assertions to be defined, but expect() was " +
+                    "not called.", this.stack);
+            } else if (this.expected !== null && this.expected !== this.assertions.length) {
+                this.pushFailure("Expected " + this.expected + " assertions, but " +
+                    this.assertions.length + " were run", this.stack);
+            } else if (this.expected === null && !this.assertions.length) {
+                this.pushFailure("Expected at least one assertion, but none were run - call " +
+                    "expect(0) to accept zero assertions.", this.stack);
             }
 
             var i,
@@ -913,15 +915,15 @@
             config.stats.all += this.assertions.length;
             config.moduleStats.all += this.assertions.length;
 
-            for ( i = 0; i < this.assertions.length; i++ ) {
-                if ( !this.assertions[ i ].result ) {
+            for (i = 0; i < this.assertions.length; i++) {
+                if (!this.assertions[i].result) {
                     bad++;
                     config.stats.bad++;
                     config.moduleStats.bad++;
                 }
             }
 
-            runLoggingCallbacks( "testDone", {
+            runLoggingCallbacks("testDone", {
                 name: this.testName,
                 module: this.module.name,
                 skipped: !!this.skip,
@@ -939,7 +941,7 @@
 
                 // DEPRECATED: this property will be removed in 2.0.0, use runtime instead
                 duration: this.runtime
-            } );
+            });
 
             // QUnit.reset() is deprecated and will be replaced for a new
             // fixture reset function on QUnit 2.0/2.1.
@@ -949,46 +951,45 @@
             config.current = undefined;
         },
 
-        queue: function() {
+        queue: function () {
             var priority,
                 test = this;
 
-            if ( !this.valid() ) {
+            if (!this.valid()) {
                 return;
             }
 
             function run() {
 
                 // Each of these can by async
-                synchronize( [
-                    function() {
+                synchronize([
+                    function () {
                         test.before();
                     },
 
-                    test.hooks( "beforeEach" ),
-                    function() {
+                    test.hooks("beforeEach"),
+                    function () {
                         test.run();
                     },
 
-                    test.hooks( "afterEach" ).reverse(),
+                    test.hooks("afterEach").reverse(),
 
-                    function() {
+                    function () {
                         test.after();
                     },
-                    function() {
+                    function () {
                         test.finish();
                     }
-                ] );
+                ]);
             }
 
             // Prioritize previously failed tests, detected from sessionStorage
-            priority = QUnit.config.reorder && defined.sessionStorage &&
-                +sessionStorage.getItem( "qunit-test-" + this.module.name + "-" + this.testName );
+            priority = QUnit.config.reorder && defined.sessionStorage && +sessionStorage.getItem("qunit-test-" + this.module.name + "-" + this.testName);
 
-            return synchronize( run, priority, config.seed );
+            return synchronize(run, priority, config.seed);
         },
 
-        pushResult: function( resultInfo ) {
+        pushResult: function (resultInfo) {
 
             // Destructure of resultInfo = { result, actual, expected, message, negative }
             var source,
@@ -1004,26 +1005,26 @@
                     runtime: now() - this.started
                 };
 
-            if ( !resultInfo.result ) {
+            if (!resultInfo.result) {
                 source = sourceFromStacktrace();
 
-                if ( source ) {
+                if (source) {
                     details.source = source;
                 }
             }
 
-            runLoggingCallbacks( "log", details );
+            runLoggingCallbacks("log", details);
 
-            this.assertions.push( {
+            this.assertions.push({
                 result: !!resultInfo.result,
                 message: resultInfo.message
-            } );
+            });
         },
 
-        pushFailure: function( message, source, actual ) {
-            if ( !( this instanceof Test ) ) {
-                throw new Error( "pushFailure() assertion outside test context, was " +
-                    sourceFromStacktrace( 2 ) );
+        pushFailure: function (message, source, actual) {
+            if (!( this instanceof Test )) {
+                throw new Error("pushFailure() assertion outside test context, was " +
+                    sourceFromStacktrace(2));
             }
 
             var details = {
@@ -1036,33 +1037,35 @@
                 runtime: now() - this.started
             };
 
-            if ( source ) {
+            if (source) {
                 details.source = source;
             }
 
-            runLoggingCallbacks( "log", details );
+            runLoggingCallbacks("log", details);
 
-            this.assertions.push( {
+            this.assertions.push({
                 result: false,
                 message: message
-            } );
+            });
         },
 
-        resolvePromise: function( promise, phase ) {
+        resolvePromise: function (promise, phase) {
             var then, message,
                 test = this;
-            if ( promise != null ) {
+            if (promise != null) {
                 then = promise.then;
-                if ( QUnit.objectType( then ) === "function" ) {
+                if (QUnit.objectType(then) === "function") {
                     QUnit.stop();
                     then.call(
                         promise,
-                        function() { QUnit.start(); },
-                        function( error ) {
+                        function () {
+                            QUnit.start();
+                        },
+                        function (error) {
                             message = "Promise rejected " +
-                                ( !phase ? "during" : phase.replace( /Each$/, "" ) ) +
+                                ( !phase ? "during" : phase.replace(/Each$/, "") ) +
                                 " " + test.testName + ": " + ( error.message || error );
-                            test.pushFailure( message, extractStacktrace( error, 0 ) );
+                            test.pushFailure(message, extractStacktrace(error, 0));
 
                             // Else next test will carry the responsibility
                             saveGlobal();
@@ -1075,76 +1078,75 @@
             }
         },
 
-        valid: function() {
+        valid: function () {
             var filter = config.filter,
-                regexFilter = /^(!?)\/([\w\W]*)\/(i?$)/.exec( filter ),
+                regexFilter = /^(!?)\/([\w\W]*)\/(i?$)/.exec(filter),
                 module = config.module && config.module.toLowerCase(),
                 fullName = ( this.module.name + ": " + this.testName );
 
-            function moduleChainNameMatch( testModule ) {
+            function moduleChainNameMatch(testModule) {
                 var testModuleName = testModule.name ? testModule.name.toLowerCase() : null;
-                if ( testModuleName === module ) {
+                if (testModuleName === module) {
                     return true;
-                } else if ( testModule.parentModule ) {
-                    return moduleChainNameMatch( testModule.parentModule );
+                } else if (testModule.parentModule) {
+                    return moduleChainNameMatch(testModule.parentModule);
                 } else {
                     return false;
                 }
             }
 
-            function moduleChainIdMatch( testModule ) {
-                return inArray( testModule.moduleId, config.moduleId ) > -1 ||
-                    testModule.parentModule && moduleChainIdMatch( testModule.parentModule );
+            function moduleChainIdMatch(testModule) {
+                return inArray(testModule.moduleId, config.moduleId) > -1 ||
+                    testModule.parentModule && moduleChainIdMatch(testModule.parentModule);
             }
 
             // Internally-generated tests are always valid
-            if ( this.callback && this.callback.validTest ) {
+            if (this.callback && this.callback.validTest) {
                 return true;
             }
 
-            if ( config.moduleId && config.moduleId.length > 0 &&
-                !moduleChainIdMatch( this.module ) ) {
+            if (config.moduleId && config.moduleId.length > 0 && !moduleChainIdMatch(this.module)) {
 
                 return false;
             }
 
-            if ( config.testId && config.testId.length > 0 &&
-                inArray( this.testId, config.testId ) < 0 ) {
+            if (config.testId && config.testId.length > 0 &&
+                inArray(this.testId, config.testId) < 0) {
 
                 return false;
             }
 
-            if ( module && !moduleChainNameMatch( this.module ) ) {
+            if (module && !moduleChainNameMatch(this.module)) {
                 return false;
             }
 
-            if ( !filter ) {
+            if (!filter) {
                 return true;
             }
 
             return regexFilter ?
-                this.regexFilter( !!regexFilter[ 1 ], regexFilter[ 2 ], regexFilter[ 3 ], fullName ) :
-                this.stringFilter( filter, fullName );
+                this.regexFilter(!!regexFilter[1], regexFilter[2], regexFilter[3], fullName) :
+                this.stringFilter(filter, fullName);
         },
 
-        regexFilter: function( exclude, pattern, flags, fullName ) {
-            var regex = new RegExp( pattern, flags );
-            var match = regex.test( fullName );
+        regexFilter: function (exclude, pattern, flags, fullName) {
+            var regex = new RegExp(pattern, flags);
+            var match = regex.test(fullName);
 
             return match !== exclude;
         },
 
-        stringFilter: function( filter, fullName ) {
+        stringFilter: function (filter, fullName) {
             filter = filter.toLowerCase();
             fullName = fullName.toLowerCase();
 
-            var include = filter.charAt( 0 ) !== "!";
-            if ( !include ) {
-                filter = filter.slice( 1 );
+            var include = filter.charAt(0) !== "!";
+            if (!include) {
+                filter = filter.slice(1);
             }
 
             // If the filter matches, we need to honour include
-            if ( fullName.indexOf( filter ) !== -1 ) {
+            if (fullName.indexOf(filter) !== -1) {
                 return include;
             }
 
@@ -1159,100 +1161,100 @@
      Use testStart or testDone for custom cleanup.
      This method will throw an error in 2.0, and will be removed in 2.1
      */
-    QUnit.reset = function() {
+    QUnit.reset = function () {
 
         // Return on non-browser environments
         // This is necessary to not break on node tests
-        if ( !defined.document ) {
+        if (!defined.document) {
             return;
         }
 
         var fixture = defined.document && document.getElementById &&
-            document.getElementById( "qunit-fixture" );
+            document.getElementById("qunit-fixture");
 
-        if ( fixture ) {
+        if (fixture) {
             fixture.innerHTML = config.fixture;
         }
     };
 
-    QUnit.pushFailure = function() {
-        if ( !QUnit.config.current ) {
-            throw new Error( "pushFailure() assertion outside test context, in " +
-                sourceFromStacktrace( 2 ) );
+    QUnit.pushFailure = function () {
+        if (!QUnit.config.current) {
+            throw new Error("pushFailure() assertion outside test context, in " +
+                sourceFromStacktrace(2));
         }
 
         // Gets current test obj
         var currentTest = QUnit.config.current;
 
-        return currentTest.pushFailure.apply( currentTest, arguments );
+        return currentTest.pushFailure.apply(currentTest, arguments);
     };
 
 // Based on Java's String.hashCode, a simple but not
 // rigorously collision resistant hashing function
-    function generateHash( module, testName ) {
+    function generateHash(module, testName) {
         var hex,
             i = 0,
             hash = 0,
             str = module + "\x1C" + testName,
             len = str.length;
 
-        for ( ; i < len; i++ ) {
-            hash  = ( ( hash << 5 ) - hash ) + str.charCodeAt( i );
+        for (; i < len; i++) {
+            hash = ( ( hash << 5 ) - hash ) + str.charCodeAt(i);
             hash |= 0;
         }
 
         // Convert the possibly negative integer hash code into an 8 character hex string, which isn't
         // strictly necessary but increases user understanding that the id is a SHA-like hash
-        hex = ( 0x100000000 + hash ).toString( 16 );
-        if ( hex.length < 8 ) {
+        hex = ( 0x100000000 + hash ).toString(16);
+        if (hex.length < 8) {
             hex = "0000000" + hex;
         }
 
-        return hex.slice( -8 );
+        return hex.slice(-8);
     }
 
-    function synchronize( callback, priority, seed ) {
+    function synchronize(callback, priority, seed) {
         var last = !priority,
             index;
 
-        if ( QUnit.objectType( callback ) === "array" ) {
-            while ( callback.length ) {
-                synchronize( callback.shift() );
+        if (QUnit.objectType(callback) === "array") {
+            while (callback.length) {
+                synchronize(callback.shift());
             }
             return;
         }
 
-        if ( priority ) {
-            config.queue.splice( priorityCount++, 0, callback );
-        } else if ( seed ) {
-            if ( !unitSampler ) {
-                unitSampler = unitSamplerGenerator( seed );
+        if (priority) {
+            config.queue.splice(priorityCount++, 0, callback);
+        } else if (seed) {
+            if (!unitSampler) {
+                unitSampler = unitSamplerGenerator(seed);
             }
 
             // Insert into a random position after all priority items
-            index = Math.floor( unitSampler() * ( config.queue.length - priorityCount + 1 ) );
-            config.queue.splice( priorityCount + index, 0, callback );
+            index = Math.floor(unitSampler() * ( config.queue.length - priorityCount + 1 ));
+            config.queue.splice(priorityCount + index, 0, callback);
         } else {
-            config.queue.push( callback );
+            config.queue.push(callback);
         }
 
-        if ( config.autorun && !config.blocking ) {
-            process( last );
+        if (config.autorun && !config.blocking) {
+            process(last);
         }
     }
 
-    function unitSamplerGenerator( seed ) {
+    function unitSamplerGenerator(seed) {
 
         // 32-bit xorshift, requires only a nonzero seed
         // http://excamera.com/sphinx/article-xorshift.html
-        var sample = parseInt( generateHash( seed ), 16 ) || -1;
-        return function() {
+        var sample = parseInt(generateHash(seed), 16) || -1;
+        return function () {
             sample ^= sample << 13;
             sample ^= sample >>> 17;
             sample ^= sample << 5;
 
             // ECMAScript has no unsigned number type
-            if ( sample < 0 ) {
+            if (sample < 0) {
                 sample += 0x100000000;
             }
 
@@ -1263,15 +1265,15 @@
     function saveGlobal() {
         config.pollution = [];
 
-        if ( config.noglobals ) {
-            for ( var key in global ) {
-                if ( hasOwn.call( global, key ) ) {
+        if (config.noglobals) {
+            for (var key in global) {
+                if (hasOwn.call(global, key)) {
 
                     // In Opera sometimes DOM element ids show up here, ignore them
-                    if ( /^qunit-test-output/.test( key ) ) {
+                    if (/^qunit-test-output/.test(key)) {
                         continue;
                     }
-                    config.pollution.push( key );
+                    config.pollution.push(key);
                 }
             }
         }
@@ -1284,85 +1286,91 @@
 
         saveGlobal();
 
-        newGlobals = diff( config.pollution, old );
-        if ( newGlobals.length > 0 ) {
-            QUnit.pushFailure( "Introduced global variable(s): " + newGlobals.join( ", " ) );
+        newGlobals = diff(config.pollution, old);
+        if (newGlobals.length > 0) {
+            QUnit.pushFailure("Introduced global variable(s): " + newGlobals.join(", "));
         }
 
-        deletedGlobals = diff( old, config.pollution );
-        if ( deletedGlobals.length > 0 ) {
-            QUnit.pushFailure( "Deleted global variable(s): " + deletedGlobals.join( ", " ) );
+        deletedGlobals = diff(old, config.pollution);
+        if (deletedGlobals.length > 0) {
+            QUnit.pushFailure("Deleted global variable(s): " + deletedGlobals.join(", "));
         }
     }
 
 // Will be exposed as QUnit.asyncTest
-    function asyncTest( testName, expected, callback ) {
-        if ( arguments.length === 2 ) {
+    function asyncTest(testName, expected, callback) {
+        if (arguments.length === 2) {
             callback = expected;
             expected = null;
         }
 
-        QUnit.test( testName, expected, callback, true );
+        QUnit.test(testName, expected, callback, true);
     }
 
 // Will be exposed as QUnit.test
-    function test( testName, expected, callback, async ) {
-        if ( focused )  { return; }
+    function test(testName, expected, callback, async) {
+        if (focused) {
+            return;
+        }
 
         var newTest;
 
-        if ( arguments.length === 2 ) {
+        if (arguments.length === 2) {
             callback = expected;
             expected = null;
         }
 
-        newTest = new Test( {
+        newTest = new Test({
             testName: testName,
             expected: expected,
             async: async,
             callback: callback
-        } );
+        });
 
         newTest.queue();
     }
 
 // Will be exposed as QUnit.skip
-    function skip( testName ) {
-        if ( focused )  { return; }
+    function skip(testName) {
+        if (focused) {
+            return;
+        }
 
-        var test = new Test( {
+        var test = new Test({
             testName: testName,
             skip: true
-        } );
+        });
 
         test.queue();
     }
 
 // Will be exposed as QUnit.only
-    function only( testName, expected, callback, async ) {
+    function only(testName, expected, callback, async) {
         var newTest;
 
-        if ( focused )  { return; }
+        if (focused) {
+            return;
+        }
 
         QUnit.config.queue.length = 0;
         focused = true;
 
-        if ( arguments.length === 2 ) {
+        if (arguments.length === 2) {
             callback = expected;
             expected = null;
         }
 
-        newTest = new Test( {
+        newTest = new Test({
             testName: testName,
             expected: expected,
             async: async,
             callback: callback
-        } );
+        });
 
         newTest.queue();
     }
 
-    function Assert( testContext ) {
+    function Assert(testContext) {
         this.test = testContext;
     }
 
@@ -1371,8 +1379,8 @@
 
         // Specify the number of expected assertions to guarantee that failed test
         // (no assertions are run at all) don't slip through.
-        expect: function( asserts ) {
-            if ( arguments.length === 1 ) {
+        expect: function (asserts) {
+            if (arguments.length === 1) {
                 this.test.expected = asserts;
             } else {
                 return this.test.expected;
@@ -1381,12 +1389,12 @@
 
         // Increment this Test's semaphore counter, then return a function that
         // decrements that counter a maximum of once.
-        async: function( count ) {
+        async: function (count) {
             var test = this.test,
                 popped = false,
                 acceptCallCount = count;
 
-            if ( typeof acceptCallCount === "undefined" ) {
+            if (typeof acceptCallCount === "undefined") {
                 acceptCallCount = 1;
             }
 
@@ -1396,13 +1404,13 @@
 
             return function done() {
 
-                if ( popped ) {
-                    test.pushFailure( "Too many calls to the `assert.async` callback",
-                        sourceFromStacktrace( 2 ) );
+                if (popped) {
+                    test.pushFailure("Too many calls to the `assert.async` callback",
+                        sourceFromStacktrace(2));
                     return;
                 }
                 acceptCallCount -= 1;
-                if ( acceptCallCount > 0 ) {
+                if (acceptCallCount > 0) {
                     return;
                 }
 
@@ -1414,18 +1422,18 @@
 
         // Exports test.push() to the user API
         // Alias of pushResult.
-        push: function( result, actual, expected, message, negative ) {
+        push: function (result, actual, expected, message, negative) {
             var currentAssert = this instanceof Assert ? this : QUnit.config.current.assert;
-            return currentAssert.pushResult( {
+            return currentAssert.pushResult({
                 result: result,
                 actual: actual,
                 expected: expected,
                 message: message,
                 negative: negative
-            } );
+            });
         },
 
-        pushResult: function( resultInfo ) {
+        pushResult: function (resultInfo) {
 
             // Destructure of resultInfo = { result, actual, expected, message, negative }
             var assert = this,
@@ -1436,208 +1444,208 @@
             // Although, it's use is not recommended as it can leak assertions
             // to other tests from async tests, because we only get a reference to the current test,
             // not exactly the test where assertion were intended to be called.
-            if ( !currentTest ) {
-                throw new Error( "assertion outside test context, in " + sourceFromStacktrace( 2 ) );
+            if (!currentTest) {
+                throw new Error("assertion outside test context, in " + sourceFromStacktrace(2));
             }
 
-            if ( currentTest.usedAsync === true && currentTest.semaphore === 0 ) {
-                currentTest.pushFailure( "Assertion after the final `assert.async` was resolved",
-                    sourceFromStacktrace( 2 ) );
+            if (currentTest.usedAsync === true && currentTest.semaphore === 0) {
+                currentTest.pushFailure("Assertion after the final `assert.async` was resolved",
+                    sourceFromStacktrace(2));
 
                 // Allow this assertion to continue running anyway...
             }
 
-            if ( !( assert instanceof Assert ) ) {
+            if (!( assert instanceof Assert )) {
                 assert = currentTest.assert;
             }
 
-            return assert.test.pushResult( resultInfo );
+            return assert.test.pushResult(resultInfo);
         },
 
-        ok: function( result, message ) {
+        ok: function (result, message) {
             message = message || ( result ? "okay" : "failed, expected argument to be truthy, was: " +
-                    QUnit.dump.parse( result ) );
-            this.pushResult( {
+                    QUnit.dump.parse(result) );
+            this.pushResult({
                 result: !!result,
                 actual: result,
                 expected: true,
                 message: message
-            } );
+            });
         },
 
-        notOk: function( result, message ) {
+        notOk: function (result, message) {
             message = message || ( !result ? "okay" : "failed, expected argument to be falsy, was: " +
-                    QUnit.dump.parse( result ) );
-            this.pushResult( {
+                    QUnit.dump.parse(result) );
+            this.pushResult({
                 result: !result,
                 actual: result,
                 expected: false,
                 message: message
-            } );
+            });
         },
 
-        equal: function( actual, expected, message ) {
+        equal: function (actual, expected, message) {
             /*jshint eqeqeq:false */
-            this.pushResult( {
+            this.pushResult({
                 result: expected == actual,
                 actual: actual,
                 expected: expected,
                 message: message
-            } );
+            });
         },
 
-        notEqual: function( actual, expected, message ) {
+        notEqual: function (actual, expected, message) {
             /*jshint eqeqeq:false */
-            this.pushResult( {
+            this.pushResult({
                 result: expected != actual,
                 actual: actual,
                 expected: expected,
                 message: message,
                 negative: true
-            } );
+            });
         },
 
-        propEqual: function( actual, expected, message ) {
-            actual = objectValues( actual );
-            expected = objectValues( expected );
-            this.pushResult( {
-                result: QUnit.equiv( actual, expected ),
+        propEqual: function (actual, expected, message) {
+            actual = objectValues(actual);
+            expected = objectValues(expected);
+            this.pushResult({
+                result: QUnit.equiv(actual, expected),
                 actual: actual,
                 expected: expected,
                 message: message
-            } );
+            });
         },
 
-        notPropEqual: function( actual, expected, message ) {
-            actual = objectValues( actual );
-            expected = objectValues( expected );
-            this.pushResult( {
-                result: !QUnit.equiv( actual, expected ),
+        notPropEqual: function (actual, expected, message) {
+            actual = objectValues(actual);
+            expected = objectValues(expected);
+            this.pushResult({
+                result: !QUnit.equiv(actual, expected),
                 actual: actual,
                 expected: expected,
                 message: message,
                 negative: true
-            } );
+            });
         },
 
-        deepEqual: function( actual, expected, message ) {
-            this.pushResult( {
-                result: QUnit.equiv( actual, expected ),
+        deepEqual: function (actual, expected, message) {
+            this.pushResult({
+                result: QUnit.equiv(actual, expected),
                 actual: actual,
                 expected: expected,
                 message: message
-            } );
+            });
         },
 
-        notDeepEqual: function( actual, expected, message ) {
-            this.pushResult( {
-                result: !QUnit.equiv( actual, expected ),
+        notDeepEqual: function (actual, expected, message) {
+            this.pushResult({
+                result: !QUnit.equiv(actual, expected),
                 actual: actual,
                 expected: expected,
                 message: message,
                 negative: true
-            } );
+            });
         },
 
-        strictEqual: function( actual, expected, message ) {
-            this.pushResult( {
+        strictEqual: function (actual, expected, message) {
+            this.pushResult({
                 result: expected === actual,
                 actual: actual,
                 expected: expected,
                 message: message
-            } );
+            });
         },
 
-        notStrictEqual: function( actual, expected, message ) {
-            this.pushResult( {
+        notStrictEqual: function (actual, expected, message) {
+            this.pushResult({
                 result: expected !== actual,
                 actual: actual,
                 expected: expected,
                 message: message,
                 negative: true
-            } );
+            });
         },
 
-        "throws": function( block, expected, message ) {
+        "throws": function (block, expected, message) {
             var actual, expectedType,
                 expectedOutput = expected,
                 ok = false,
                 currentTest = ( this instanceof Assert && this.test ) || QUnit.config.current;
 
             // 'expected' is optional unless doing string comparison
-            if ( message == null && typeof expected === "string" ) {
+            if (message == null && typeof expected === "string") {
                 message = expected;
                 expected = null;
             }
 
             currentTest.ignoreGlobalErrors = true;
             try {
-                block.call( currentTest.testEnvironment );
-            } catch ( e ) {
+                block.call(currentTest.testEnvironment);
+            } catch (e) {
                 actual = e;
             }
             currentTest.ignoreGlobalErrors = false;
 
-            if ( actual ) {
-                expectedType = QUnit.objectType( expected );
+            if (actual) {
+                expectedType = QUnit.objectType(expected);
 
                 // We don't want to validate thrown error
-                if ( !expected ) {
+                if (!expected) {
                     ok = true;
                     expectedOutput = null;
 
                     // Expected is a regexp
-                } else if ( expectedType === "regexp" ) {
-                    ok = expected.test( errorString( actual ) );
+                } else if (expectedType === "regexp") {
+                    ok = expected.test(errorString(actual));
 
                     // Expected is a string
-                } else if ( expectedType === "string" ) {
-                    ok = expected === errorString( actual );
+                } else if (expectedType === "string") {
+                    ok = expected === errorString(actual);
 
                     // Expected is a constructor, maybe an Error constructor
-                } else if ( expectedType === "function" && actual instanceof expected ) {
+                } else if (expectedType === "function" && actual instanceof expected) {
                     ok = true;
 
                     // Expected is an Error object
-                } else if ( expectedType === "object" ) {
+                } else if (expectedType === "object") {
                     ok = actual instanceof expected.constructor &&
                         actual.name === expected.name &&
                         actual.message === expected.message;
 
                     // Expected is a validation function which returns true if validation passed
-                } else if ( expectedType === "function" && expected.call( {}, actual ) === true ) {
+                } else if (expectedType === "function" && expected.call({}, actual) === true) {
                     expectedOutput = null;
                     ok = true;
                 }
             }
 
-            currentTest.assert.pushResult( {
+            currentTest.assert.pushResult({
                 result: ok,
                 actual: actual,
                 expected: expectedOutput,
                 message: message
-            } );
+            });
         }
     };
 
 // Provide an alternative to assert.throws(), for environments that consider throws a reserved word
 // Known to us are: Closure Compiler, Narwhal
-    ( function() {
+    ( function () {
         /*jshint sub:true */
-        Assert.prototype.raises = Assert.prototype [ "throws" ]; //jscs:ignore requireDotNotation
+        Assert.prototype.raises = Assert.prototype ["throws"]; //jscs:ignore requireDotNotation
     }() );
 
-    function errorString( error ) {
+    function errorString(error) {
         var name, message,
             resultErrorString = error.toString();
-        if ( resultErrorString.substring( 0, 7 ) === "[object" ) {
+        if (resultErrorString.substring(0, 7) === "[object") {
             name = error.name ? error.name.toString() : "Error";
             message = error.message ? error.message.toString() : "";
-            if ( name && message ) {
+            if (name && message) {
                 return name + ": " + message;
-            } else if ( name ) {
+            } else if (name) {
                 return name;
-            } else if ( message ) {
+            } else if (message) {
                 return message;
             } else {
                 return "Error";
@@ -1649,7 +1657,7 @@
 
 // Test for equality any JavaScript type.
 // Author: Philippe Rathé <prathe@gmail.com>
-    QUnit.equiv = ( function() {
+    QUnit.equiv = ( function () {
 
         // Stack to decide between skip/abort functions
         var callers = [];
@@ -1658,58 +1666,58 @@
         var parents = [];
         var parentsB = [];
 
-        var getProto = Object.getPrototypeOf || function( obj ) {
+        var getProto = Object.getPrototypeOf || function (obj) {
 
                 /*jshint proto: true */
                 return obj.__proto__;
             };
 
-        function useStrictEquality( b, a ) {
+        function useStrictEquality(b, a) {
 
             // To catch short annotation VS 'new' annotation of a declaration. e.g.:
             // `var i = 1;`
             // `var j = new Number(1);`
-            if ( typeof a === "object" ) {
+            if (typeof a === "object") {
                 a = a.valueOf();
             }
-            if ( typeof b === "object" ) {
+            if (typeof b === "object") {
                 b = b.valueOf();
             }
 
             return a === b;
         }
 
-        function compareConstructors( a, b ) {
-            var protoA = getProto( a );
-            var protoB = getProto( b );
+        function compareConstructors(a, b) {
+            var protoA = getProto(a);
+            var protoB = getProto(b);
 
             // Comparing constructors is more strict than using `instanceof`
-            if ( a.constructor === b.constructor ) {
+            if (a.constructor === b.constructor) {
                 return true;
             }
 
             // Ref #851
             // If the obj prototype descends from a null constructor, treat it
             // as a null prototype.
-            if ( protoA && protoA.constructor === null ) {
+            if (protoA && protoA.constructor === null) {
                 protoA = null;
             }
-            if ( protoB && protoB.constructor === null ) {
+            if (protoB && protoB.constructor === null) {
                 protoB = null;
             }
 
             // Allow objects with no prototype to be equivalent to
             // objects with Object as their constructor.
-            if ( ( protoA === null && protoB === Object.prototype ) ||
-                ( protoB === null && protoA === Object.prototype ) ) {
+            if (( protoA === null && protoB === Object.prototype ) ||
+                ( protoB === null && protoA === Object.prototype )) {
                 return true;
             }
 
             return false;
         }
 
-        function getRegExpFlags( regexp ) {
-            return "flags" in regexp ? regexp.flags : regexp.toString().match( /[gimuy]*$/ )[ 0 ];
+        function getRegExpFlags(regexp) {
+            return "flags" in regexp ? regexp.flags : regexp.toString().match(/[gimuy]*$/)[0];
         }
 
         var callbacks = {
@@ -1721,45 +1729,45 @@
             "symbol": useStrictEquality,
             "date": useStrictEquality,
 
-            "nan": function() {
+            "nan": function () {
                 return true;
             },
 
-            "regexp": function( b, a ) {
+            "regexp": function (b, a) {
                 return a.source === b.source &&
 
                     // Include flags in the comparison
-                    getRegExpFlags( a ) === getRegExpFlags( b );
+                    getRegExpFlags(a) === getRegExpFlags(b);
             },
 
             // - skip when the property is a method of an instance (OOP)
             // - abort otherwise,
             // initial === would have catch identical references anyway
-            "function": function() {
-                var caller = callers[ callers.length - 1 ];
+            "function": function () {
+                var caller = callers[callers.length - 1];
                 return caller !== Object && typeof caller !== "undefined";
             },
 
-            "array": function( b, a ) {
+            "array": function (b, a) {
                 var i, j, len, loop, aCircular, bCircular;
 
                 len = a.length;
-                if ( len !== b.length ) {
+                if (len !== b.length) {
 
                     // Safe and faster
                     return false;
                 }
 
                 // Track reference to avoid circular references
-                parents.push( a );
-                parentsB.push( b );
-                for ( i = 0; i < len; i++ ) {
+                parents.push(a);
+                parentsB.push(b);
+                for (i = 0; i < len; i++) {
                     loop = false;
-                    for ( j = 0; j < parents.length; j++ ) {
-                        aCircular = parents[ j ] === a[ i ];
-                        bCircular = parentsB[ j ] === b[ i ];
-                        if ( aCircular || bCircular ) {
-                            if ( a[ i ] === b[ i ] || aCircular && bCircular ) {
+                    for (j = 0; j < parents.length; j++) {
+                        aCircular = parents[j] === a[i];
+                        bCircular = parentsB[j] === b[i];
+                        if (aCircular || bCircular) {
+                            if (a[i] === b[i] || aCircular && bCircular) {
                                 loop = true;
                             } else {
                                 parents.pop();
@@ -1768,7 +1776,7 @@
                             }
                         }
                     }
-                    if ( !loop && !innerEquiv( a[ i ], b[ i ] ) ) {
+                    if (!loop && !innerEquiv(a[i], b[i])) {
                         parents.pop();
                         parentsB.pop();
                         return false;
@@ -1779,57 +1787,57 @@
                 return true;
             },
 
-            "set": function( b, a ) {
+            "set": function (b, a) {
                 var innerEq,
                     outerEq = true;
 
-                if ( a.size !== b.size ) {
+                if (a.size !== b.size) {
                     return false;
                 }
 
-                a.forEach( function( aVal ) {
+                a.forEach(function (aVal) {
                     innerEq = false;
 
-                    b.forEach( function( bVal ) {
-                        if ( innerEquiv( bVal, aVal ) ) {
+                    b.forEach(function (bVal) {
+                        if (innerEquiv(bVal, aVal)) {
                             innerEq = true;
                         }
-                    } );
+                    });
 
-                    if ( !innerEq ) {
+                    if (!innerEq) {
                         outerEq = false;
                     }
-                } );
+                });
 
                 return outerEq;
             },
 
-            "map": function( b, a ) {
+            "map": function (b, a) {
                 var innerEq,
                     outerEq = true;
 
-                if ( a.size !== b.size ) {
+                if (a.size !== b.size) {
                     return false;
                 }
 
-                a.forEach( function( aVal, aKey ) {
+                a.forEach(function (aVal, aKey) {
                     innerEq = false;
 
-                    b.forEach( function( bVal, bKey ) {
-                        if ( innerEquiv( [ bVal, bKey ], [ aVal, aKey ] ) ) {
+                    b.forEach(function (bVal, bKey) {
+                        if (innerEquiv([bVal, bKey], [aVal, aKey])) {
                             innerEq = true;
                         }
-                    } );
+                    });
 
-                    if ( !innerEq ) {
+                    if (!innerEq) {
                         outerEq = false;
                     }
-                } );
+                });
 
                 return outerEq;
             },
 
-            "object": function( b, a ) {
+            "object": function (b, a) {
                 var i, j, loop, aCircular, bCircular;
 
                 // Default to true
@@ -1837,25 +1845,25 @@
                 var aProperties = [];
                 var bProperties = [];
 
-                if ( compareConstructors( a, b ) === false ) {
+                if (compareConstructors(a, b) === false) {
                     return false;
                 }
 
                 // Stack constructor before traversing properties
-                callers.push( a.constructor );
+                callers.push(a.constructor);
 
                 // Track reference to avoid circular references
-                parents.push( a );
-                parentsB.push( b );
+                parents.push(a);
+                parentsB.push(b);
 
                 // Be strict: don't ensure hasOwnProperty and go deep
-                for ( i in a ) {
+                for (i in a) {
                     loop = false;
-                    for ( j = 0; j < parents.length; j++ ) {
-                        aCircular = parents[ j ] === a[ i ];
-                        bCircular = parentsB[ j ] === b[ i ];
-                        if ( aCircular || bCircular ) {
-                            if ( a[ i ] === b[ i ] || aCircular && bCircular ) {
+                    for (j = 0; j < parents.length; j++) {
+                        aCircular = parents[j] === a[i];
+                        bCircular = parentsB[j] === b[i];
+                        if (aCircular || bCircular) {
+                            if (a[i] === b[i] || aCircular && bCircular) {
                                 loop = true;
                             } else {
                                 eq = false;
@@ -1863,8 +1871,8 @@
                             }
                         }
                     }
-                    aProperties.push( i );
-                    if ( !loop && !innerEquiv( a[ i ], b[ i ] ) ) {
+                    aProperties.push(i);
+                    if (!loop && !innerEquiv(a[i], b[i])) {
                         eq = false;
                         break;
                     }
@@ -1876,35 +1884,35 @@
                 // Unstack, we are done
                 callers.pop();
 
-                for ( i in b ) {
+                for (i in b) {
 
                     // Collect b's properties
-                    bProperties.push( i );
+                    bProperties.push(i);
                 }
 
                 // Ensures identical properties name
-                return eq && innerEquiv( aProperties.sort(), bProperties.sort() );
+                return eq && innerEquiv(aProperties.sort(), bProperties.sort());
             }
         };
 
-        function typeEquiv( a, b ) {
-            var type = QUnit.objectType( a );
-            return QUnit.objectType( b ) === type && callbacks[ type ]( b, a );
+        function typeEquiv(a, b) {
+            var type = QUnit.objectType(a);
+            return QUnit.objectType(b) === type && callbacks[type](b, a);
         }
 
         // The real equiv function
-        function innerEquiv( a, b ) {
+        function innerEquiv(a, b) {
 
             // We're done when there's nothing more to compare
-            if ( arguments.length < 2 ) {
+            if (arguments.length < 2) {
                 return true;
             }
 
             // Require type-specific equality
-            return ( a === b || typeEquiv( a, b ) ) &&
+            return ( a === b || typeEquiv(a, b) ) &&
 
                 // ...across all consecutive argument pairs
-                ( arguments.length === 2 || innerEquiv.apply( this, [].slice.call( arguments, 1 ) ) );
+                ( arguments.length === 2 || innerEquiv.apply(this, [].slice.call(arguments, 1)) );
         }
 
         return innerEquiv;
@@ -1912,98 +1920,101 @@
 
 // Based on jsDump by Ariel Flesler
 // http://flesler.blogspot.com/2008/05/jsdump-pretty-dump-of-any-javascript.html
-    QUnit.dump = ( function() {
-        function quote( str ) {
-            return "\"" + str.toString().replace( /\\/g, "\\\\" ).replace( /"/g, "\\\"" ) + "\"";
+    QUnit.dump = ( function () {
+        function quote(str) {
+            return "\"" + str.toString().replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\"";
         }
-        function literal( o ) {
+
+        function literal(o) {
             return o + "";
         }
-        function join( pre, arr, post ) {
+
+        function join(pre, arr, post) {
             var s = dump.separator(),
                 base = dump.indent(),
-                inner = dump.indent( 1 );
-            if ( arr.join ) {
-                arr = arr.join( "," + s + inner );
+                inner = dump.indent(1);
+            if (arr.join) {
+                arr = arr.join("," + s + inner);
             }
-            if ( !arr ) {
+            if (!arr) {
                 return pre + post;
             }
-            return [ pre, inner + arr, base + post ].join( s );
+            return [pre, inner + arr, base + post].join(s);
         }
-        function array( arr, stack ) {
-            var i = arr.length,
-                ret = new Array( i );
 
-            if ( dump.maxDepth && dump.depth > dump.maxDepth ) {
+        function array(arr, stack) {
+            var i = arr.length,
+                ret = new Array(i);
+
+            if (dump.maxDepth && dump.depth > dump.maxDepth) {
                 return "[object Array]";
             }
 
             this.up();
-            while ( i-- ) {
-                ret[ i ] = this.parse( arr[ i ], undefined, stack );
+            while (i--) {
+                ret[i] = this.parse(arr[i], undefined, stack);
             }
             this.down();
-            return join( "[", ret, "]" );
+            return join("[", ret, "]");
         }
 
         var reName = /^function (\w+)/,
             dump = {
 
                 // The objType is used mostly internally, you can fix a (custom) type in advance
-                parse: function( obj, objType, stack ) {
+                parse: function (obj, objType, stack) {
                     stack = stack || [];
                     var res, parser, parserType,
-                        inStack = inArray( obj, stack );
+                        inStack = inArray(obj, stack);
 
-                    if ( inStack !== -1 ) {
+                    if (inStack !== -1) {
                         return "recursion(" + ( inStack - stack.length ) + ")";
                     }
 
-                    objType = objType || this.typeOf( obj  );
-                    parser = this.parsers[ objType ];
+                    objType = objType || this.typeOf(obj);
+                    parser = this.parsers[objType];
                     parserType = typeof parser;
 
-                    if ( parserType === "function" ) {
-                        stack.push( obj );
-                        res = parser.call( this, obj, stack );
+                    if (parserType === "function") {
+                        stack.push(obj);
+                        res = parser.call(this, obj, stack);
                         stack.pop();
                         return res;
                     }
                     return ( parserType === "string" ) ? parser : this.parsers.error;
                 },
-                typeOf: function( obj ) {
+                typeOf: function (obj) {
                     var type;
-                    if ( obj === null ) {
+                    if (obj === null) {
                         type = "null";
-                    } else if ( typeof obj === "undefined" ) {
+                    } else if (typeof obj === "undefined") {
                         type = "undefined";
-                    } else if ( QUnit.is( "regexp", obj ) ) {
+                    } else if (QUnit.is("regexp", obj)) {
                         type = "regexp";
-                    } else if ( QUnit.is( "date", obj ) ) {
+                    } else if (QUnit.is("date", obj)) {
                         type = "date";
-                    } else if ( QUnit.is( "function", obj ) ) {
+                    } else if (QUnit.is("function", obj)) {
                         type = "function";
-                    } else if ( obj.setInterval !== undefined &&
+                    } else if (obj.setInterval !== undefined &&
                         obj.document !== undefined &&
-                        obj.nodeType === undefined ) {
+                        obj.nodeType === undefined) {
                         type = "window";
-                    } else if ( obj.nodeType === 9 ) {
+                    } else if (obj.nodeType === 9) {
                         type = "document";
-                    } else if ( obj.nodeType ) {
+                    } else if (obj.nodeType) {
                         type = "node";
                     } else if (
 
                         // Native arrays
-                    toString.call( obj ) === "[object Array]" ||
+                    toString.call(obj) === "[object Array]" ||
 
                     // NodeList objects
                     ( typeof obj.length === "number" && obj.item !== undefined &&
-                    ( obj.length ? obj.item( 0 ) === obj[ 0 ] : ( obj.item( 0 ) === null &&
-                    obj[ 0 ] === undefined ) ) )
+                    ( obj.length ? obj.item(0) === obj[0] : ( obj.item(0) === null &&
+                        obj[0] === undefined ) ) )
                     ) {
                         type = "array";
-                    } else if ( obj.constructor === Error.prototype.constructor ) {
+                    } else if (obj.constructor === Error.prototype.constructor) {
                         type = "error";
                     } else {
                         type = typeof obj;
@@ -2011,29 +2022,29 @@
                     return type;
                 },
 
-                separator: function() {
+                separator: function () {
                     return this.multiline ? this.HTML ? "<br />" : "\n" : this.HTML ? "&#160;" : " ";
                 },
 
                 // Extra can be a number, shortcut for increasing-calling-decreasing
-                indent: function( extra ) {
-                    if ( !this.multiline ) {
+                indent: function (extra) {
+                    if (!this.multiline) {
                         return "";
                     }
                     var chr = this.indentChar;
-                    if ( this.HTML ) {
-                        chr = chr.replace( /\t/g, "   " ).replace( / /g, "&#160;" );
+                    if (this.HTML) {
+                        chr = chr.replace(/\t/g, "   ").replace(/ /g, "&#160;");
                     }
-                    return new Array( this.depth + ( extra || 0 ) ).join( chr );
+                    return new Array(this.depth + ( extra || 0 )).join(chr);
                 },
-                up: function( a ) {
+                up: function (a) {
                     this.depth += a || 1;
                 },
-                down: function( a ) {
+                down: function (a) {
                     this.depth -= a || 1;
                 },
-                setParser: function( name, parser ) {
-                    this.parsers[ name ] = parser;
+                setParser: function (name, parser) {
+                    this.parsers[name] = parser;
                 },
 
                 // The next 3 are exposed so you can use them
@@ -2047,62 +2058,62 @@
                 parsers: {
                     window: "[Window]",
                     document: "[Document]",
-                    error: function( error ) {
+                    error: function (error) {
                         return "Error(\"" + error.message + "\")";
                     },
                     unknown: "[Unknown]",
                     "null": "null",
                     "undefined": "undefined",
-                    "function": function( fn ) {
+                    "function": function (fn) {
                         var ret = "function",
 
                             // Functions never have name in IE
-                            name = "name" in fn ? fn.name : ( reName.exec( fn ) || [] )[ 1 ];
+                            name = "name" in fn ? fn.name : ( reName.exec(fn) || [] )[1];
 
-                        if ( name ) {
+                        if (name) {
                             ret += " " + name;
                         }
                         ret += "(";
 
-                        ret = [ ret, dump.parse( fn, "functionArgs" ), "){" ].join( "" );
-                        return join( ret, dump.parse( fn, "functionCode" ), "}" );
+                        ret = [ret, dump.parse(fn, "functionArgs"), "){"].join("");
+                        return join(ret, dump.parse(fn, "functionCode"), "}");
                     },
                     array: array,
                     nodelist: array,
                     "arguments": array,
-                    object: function( map, stack ) {
+                    object: function (map, stack) {
                         var keys, key, val, i, nonEnumerableProperties,
                             ret = [];
 
-                        if ( dump.maxDepth && dump.depth > dump.maxDepth ) {
+                        if (dump.maxDepth && dump.depth > dump.maxDepth) {
                             return "[object Object]";
                         }
 
                         dump.up();
                         keys = [];
-                        for ( key in map ) {
-                            keys.push( key );
+                        for (key in map) {
+                            keys.push(key);
                         }
 
                         // Some properties are not always enumerable on Error objects.
-                        nonEnumerableProperties = [ "message", "name" ];
-                        for ( i in nonEnumerableProperties ) {
-                            key = nonEnumerableProperties[ i ];
-                            if ( key in map && inArray( key, keys ) < 0 ) {
-                                keys.push( key );
+                        nonEnumerableProperties = ["message", "name"];
+                        for (i in nonEnumerableProperties) {
+                            key = nonEnumerableProperties[i];
+                            if (key in map && inArray(key, keys) < 0) {
+                                keys.push(key);
                             }
                         }
                         keys.sort();
-                        for ( i = 0; i < keys.length; i++ ) {
-                            key = keys[ i ];
-                            val = map[ key ];
-                            ret.push( dump.parse( key, "key" ) + ": " +
-                                dump.parse( val, undefined, stack ) );
+                        for (i = 0; i < keys.length; i++) {
+                            key = keys[i];
+                            val = map[key];
+                            ret.push(dump.parse(key, "key") + ": " +
+                                dump.parse(val, undefined, stack));
                         }
                         dump.down();
-                        return join( "{", ret, "}" );
+                        return join("{", ret, "}");
                     },
-                    node: function( node ) {
+                    node: function (node) {
                         var len, i, val,
                             open = dump.HTML ? "&lt;" : "<",
                             close = dump.HTML ? "&gt;" : ">",
@@ -2110,23 +2121,23 @@
                             ret = open + tag,
                             attrs = node.attributes;
 
-                        if ( attrs ) {
-                            for ( i = 0, len = attrs.length; i < len; i++ ) {
-                                val = attrs[ i ].nodeValue;
+                        if (attrs) {
+                            for (i = 0, len = attrs.length; i < len; i++) {
+                                val = attrs[i].nodeValue;
 
                                 // IE6 includes all attributes in .attributes, even ones not explicitly
                                 // set. Those have values like undefined, null, 0, false, "" or
                                 // "inherit".
-                                if ( val && val !== "inherit" ) {
-                                    ret += " " + attrs[ i ].nodeName + "=" +
-                                        dump.parse( val, "attribute" );
+                                if (val && val !== "inherit") {
+                                    ret += " " + attrs[i].nodeName + "=" +
+                                        dump.parse(val, "attribute");
                                 }
                             }
                         }
                         ret += close;
 
                         // Show content of TextNode or CDATASection
-                        if ( node.nodeType === 3 || node.nodeType === 4 ) {
+                        if (node.nodeType === 3 || node.nodeType === 4) {
                             ret += node.nodeValue;
                         }
 
@@ -2134,21 +2145,21 @@
                     },
 
                     // Function calls it internally, it's the arguments part of the function
-                    functionArgs: function( fn ) {
+                    functionArgs: function (fn) {
                         var args,
                             l = fn.length;
 
-                        if ( !l ) {
+                        if (!l) {
                             return "";
                         }
 
-                        args = new Array( l );
-                        while ( l-- ) {
+                        args = new Array(l);
+                        while (l--) {
 
                             // 97 is 'a'
-                            args[ l ] = String.fromCharCode( 97 + l );
+                            args[l] = String.fromCharCode(97 + l);
                         }
-                        return " " + args.join( ", " ) + " ";
+                        return " " + args.join(", ") + " ";
                     },
 
                     // Object calls it internally, the key part of an item in a map
@@ -2184,26 +2195,26 @@
 
 // Deprecated
 // Extend assert methods to QUnit for Backwards compatibility
-    ( function() {
+    ( function () {
         var i,
             assertions = Assert.prototype;
 
-        function applyCurrent( current ) {
-            return function() {
-                var assert = new Assert( QUnit.config.current );
-                current.apply( assert, arguments );
+        function applyCurrent(current) {
+            return function () {
+                var assert = new Assert(QUnit.config.current);
+                current.apply(assert, arguments);
             };
         }
 
-        for ( i in assertions ) {
-            QUnit[ i ] = applyCurrent( assertions[ i ] );
+        for (i in assertions) {
+            QUnit[i] = applyCurrent(assertions[i]);
         }
     }() );
 
 // For browser, export only select globals
-    if ( defined.document ) {
+    if (defined.document) {
 
-        ( function() {
+        ( function () {
             var i, l,
                 keys = [
                     "test",
@@ -2226,8 +2237,8 @@
                     "raises"
                 ];
 
-            for ( i = 0, l = keys.length; i < l; i++ ) {
-                window[ keys[ i ] ] = QUnit[ keys[ i ] ];
+            for (i = 0, l = keys.length; i < l; i++) {
+                window[keys[i]] = QUnit[keys[i]];
             }
         }() );
 
@@ -2235,7 +2246,7 @@
     }
 
 // For nodejs
-    if ( typeof module !== "undefined" && module && module.exports ) {
+    if (typeof module !== "undefined" && module && module.exports) {
         module.exports = QUnit;
 
         // For consistency with CommonJS environments' exports
@@ -2243,27 +2254,27 @@
     }
 
 // For CommonJS with exports, but without module.exports, like Rhino
-    if ( typeof exports !== "undefined" && exports ) {
+    if (typeof exports !== "undefined" && exports) {
         exports.QUnit = QUnit;
     }
 
-    if ( typeof define === "function" && define.amd ) {
-        define( function() {
+    if (typeof define === "function" && define.amd) {
+        define(function () {
             return QUnit;
-        } );
+        });
         QUnit.config.autostart = false;
     }
 
 // Get a reference to the global object, like window in browsers
-}( ( function() {
+}(( function () {
     return this;
-}() ) ) );
+}() )) );
 
-( function() {
+( function () {
 
 // Only interact with URLs via window.location
     var location = typeof window !== "undefined" && window.location;
-    if ( !location ) {
+    if (!location) {
         return;
     }
 
@@ -2272,8 +2283,8 @@
     QUnit.urlParams = urlParams;
 
 // Match module/test by inclusion in an array
-    QUnit.config.moduleId = [].concat( urlParams.moduleId || [] );
-    QUnit.config.testId = [].concat( urlParams.testId || [] );
+    QUnit.config.moduleId = [].concat(urlParams.moduleId || []);
+    QUnit.config.testId = [].concat(urlParams.testId || []);
 
 // Exact case-insensitive match of the module name
     QUnit.config.module = urlParams.module;
@@ -2282,11 +2293,11 @@
     QUnit.config.filter = urlParams.filter;
 
 // Test order randomization
-    if ( urlParams.seed === true ) {
+    if (urlParams.seed === true) {
 
         // Generate a random seed if the option is specified without a value
-        QUnit.config.seed = Math.random().toString( 36 ).slice( 2 );
-    } else if ( urlParams.seed ) {
+        QUnit.config.seed = Math.random().toString(36).slice(2);
+    } else if (urlParams.seed) {
         QUnit.config.seed = urlParams.seed;
     }
 
@@ -2311,42 +2322,42 @@
         }
     );
 
-    QUnit.begin( function() {
+    QUnit.begin(function () {
         var i, option,
             urlConfig = QUnit.config.urlConfig;
 
-        for ( i = 0; i < urlConfig.length; i++ ) {
+        for (i = 0; i < urlConfig.length; i++) {
 
             // Options can be either strings or objects with nonempty "id" properties
-            option = QUnit.config.urlConfig[ i ];
-            if ( typeof option !== "string" ) {
+            option = QUnit.config.urlConfig[i];
+            if (typeof option !== "string") {
                 option = option.id;
             }
 
-            if ( QUnit.config[ option ] === undefined ) {
-                QUnit.config[ option ] = urlParams[ option ];
+            if (QUnit.config[option] === undefined) {
+                QUnit.config[option] = urlParams[option];
             }
         }
-    } );
+    });
 
     function getUrlParams() {
         var i, param, name, value;
         var urlParams = {};
-        var params = location.search.slice( 1 ).split( "&" );
+        var params = location.search.slice(1).split("&");
         var length = params.length;
 
-        for ( i = 0; i < length; i++ ) {
-            if ( params[ i ] ) {
-                param = params[ i ].split( "=" );
-                name = decodeURIComponent( param[ 0 ] );
+        for (i = 0; i < length; i++) {
+            if (params[i]) {
+                param = params[i].split("=");
+                name = decodeURIComponent(param[0]);
 
                 // Allow just a key to turn on a flag, e.g., test.html?noglobals
                 value = param.length === 1 ||
-                    decodeURIComponent( param.slice( 1 ).join( "=" ) ) ;
-                if ( urlParams[ name ] ) {
-                    urlParams[ name ] = [].concat( urlParams[ name ], value );
+                    decodeURIComponent(param.slice(1).join("="));
+                if (urlParams[name]) {
+                    urlParams[name] = [].concat(urlParams[name], value);
                 } else {
-                    urlParams[ name ] = value;
+                    urlParams[name] = value;
                 }
             }
         }
@@ -2355,17 +2366,17 @@
     }
 
 // Don't load the HTML Reporter on non-browser environments
-    if ( typeof window === "undefined" || !window.document ) {
+    if (typeof window === "undefined" || !window.document) {
         return;
     }
 
 // Deprecated QUnit.init - Ref #530
 // Re-initialize the configuration options
-    QUnit.init = function() {
+    QUnit.init = function () {
         var config = QUnit.config;
 
-        config.stats = { all: 0, bad: 0 };
-        config.moduleStats = { all: 0, bad: 0 };
+        config.stats = {all: 0, bad: 0};
+        config.moduleStats = {all: 0, bad: 0};
         config.started = 0;
         config.updateRate = 1000;
         config.blocking = false;
@@ -2381,16 +2392,18 @@
         document = window.document,
         collapseNext = false,
         hasOwn = Object.prototype.hasOwnProperty,
-        unfilteredUrl = setUrl( { filter: undefined, module: undefined,
-            moduleId: undefined, testId: undefined } ),
+        unfilteredUrl = setUrl({
+            filter: undefined, module: undefined,
+            moduleId: undefined, testId: undefined
+        }),
         defined = {
-            sessionStorage: ( function() {
+            sessionStorage: ( function () {
                 var x = "qunit-test-string";
                 try {
-                    sessionStorage.setItem( x, x );
-                    sessionStorage.removeItem( x );
+                    sessionStorage.setItem(x, x);
+                    sessionStorage.removeItem(x);
                     return true;
-                } catch ( e ) {
+                } catch (e) {
                     return false;
                 }
             }() )
@@ -2400,15 +2413,15 @@
     /**
      * Escape text for attribute or text content.
      */
-    function escapeText( s ) {
-        if ( !s ) {
+    function escapeText(s) {
+        if (!s) {
             return "";
         }
         s = s + "";
 
         // Both single quotes and double quotes (for attributes)
-        return s.replace( /['"<>&]/g, function( s ) {
-            switch ( s ) {
+        return s.replace(/['"<>&]/g, function (s) {
+            switch (s) {
                 case "'":
                     return "&#039;";
                 case "\"":
@@ -2420,7 +2433,7 @@
                 case "&":
                     return "&amp;";
             }
-        } );
+        });
     }
 
     /**
@@ -2428,22 +2441,22 @@
      * @param {string} type
      * @param {Function} fn
      */
-    function addEvent( elem, type, fn ) {
-        if ( elem.addEventListener ) {
+    function addEvent(elem, type, fn) {
+        if (elem.addEventListener) {
 
             // Standards-based browsers
-            elem.addEventListener( type, fn, false );
-        } else if ( elem.attachEvent ) {
+            elem.addEventListener(type, fn, false);
+        } else if (elem.attachEvent) {
 
             // Support: IE <9
-            elem.attachEvent( "on" + type, function() {
+            elem.attachEvent("on" + type, function () {
                 var event = window.event;
-                if ( !event.target ) {
+                if (!event.target) {
                     event.target = event.srcElement || document;
                 }
 
-                fn.call( elem, event );
-            } );
+                fn.call(elem, event);
+            });
         }
     }
 
@@ -2452,45 +2465,45 @@
      * @param {string} type
      * @param {Function} fn
      */
-    function addEvents( elems, type, fn ) {
+    function addEvents(elems, type, fn) {
         var i = elems.length;
-        while ( i-- ) {
-            addEvent( elems[ i ], type, fn );
+        while (i--) {
+            addEvent(elems[i], type, fn);
         }
     }
 
-    function hasClass( elem, name ) {
-        return ( " " + elem.className + " " ).indexOf( " " + name + " " ) >= 0;
+    function hasClass(elem, name) {
+        return ( " " + elem.className + " " ).indexOf(" " + name + " ") >= 0;
     }
 
-    function addClass( elem, name ) {
-        if ( !hasClass( elem, name ) ) {
+    function addClass(elem, name) {
+        if (!hasClass(elem, name)) {
             elem.className += ( elem.className ? " " : "" ) + name;
         }
     }
 
-    function toggleClass( elem, name, force ) {
-        if ( force || typeof force === "undefined" && !hasClass( elem, name ) ) {
-            addClass( elem, name );
+    function toggleClass(elem, name, force) {
+        if (force || typeof force === "undefined" && !hasClass(elem, name)) {
+            addClass(elem, name);
         } else {
-            removeClass( elem, name );
+            removeClass(elem, name);
         }
     }
 
-    function removeClass( elem, name ) {
+    function removeClass(elem, name) {
         var set = " " + elem.className + " ";
 
         // Class name may appear multiple times
-        while ( set.indexOf( " " + name + " " ) >= 0 ) {
-            set = set.replace( " " + name + " ", " " );
+        while (set.indexOf(" " + name + " ") >= 0) {
+            set = set.replace(" " + name + " ", " ");
         }
 
         // Trim for prettiness
-        elem.className = typeof set.trim === "function" ? set.trim() : set.replace( /^\s+|\s+$/g, "" );
+        elem.className = typeof set.trim === "function" ? set.trim() : set.replace(/^\s+|\s+$/g, "");
     }
 
-    function id( name ) {
-        return document.getElementById && document.getElementById( name );
+    function id(name) {
+        return document.getElementById && document.getElementById(name);
     }
 
     function getUrlConfigHtml() {
@@ -2500,25 +2513,25 @@
             urlConfig = config.urlConfig,
             urlConfigHtml = "";
 
-        for ( i = 0; i < urlConfig.length; i++ ) {
+        for (i = 0; i < urlConfig.length; i++) {
 
             // Options can be either strings or objects with nonempty "id" properties
-            val = config.urlConfig[ i ];
-            if ( typeof val === "string" ) {
+            val = config.urlConfig[i];
+            if (typeof val === "string") {
                 val = {
                     id: val,
                     label: val
                 };
             }
 
-            escaped = escapeText( val.id );
-            escapedTooltip = escapeText( val.tooltip );
+            escaped = escapeText(val.id);
+            escapedTooltip = escapeText(val.tooltip);
 
-            if ( !val.value || typeof val.value === "string" ) {
+            if (!val.value || typeof val.value === "string") {
                 urlConfigHtml += "<input id='qunit-urlconfig-" + escaped +
                     "' name='" + escaped + "' type='checkbox'" +
-                    ( val.value ? " value='" + escapeText( val.value ) + "'" : "" ) +
-                    ( config[ val.id ] ? " checked='checked'" : "" ) +
+                    ( val.value ? " value='" + escapeText(val.value) + "'" : "" ) +
+                    ( config[val.id] ? " checked='checked'" : "" ) +
                     " title='" + escapedTooltip + "' /><label for='qunit-urlconfig-" + escaped +
                     "' title='" + escapedTooltip + "'>" + val.label + "</label>";
             } else {
@@ -2527,26 +2540,26 @@
                     ": </label><select id='qunit-urlconfig-" + escaped +
                     "' name='" + escaped + "' title='" + escapedTooltip + "'><option></option>";
 
-                if ( QUnit.is( "array", val.value ) ) {
-                    for ( j = 0; j < val.value.length; j++ ) {
-                        escaped = escapeText( val.value[ j ] );
+                if (QUnit.is("array", val.value)) {
+                    for (j = 0; j < val.value.length; j++) {
+                        escaped = escapeText(val.value[j]);
                         urlConfigHtml += "<option value='" + escaped + "'" +
-                            ( config[ val.id ] === val.value[ j ] ?
+                            ( config[val.id] === val.value[j] ?
                                 ( selection = true ) && " selected='selected'" : "" ) +
                             ">" + escaped + "</option>";
                     }
                 } else {
-                    for ( j in val.value ) {
-                        if ( hasOwn.call( val.value, j ) ) {
-                            urlConfigHtml += "<option value='" + escapeText( j ) + "'" +
-                                ( config[ val.id ] === j ?
+                    for (j in val.value) {
+                        if (hasOwn.call(val.value, j)) {
+                            urlConfigHtml += "<option value='" + escapeText(j) + "'" +
+                                ( config[val.id] === j ?
                                     ( selection = true ) && " selected='selected'" : "" ) +
-                                ">" + escapeText( val.value[ j ] ) + "</option>";
+                                ">" + escapeText(val.value[j]) + "</option>";
                         }
                     }
                 }
-                if ( config[ val.id ] && !selection ) {
-                    escaped = escapeText( config[ val.id ] );
+                if (config[val.id] && !selection) {
+                    escaped = escapeText(config[val.id]);
                     urlConfigHtml += "<option value='" + escaped +
                         "' selected='selected' disabled='disabled'>" + escaped + "</option>";
                 }
@@ -2565,97 +2578,97 @@
             params = {};
 
         // Detect if field is a select menu or a checkbox
-        if ( "selectedIndex" in field ) {
-            value = field.options[ field.selectedIndex ].value || undefined;
+        if ("selectedIndex" in field) {
+            value = field.options[field.selectedIndex].value || undefined;
         } else {
             value = field.checked ? ( field.defaultValue || true ) : undefined;
         }
 
-        params[ field.name ] = value;
-        updatedUrl = setUrl( params );
+        params[field.name] = value;
+        updatedUrl = setUrl(params);
 
         // Check if we can apply the change without a page refresh
-        if ( "hidepassed" === field.name && "replaceState" in window.history ) {
-            QUnit.urlParams[ field.name ] = value;
-            config[ field.name ] = value || false;
-            tests = id( "qunit-tests" );
-            if ( tests ) {
-                toggleClass( tests, "hidepass", value || false );
+        if ("hidepassed" === field.name && "replaceState" in window.history) {
+            QUnit.urlParams[field.name] = value;
+            config[field.name] = value || false;
+            tests = id("qunit-tests");
+            if (tests) {
+                toggleClass(tests, "hidepass", value || false);
             }
-            window.history.replaceState( null, "", updatedUrl );
+            window.history.replaceState(null, "", updatedUrl);
         } else {
             window.location = updatedUrl;
         }
     }
 
-    function setUrl( params ) {
+    function setUrl(params) {
         var key, arrValue, i,
             querystring = "?",
             location = window.location;
 
-        params = QUnit.extend( QUnit.extend( {}, QUnit.urlParams ), params );
+        params = QUnit.extend(QUnit.extend({}, QUnit.urlParams), params);
 
-        for ( key in params ) {
+        for (key in params) {
 
             // Skip inherited or undefined properties
-            if ( hasOwn.call( params, key ) && params[ key ] !== undefined ) {
+            if (hasOwn.call(params, key) && params[key] !== undefined) {
 
                 // Output a parameter for each value of this key (but usually just one)
-                arrValue = [].concat( params[ key ] );
-                for ( i = 0; i < arrValue.length; i++ ) {
-                    querystring += encodeURIComponent( key );
-                    if ( arrValue[ i ] !== true ) {
-                        querystring += "=" + encodeURIComponent( arrValue[ i ] );
+                arrValue = [].concat(params[key]);
+                for (i = 0; i < arrValue.length; i++) {
+                    querystring += encodeURIComponent(key);
+                    if (arrValue[i] !== true) {
+                        querystring += "=" + encodeURIComponent(arrValue[i]);
                     }
                     querystring += "&";
                 }
             }
         }
         return location.protocol + "//" + location.host +
-            location.pathname + querystring.slice( 0, -1 );
+            location.pathname + querystring.slice(0, -1);
     }
 
     function applyUrlParams() {
         var selectedModule,
-            modulesList = id( "qunit-modulefilter" ),
-            filter = id( "qunit-filter-input" ).value;
+            modulesList = id("qunit-modulefilter"),
+            filter = id("qunit-filter-input").value;
 
         selectedModule = modulesList ?
-            decodeURIComponent( modulesList.options[ modulesList.selectedIndex ].value ) :
+            decodeURIComponent(modulesList.options[modulesList.selectedIndex].value) :
             undefined;
 
-        window.location = setUrl( {
+        window.location = setUrl({
             module: ( selectedModule === "" ) ? undefined : selectedModule,
             filter: ( filter === "" ) ? undefined : filter,
 
             // Remove moduleId and testId filters
             moduleId: undefined,
             testId: undefined
-        } );
+        });
     }
 
     function toolbarUrlConfigContainer() {
-        var urlConfigContainer = document.createElement( "span" );
+        var urlConfigContainer = document.createElement("span");
 
         urlConfigContainer.innerHTML = getUrlConfigHtml();
-        addClass( urlConfigContainer, "qunit-url-config" );
+        addClass(urlConfigContainer, "qunit-url-config");
 
         // For oldIE support:
         // * Add handlers to the individual elements instead of the container
         // * Use "click" instead of "change" for checkboxes
-        addEvents( urlConfigContainer.getElementsByTagName( "input" ), "click", toolbarChanged );
-        addEvents( urlConfigContainer.getElementsByTagName( "select" ), "change", toolbarChanged );
+        addEvents(urlConfigContainer.getElementsByTagName("input"), "click", toolbarChanged);
+        addEvents(urlConfigContainer.getElementsByTagName("select"), "change", toolbarChanged);
 
         return urlConfigContainer;
     }
 
     function toolbarLooseFilter() {
-        var filter = document.createElement( "form" ),
-            label = document.createElement( "label" ),
-            input = document.createElement( "input" ),
-            button = document.createElement( "button" );
+        var filter = document.createElement("form"),
+            label = document.createElement("label"),
+            input = document.createElement("input"),
+            button = document.createElement("button");
 
-        addClass( filter, "qunit-filter" );
+        addClass(filter, "qunit-filter");
 
         label.innerHTML = "Filter: ";
 
@@ -2666,19 +2679,19 @@
 
         button.innerHTML = "Go";
 
-        label.appendChild( input );
+        label.appendChild(input);
 
-        filter.appendChild( label );
-        filter.appendChild( button );
-        addEvent( filter, "submit", function( ev ) {
+        filter.appendChild(label);
+        filter.appendChild(button);
+        addEvent(filter, "submit", function (ev) {
             applyUrlParams();
 
-            if ( ev && ev.preventDefault ) {
+            if (ev && ev.preventDefault) {
                 ev.preventDefault();
             }
 
             return false;
-        } );
+        });
 
         return filter;
     }
@@ -2687,7 +2700,7 @@
         var i,
             moduleFilterHtml = "";
 
-        if ( !modulesList.length ) {
+        if (!modulesList.length) {
             return false;
         }
 
@@ -2696,11 +2709,11 @@
             ( QUnit.urlParams.module === undefined ? "selected='selected'" : "" ) +
             ">< All Modules ></option>";
 
-        for ( i = 0; i < modulesList.length; i++ ) {
+        for (i = 0; i < modulesList.length; i++) {
             moduleFilterHtml += "<option value='" +
-                escapeText( encodeURIComponent( modulesList[ i ] ) ) + "' " +
-                ( QUnit.urlParams.module === modulesList[ i ] ? "selected='selected'" : "" ) +
-                ">" + escapeText( modulesList[ i ] ) + "</option>";
+                escapeText(encodeURIComponent(modulesList[i])) + "' " +
+                ( QUnit.urlParams.module === modulesList[i] ? "selected='selected'" : "" ) +
+                ">" + escapeText(modulesList[i]) + "</option>";
         }
         moduleFilterHtml += "</select>";
 
@@ -2708,90 +2721,90 @@
     }
 
     function toolbarModuleFilter() {
-        var toolbar = id( "qunit-testrunner-toolbar" ),
-            moduleFilter = document.createElement( "span" ),
+        var toolbar = id("qunit-testrunner-toolbar"),
+            moduleFilter = document.createElement("span"),
             moduleFilterHtml = toolbarModuleFilterHtml();
 
-        if ( !toolbar || !moduleFilterHtml ) {
+        if (!toolbar || !moduleFilterHtml) {
             return false;
         }
 
-        moduleFilter.setAttribute( "id", "qunit-modulefilter-container" );
+        moduleFilter.setAttribute("id", "qunit-modulefilter-container");
         moduleFilter.innerHTML = moduleFilterHtml;
 
-        addEvent( moduleFilter.lastChild, "change", applyUrlParams );
+        addEvent(moduleFilter.lastChild, "change", applyUrlParams);
 
-        toolbar.appendChild( moduleFilter );
+        toolbar.appendChild(moduleFilter);
     }
 
     function appendToolbar() {
-        var toolbar = id( "qunit-testrunner-toolbar" );
+        var toolbar = id("qunit-testrunner-toolbar");
 
-        if ( toolbar ) {
-            toolbar.appendChild( toolbarUrlConfigContainer() );
-            toolbar.appendChild( toolbarLooseFilter() );
+        if (toolbar) {
+            toolbar.appendChild(toolbarUrlConfigContainer());
+            toolbar.appendChild(toolbarLooseFilter());
             toolbarModuleFilter();
         }
     }
 
     function appendHeader() {
-        var header = id( "qunit-header" );
+        var header = id("qunit-header");
 
-        if ( header ) {
-            header.innerHTML = "<a href='" + escapeText( unfilteredUrl ) + "'>" + header.innerHTML +
+        if (header) {
+            header.innerHTML = "<a href='" + escapeText(unfilteredUrl) + "'>" + header.innerHTML +
                 "</a> ";
         }
     }
 
     function appendBanner() {
-        var banner = id( "qunit-banner" );
+        var banner = id("qunit-banner");
 
-        if ( banner ) {
+        if (banner) {
             banner.className = "";
         }
     }
 
     function appendTestResults() {
-        var tests = id( "qunit-tests" ),
-            result = id( "qunit-testresult" );
+        var tests = id("qunit-tests"),
+            result = id("qunit-testresult");
 
-        if ( result ) {
-            result.parentNode.removeChild( result );
+        if (result) {
+            result.parentNode.removeChild(result);
         }
 
-        if ( tests ) {
+        if (tests) {
             tests.innerHTML = "";
-            result = document.createElement( "p" );
+            result = document.createElement("p");
             result.id = "qunit-testresult";
             result.className = "result";
-            tests.parentNode.insertBefore( result, tests );
+            tests.parentNode.insertBefore(result, tests);
             result.innerHTML = "Running...<br />&#160;";
         }
     }
 
     function storeFixture() {
-        var fixture = id( "qunit-fixture" );
-        if ( fixture ) {
+        var fixture = id("qunit-fixture");
+        if (fixture) {
             config.fixture = fixture.innerHTML;
         }
     }
 
     function appendFilteredTest() {
         var testId = QUnit.config.testId;
-        if ( !testId || testId.length <= 0 ) {
+        if (!testId || testId.length <= 0) {
             return "";
         }
         return "<div id='qunit-filteredTest'>Rerunning selected tests: " +
-            escapeText( testId.join( ", " ) ) +
+            escapeText(testId.join(", ")) +
             " <a id='qunit-clearFilter' href='" +
-            escapeText( unfilteredUrl ) +
+            escapeText(unfilteredUrl) +
             "'>Run all tests</a></div>";
     }
 
     function appendUserAgent() {
-        var userAgent = id( "qunit-userAgent" );
+        var userAgent = id("qunit-userAgent");
 
-        if ( userAgent ) {
+        if (userAgent) {
             userAgent.innerHTML = "";
             userAgent.appendChild(
                 document.createTextNode(
@@ -2802,11 +2815,11 @@
     }
 
     function appendInterface() {
-        var qunit = id( "qunit" );
+        var qunit = id("qunit");
 
-        if ( qunit ) {
+        if (qunit) {
             qunit.innerHTML =
-                "<h1 id='qunit-header'>" + escapeText( document.title ) + "</h1>" +
+                "<h1 id='qunit-header'>" + escapeText(document.title) + "</h1>" +
                 "<h2 id='qunit-banner'></h2>" +
                 "<div id='qunit-testrunner-toolbar'></div>" +
                 appendFilteredTest() +
@@ -2821,79 +2834,79 @@
         appendToolbar();
     }
 
-    function appendTestsList( modules ) {
+    function appendTestsList(modules) {
         var i, l, x, z, test, moduleObj;
 
-        for ( i = 0, l = modules.length; i < l; i++ ) {
-            moduleObj = modules[ i ];
+        for (i = 0, l = modules.length; i < l; i++) {
+            moduleObj = modules[i];
 
-            for ( x = 0, z = moduleObj.tests.length; x < z; x++ ) {
-                test = moduleObj.tests[ x ];
+            for (x = 0, z = moduleObj.tests.length; x < z; x++) {
+                test = moduleObj.tests[x];
 
-                appendTest( test.name, test.testId, moduleObj.name );
+                appendTest(test.name, test.testId, moduleObj.name);
             }
         }
     }
 
-    function appendTest( name, testId, moduleName ) {
+    function appendTest(name, testId, moduleName) {
         var title, rerunTrigger, testBlock, assertList,
-            tests = id( "qunit-tests" );
+            tests = id("qunit-tests");
 
-        if ( !tests ) {
+        if (!tests) {
             return;
         }
 
-        title = document.createElement( "strong" );
-        title.innerHTML = getNameHtml( name, moduleName );
+        title = document.createElement("strong");
+        title.innerHTML = getNameHtml(name, moduleName);
 
-        rerunTrigger = document.createElement( "a" );
+        rerunTrigger = document.createElement("a");
         rerunTrigger.innerHTML = "Rerun";
-        rerunTrigger.href = setUrl( { testId: testId } );
+        rerunTrigger.href = setUrl({testId: testId});
 
-        testBlock = document.createElement( "li" );
-        testBlock.appendChild( title );
-        testBlock.appendChild( rerunTrigger );
+        testBlock = document.createElement("li");
+        testBlock.appendChild(title);
+        testBlock.appendChild(rerunTrigger);
         testBlock.id = "qunit-test-output-" + testId;
 
-        assertList = document.createElement( "ol" );
+        assertList = document.createElement("ol");
         assertList.className = "qunit-assert-list";
 
-        testBlock.appendChild( assertList );
+        testBlock.appendChild(assertList);
 
-        tests.appendChild( testBlock );
+        tests.appendChild(testBlock);
     }
 
 // HTML Reporter initialization and load
-    QUnit.begin( function( details ) {
+    QUnit.begin(function (details) {
         var i, moduleObj, tests;
 
         // Sort modules by name for the picker
-        for ( i = 0; i < details.modules.length; i++ ) {
-            moduleObj = details.modules[ i ];
-            if ( moduleObj.name ) {
-                modulesList.push( moduleObj.name );
+        for (i = 0; i < details.modules.length; i++) {
+            moduleObj = details.modules[i];
+            if (moduleObj.name) {
+                modulesList.push(moduleObj.name);
             }
         }
-        modulesList.sort( function( a, b ) {
-            return a.localeCompare( b );
-        } );
+        modulesList.sort(function (a, b) {
+            return a.localeCompare(b);
+        });
 
         // Capture fixture HTML from the page
         storeFixture();
 
         // Initialize QUnit elements
         appendInterface();
-        appendTestsList( details.modules );
-        tests = id( "qunit-tests" );
-        if ( tests && config.hidepassed ) {
-            addClass( tests, "hidepass" );
+        appendTestsList(details.modules);
+        tests = id("qunit-tests");
+        if (tests && config.hidepassed) {
+            addClass(tests, "hidepass");
         }
-    } );
+    });
 
-    QUnit.done( function( details ) {
+    QUnit.done(function (details) {
         var i, key,
-            banner = id( "qunit-banner" ),
-            tests = id( "qunit-tests" ),
+            banner = id("qunit-banner"),
+            tests = id("qunit-tests"),
             html = [
                 "Tests completed in ",
                 details.runtime,
@@ -2905,140 +2918,138 @@
                 "</span> passed, <span class='failed'>",
                 details.failed,
                 "</span> failed."
-            ].join( "" );
+            ].join("");
 
-        if ( banner ) {
+        if (banner) {
             banner.className = details.failed ? "qunit-fail" : "qunit-pass";
         }
 
-        if ( tests ) {
-            id( "qunit-testresult" ).innerHTML = html;
+        if (tests) {
+            id("qunit-testresult").innerHTML = html;
         }
 
-        if ( config.altertitle && document.title ) {
+        if (config.altertitle && document.title) {
 
             // Show ✖ for good, ✔ for bad suite result in title
             // use escape sequences in case file gets loaded with non-utf-8-charset
             document.title = [
                 ( details.failed ? "\u2716" : "\u2714" ),
-                document.title.replace( /^[\u2714\u2716] /i, "" )
-            ].join( " " );
+                document.title.replace(/^[\u2714\u2716] /i, "")
+            ].join(" ");
         }
 
         // Clear own sessionStorage items if all tests passed
-        if ( config.reorder && defined.sessionStorage && details.failed === 0 ) {
-            for ( i = 0; i < sessionStorage.length; i++ ) {
-                key = sessionStorage.key( i++ );
-                if ( key.indexOf( "qunit-test-" ) === 0 ) {
-                    sessionStorage.removeItem( key );
+        if (config.reorder && defined.sessionStorage && details.failed === 0) {
+            for (i = 0; i < sessionStorage.length; i++) {
+                key = sessionStorage.key(i++);
+                if (key.indexOf("qunit-test-") === 0) {
+                    sessionStorage.removeItem(key);
                 }
             }
         }
 
         // Scroll back to top to show results
-        if ( config.scrolltop && window.scrollTo ) {
-            window.scrollTo( 0, 0 );
+        if (config.scrolltop && window.scrollTo) {
+            window.scrollTo(0, 0);
         }
-    } );
+    });
 
-    function getNameHtml( name, module ) {
+    function getNameHtml(name, module) {
         var nameHtml = "";
 
-        if ( module ) {
-            nameHtml = "<span class='module-name'>" + escapeText( module ) + "</span>: ";
+        if (module) {
+            nameHtml = "<span class='module-name'>" + escapeText(module) + "</span>: ";
         }
 
-        nameHtml += "<span class='test-name'>" + escapeText( name ) + "</span>";
+        nameHtml += "<span class='test-name'>" + escapeText(name) + "</span>";
 
         return nameHtml;
     }
 
-    QUnit.testStart( function( details ) {
+    QUnit.testStart(function (details) {
         var running, testBlock, bad;
 
-        testBlock = id( "qunit-test-output-" + details.testId );
-        if ( testBlock ) {
+        testBlock = id("qunit-test-output-" + details.testId);
+        if (testBlock) {
             testBlock.className = "running";
         } else {
 
             // Report later registered tests
-            appendTest( details.name, details.testId, details.module );
+            appendTest(details.name, details.testId, details.module);
         }
 
-        running = id( "qunit-testresult" );
-        if ( running ) {
-            bad = QUnit.config.reorder && defined.sessionStorage &&
-                +sessionStorage.getItem( "qunit-test-" + details.module + "-" + details.name );
+        running = id("qunit-testresult");
+        if (running) {
+            bad = QUnit.config.reorder && defined.sessionStorage && +sessionStorage.getItem("qunit-test-" + details.module + "-" + details.name);
 
             running.innerHTML = ( bad ?
                     "Rerunning previously failed test: <br />" :
                     "Running: <br />" ) +
-                getNameHtml( details.name, details.module );
+                getNameHtml(details.name, details.module);
         }
 
-    } );
+    });
 
-    function stripHtml( string ) {
+    function stripHtml(string) {
 
         // Strip tags, html entity and whitespaces
-        return string.replace( /<\/?[^>]+(>|$)/g, "" ).replace( /\&quot;/g, "" ).replace( /\s+/g, "" );
+        return string.replace(/<\/?[^>]+(>|$)/g, "").replace(/\&quot;/g, "").replace(/\s+/g, "");
     }
 
-    QUnit.log( function( details ) {
+    QUnit.log(function (details) {
         var assertList, assertLi,
             message, expected, actual, diff,
             showDiff = false,
-            testItem = id( "qunit-test-output-" + details.testId );
+            testItem = id("qunit-test-output-" + details.testId);
 
-        if ( !testItem ) {
+        if (!testItem) {
             return;
         }
 
-        message = escapeText( details.message ) || ( details.result ? "okay" : "failed" );
+        message = escapeText(details.message) || ( details.result ? "okay" : "failed" );
         message = "<span class='test-message'>" + message + "</span>";
         message += "<span class='runtime'>@ " + details.runtime + " ms</span>";
 
         // The pushFailure doesn't provide details.expected
         // when it calls, it's implicit to also not show expected and diff stuff
         // Also, we need to check details.expected existence, as it can exist and be undefined
-        if ( !details.result && hasOwn.call( details, "expected" ) ) {
-            if ( details.negative ) {
-                expected = "NOT " + QUnit.dump.parse( details.expected );
+        if (!details.result && hasOwn.call(details, "expected")) {
+            if (details.negative) {
+                expected = "NOT " + QUnit.dump.parse(details.expected);
             } else {
-                expected = QUnit.dump.parse( details.expected );
+                expected = QUnit.dump.parse(details.expected);
             }
 
-            actual = QUnit.dump.parse( details.actual );
+            actual = QUnit.dump.parse(details.actual);
             message += "<table><tr class='test-expected'><th>Expected: </th><td><pre>" +
-                escapeText( expected ) +
+                escapeText(expected) +
                 "</pre></td></tr>";
 
-            if ( actual !== expected ) {
+            if (actual !== expected) {
 
                 message += "<tr class='test-actual'><th>Result: </th><td><pre>" +
-                    escapeText( actual ) + "</pre></td></tr>";
+                    escapeText(actual) + "</pre></td></tr>";
 
                 // Don't show diff if actual or expected are booleans
-                if ( !( /^(true|false)$/.test( actual ) ) &&
-                    !( /^(true|false)$/.test( expected ) ) ) {
-                    diff = QUnit.diff( expected, actual );
-                    showDiff = stripHtml( diff ).length !==
-                        stripHtml( expected ).length +
-                        stripHtml( actual ).length;
+                if (!( /^(true|false)$/.test(actual) ) && !( /^(true|false)$/.test(expected) )) {
+                    diff = QUnit.diff(expected, actual);
+                    showDiff = stripHtml(diff).length !==
+                        stripHtml(expected).length +
+                        stripHtml(actual).length;
                 }
 
                 // Don't show diff if expected and actual are totally different
-                if ( showDiff ) {
+                if (showDiff) {
                     message += "<tr class='test-diff'><th>Diff: </th><td><pre>" +
                         diff + "</pre></td></tr>";
                 }
-            } else if ( expected.indexOf( "[object Array]" ) !== -1 ||
-                expected.indexOf( "[object Object]" ) !== -1 ) {
+            } else if (expected.indexOf("[object Array]") !== -1 ||
+                expected.indexOf("[object Object]") !== -1) {
                 message += "<tr class='test-message'><th>Message: </th><td>" +
                     "Diff suppressed as the depth of object is more than current max depth (" +
                     QUnit.config.maxDepth + ").<p>Hint: Use <code>QUnit.dump.maxDepth</code> to " +
                     " run with a higher max depth or <a href='" +
-                    escapeText( setUrl( { maxDepth: -1 } ) ) + "'>" +
+                    escapeText(setUrl({maxDepth: -1})) + "'>" +
                     "Rerun</a> without max depth.</p></td></tr>";
             } else {
                 message += "<tr class='test-message'><th>Message: </th><td>" +
@@ -3046,66 +3057,66 @@
                     " serialization</td></tr>";
             }
 
-            if ( details.source ) {
+            if (details.source) {
                 message += "<tr class='test-source'><th>Source: </th><td><pre>" +
-                    escapeText( details.source ) + "</pre></td></tr>";
+                    escapeText(details.source) + "</pre></td></tr>";
             }
 
             message += "</table>";
 
             // This occurs when pushFailure is set and we have an extracted stack trace
-        } else if ( !details.result && details.source ) {
+        } else if (!details.result && details.source) {
             message += "<table>" +
                 "<tr class='test-source'><th>Source: </th><td><pre>" +
-                escapeText( details.source ) + "</pre></td></tr>" +
+                escapeText(details.source) + "</pre></td></tr>" +
                 "</table>";
         }
 
-        assertList = testItem.getElementsByTagName( "ol" )[ 0 ];
+        assertList = testItem.getElementsByTagName("ol")[0];
 
-        assertLi = document.createElement( "li" );
+        assertLi = document.createElement("li");
         assertLi.className = details.result ? "pass" : "fail";
         assertLi.innerHTML = message;
-        assertList.appendChild( assertLi );
-    } );
+        assertList.appendChild(assertLi);
+    });
 
-    QUnit.testDone( function( details ) {
+    QUnit.testDone(function (details) {
         var testTitle, time, testItem, assertList,
             good, bad, testCounts, skipped, sourceName,
-            tests = id( "qunit-tests" );
+            tests = id("qunit-tests");
 
-        if ( !tests ) {
+        if (!tests) {
             return;
         }
 
-        testItem = id( "qunit-test-output-" + details.testId );
+        testItem = id("qunit-test-output-" + details.testId);
 
-        assertList = testItem.getElementsByTagName( "ol" )[ 0 ];
+        assertList = testItem.getElementsByTagName("ol")[0];
 
         good = details.passed;
         bad = details.failed;
 
         // Store result when possible
-        if ( config.reorder && defined.sessionStorage ) {
-            if ( bad ) {
-                sessionStorage.setItem( "qunit-test-" + details.module + "-" + details.name, bad );
+        if (config.reorder && defined.sessionStorage) {
+            if (bad) {
+                sessionStorage.setItem("qunit-test-" + details.module + "-" + details.name, bad);
             } else {
-                sessionStorage.removeItem( "qunit-test-" + details.module + "-" + details.name );
+                sessionStorage.removeItem("qunit-test-" + details.module + "-" + details.name);
             }
         }
 
-        if ( bad === 0 ) {
+        if (bad === 0) {
 
             // Collapse the passing tests
-            addClass( assertList, "qunit-collapsed" );
-        } else if ( bad && config.collapse && !collapseNext ) {
+            addClass(assertList, "qunit-collapsed");
+        } else if (bad && config.collapse && !collapseNext) {
 
             // Skip collapsing the first failing test
             collapseNext = true;
         } else {
 
             // Collapse remaining tests
-            addClass( assertList, "qunit-collapsed" );
+            addClass(assertList, "qunit-collapsed");
         }
 
         // The testItem.firstChild is the test name
@@ -3118,50 +3129,50 @@
         testTitle.innerHTML += " <b class='counts'>(" + testCounts +
             details.assertions.length + ")</b>";
 
-        if ( details.skipped ) {
+        if (details.skipped) {
             testItem.className = "skipped";
-            skipped = document.createElement( "em" );
+            skipped = document.createElement("em");
             skipped.className = "qunit-skipped-label";
             skipped.innerHTML = "skipped";
-            testItem.insertBefore( skipped, testTitle );
+            testItem.insertBefore(skipped, testTitle);
         } else {
-            addEvent( testTitle, "click", function() {
-                toggleClass( assertList, "qunit-collapsed" );
-            } );
+            addEvent(testTitle, "click", function () {
+                toggleClass(assertList, "qunit-collapsed");
+            });
 
             testItem.className = bad ? "fail" : "pass";
 
-            time = document.createElement( "span" );
+            time = document.createElement("span");
             time.className = "runtime";
             time.innerHTML = details.runtime + " ms";
-            testItem.insertBefore( time, assertList );
+            testItem.insertBefore(time, assertList);
         }
 
         // Show the source of the test when showing assertions
-        if ( details.source ) {
-            sourceName = document.createElement( "p" );
+        if (details.source) {
+            sourceName = document.createElement("p");
             sourceName.innerHTML = "<strong>Source: </strong>" + details.source;
-            addClass( sourceName, "qunit-source" );
-            if ( bad === 0 ) {
-                addClass( sourceName, "qunit-collapsed" );
+            addClass(sourceName, "qunit-source");
+            if (bad === 0) {
+                addClass(sourceName, "qunit-collapsed");
             }
-            addEvent( testTitle, "click", function() {
-                toggleClass( sourceName, "qunit-collapsed" );
-            } );
-            testItem.appendChild( sourceName );
+            addEvent(testTitle, "click", function () {
+                toggleClass(sourceName, "qunit-collapsed");
+            });
+            testItem.appendChild(sourceName);
         }
-    } );
+    });
 
 // Avoid readyState issue with phantomjs
 // Ref: #818
-    var notPhantom = ( function( p ) {
+    var notPhantom = (function (p) {
         return !( p && p.version && p.version.major > 0 );
-    } )( window.phantom );
+    })(window.phantom);
 
-    if ( notPhantom && document.readyState === "complete" ) {
+    if (notPhantom && document.readyState === "complete") {
         QUnit.load();
     } else {
-        addEvent( window, "load", QUnit.load );
+        addEvent(window, "load", QUnit.load);
     }
 
     /*
@@ -3192,7 +3203,7 @@
      * Usage: QUnit.diff(expected, actual)
      *
      */
-    QUnit.diff = ( function() {
+    QUnit.diff = ( function () {
         function DiffMatchPatch() {
         }
 
@@ -3217,7 +3228,7 @@
          *     Defaults to true, which does a faster, slightly less optimal diff.
          * @return {!Array.<!DiffMatchPatch.Diff>} Array of diff tuples.
          */
-        DiffMatchPatch.prototype.DiffMain = function( text1, text2, optChecklines ) {
+        DiffMatchPatch.prototype.DiffMain = function (text1, text2, optChecklines) {
             var deadline, checklines, commonlength,
                 commonprefix, commonsuffix, diffs;
 
@@ -3225,49 +3236,49 @@
             deadline = ( new Date() ).getTime() + 1000;
 
             // Check for null inputs.
-            if ( text1 === null || text2 === null ) {
-                throw new Error( "Null input. (DiffMain)" );
+            if (text1 === null || text2 === null) {
+                throw new Error("Null input. (DiffMain)");
             }
 
             // Check for equality (speedup).
-            if ( text1 === text2 ) {
-                if ( text1 ) {
+            if (text1 === text2) {
+                if (text1) {
                     return [
-                        [ DIFF_EQUAL, text1 ]
+                        [DIFF_EQUAL, text1]
                     ];
                 }
                 return [];
             }
 
-            if ( typeof optChecklines === "undefined" ) {
+            if (typeof optChecklines === "undefined") {
                 optChecklines = true;
             }
 
             checklines = optChecklines;
 
             // Trim off common prefix (speedup).
-            commonlength = this.diffCommonPrefix( text1, text2 );
-            commonprefix = text1.substring( 0, commonlength );
-            text1 = text1.substring( commonlength );
-            text2 = text2.substring( commonlength );
+            commonlength = this.diffCommonPrefix(text1, text2);
+            commonprefix = text1.substring(0, commonlength);
+            text1 = text1.substring(commonlength);
+            text2 = text2.substring(commonlength);
 
             // Trim off common suffix (speedup).
-            commonlength = this.diffCommonSuffix( text1, text2 );
-            commonsuffix = text1.substring( text1.length - commonlength );
-            text1 = text1.substring( 0, text1.length - commonlength );
-            text2 = text2.substring( 0, text2.length - commonlength );
+            commonlength = this.diffCommonSuffix(text1, text2);
+            commonsuffix = text1.substring(text1.length - commonlength);
+            text1 = text1.substring(0, text1.length - commonlength);
+            text2 = text2.substring(0, text2.length - commonlength);
 
             // Compute the diff on the middle block.
-            diffs = this.diffCompute( text1, text2, checklines, deadline );
+            diffs = this.diffCompute(text1, text2, checklines, deadline);
 
             // Restore the prefix and suffix.
-            if ( commonprefix ) {
-                diffs.unshift( [ DIFF_EQUAL, commonprefix ] );
+            if (commonprefix) {
+                diffs.unshift([DIFF_EQUAL, commonprefix]);
             }
-            if ( commonsuffix ) {
-                diffs.push( [ DIFF_EQUAL, commonsuffix ] );
+            if (commonsuffix) {
+                diffs.push([DIFF_EQUAL, commonsuffix]);
             }
-            this.diffCleanupMerge( diffs );
+            this.diffCleanupMerge(diffs);
             return diffs;
         };
 
@@ -3275,7 +3286,7 @@
          * Reduce the number of edits by eliminating operationally trivial equalities.
          * @param {!Array.<!DiffMatchPatch.Diff>} diffs Array of diff tuples.
          */
-        DiffMatchPatch.prototype.diffCleanupEfficiency = function( diffs ) {
+        DiffMatchPatch.prototype.diffCleanupEfficiency = function (diffs) {
             var changes, equalities, equalitiesLength, lastequality,
                 pointer, preIns, preDel, postIns, postDel;
             changes = false;
@@ -3298,17 +3309,17 @@
 
             // Is there a deletion operation after the last equality.
             postDel = false;
-            while ( pointer < diffs.length ) {
+            while (pointer < diffs.length) {
 
                 // Equality found.
-                if ( diffs[ pointer ][ 0 ] === DIFF_EQUAL ) {
-                    if ( diffs[ pointer ][ 1 ].length < 4 && ( postIns || postDel ) ) {
+                if (diffs[pointer][0] === DIFF_EQUAL) {
+                    if (diffs[pointer][1].length < 4 && ( postIns || postDel )) {
 
                         // Candidate found.
-                        equalities[ equalitiesLength++ ] = pointer;
+                        equalities[equalitiesLength++] = pointer;
                         preIns = postIns;
                         preDel = postDel;
-                        lastequality = diffs[ pointer ][ 1 ];
+                        lastequality = diffs[pointer][1];
                     } else {
 
                         // Not a candidate, and can never become one.
@@ -3320,7 +3331,7 @@
                     // An insertion or deletion.
                 } else {
 
-                    if ( diffs[ pointer ][ 0 ] === DIFF_DELETE ) {
+                    if (diffs[pointer][0] === DIFF_DELETE) {
                         postDel = true;
                     } else {
                         postIns = true;
@@ -3334,29 +3345,29 @@
                      * <ins>A</del>X<ins>C</ins><del>D</del>
                      * <ins>A</ins><del>B</del>X<del>C</del>
                      */
-                    if ( lastequality && ( ( preIns && preDel && postIns && postDel ) ||
+                    if (lastequality && ( ( preIns && preDel && postIns && postDel ) ||
                         ( ( lastequality.length < 2 ) &&
-                        ( preIns + preDel + postIns + postDel ) === 3 ) ) ) {
+                        ( preIns + preDel + postIns + postDel ) === 3 ) )) {
 
                         // Duplicate record.
                         diffs.splice(
-                            equalities[ equalitiesLength - 1 ],
+                            equalities[equalitiesLength - 1],
                             0,
-                            [ DIFF_DELETE, lastequality ]
+                            [DIFF_DELETE, lastequality]
                         );
 
                         // Change second copy to insert.
-                        diffs[ equalities[ equalitiesLength - 1 ] + 1 ][ 0 ] = DIFF_INSERT;
+                        diffs[equalities[equalitiesLength - 1] + 1][0] = DIFF_INSERT;
                         equalitiesLength--; // Throw away the equality we just deleted;
                         lastequality = null;
-                        if ( preIns && preDel ) {
+                        if (preIns && preDel) {
 
                             // No changes made which could affect previous entry, keep going.
                             postIns = postDel = true;
                             equalitiesLength = 0;
                         } else {
                             equalitiesLength--; // Throw away the previous equality.
-                            pointer = equalitiesLength > 0 ? equalities[ equalitiesLength - 1 ] : -1;
+                            pointer = equalitiesLength > 0 ? equalities[equalitiesLength - 1] : -1;
                             postIns = postDel = false;
                         }
                         changes = true;
@@ -3365,8 +3376,8 @@
                 pointer++;
             }
 
-            if ( changes ) {
-                this.diffCleanupMerge( diffs );
+            if (changes) {
+                this.diffCleanupMerge(diffs);
             }
         };
 
@@ -3376,25 +3387,25 @@
          * @param {integer} string to be beautified.
          * @return {string} HTML representation.
          */
-        DiffMatchPatch.prototype.diffPrettyHtml = function( diffs ) {
+        DiffMatchPatch.prototype.diffPrettyHtml = function (diffs) {
             var op, data, x,
                 html = [];
-            for ( x = 0; x < diffs.length; x++ ) {
-                op = diffs[ x ][ 0 ]; // Operation (insert, delete, equal)
-                data = diffs[ x ][ 1 ]; // Text of change.
-                switch ( op ) {
+            for (x = 0; x < diffs.length; x++) {
+                op = diffs[x][0]; // Operation (insert, delete, equal)
+                data = diffs[x][1]; // Text of change.
+                switch (op) {
                     case DIFF_INSERT:
-                        html[ x ] = "<ins>" + escapeText( data ) + "</ins>";
+                        html[x] = "<ins>" + escapeText(data) + "</ins>";
                         break;
                     case DIFF_DELETE:
-                        html[ x ] = "<del>" + escapeText( data ) + "</del>";
+                        html[x] = "<del>" + escapeText(data) + "</del>";
                         break;
                     case DIFF_EQUAL:
-                        html[ x ] = "<span>" + escapeText( data ) + "</span>";
+                        html[x] = "<span>" + escapeText(data) + "</span>";
                         break;
                 }
             }
-            return html.join( "" );
+            return html.join("");
         };
 
         /**
@@ -3404,29 +3415,29 @@
          * @return {number} The number of characters common to the start of each
          *     string.
          */
-        DiffMatchPatch.prototype.diffCommonPrefix = function( text1, text2 ) {
+        DiffMatchPatch.prototype.diffCommonPrefix = function (text1, text2) {
             var pointermid, pointermax, pointermin, pointerstart;
 
             // Quick check for common null cases.
-            if ( !text1 || !text2 || text1.charAt( 0 ) !== text2.charAt( 0 ) ) {
+            if (!text1 || !text2 || text1.charAt(0) !== text2.charAt(0)) {
                 return 0;
             }
 
             // Binary search.
             // Performance analysis: https://neil.fraser.name/news/2007/10/09/
             pointermin = 0;
-            pointermax = Math.min( text1.length, text2.length );
+            pointermax = Math.min(text1.length, text2.length);
             pointermid = pointermax;
             pointerstart = 0;
-            while ( pointermin < pointermid ) {
-                if ( text1.substring( pointerstart, pointermid ) ===
-                    text2.substring( pointerstart, pointermid ) ) {
+            while (pointermin < pointermid) {
+                if (text1.substring(pointerstart, pointermid) ===
+                    text2.substring(pointerstart, pointermid)) {
                     pointermin = pointermid;
                     pointerstart = pointermin;
                 } else {
                     pointermax = pointermid;
                 }
-                pointermid = Math.floor( ( pointermax - pointermin ) / 2 + pointermin );
+                pointermid = Math.floor(( pointermax - pointermin ) / 2 + pointermin);
             }
             return pointermid;
         };
@@ -3437,31 +3448,30 @@
          * @param {string} text2 Second string.
          * @return {number} The number of characters common to the end of each string.
          */
-        DiffMatchPatch.prototype.diffCommonSuffix = function( text1, text2 ) {
+        DiffMatchPatch.prototype.diffCommonSuffix = function (text1, text2) {
             var pointermid, pointermax, pointermin, pointerend;
 
             // Quick check for common null cases.
-            if ( !text1 ||
-                !text2 ||
-                text1.charAt( text1.length - 1 ) !== text2.charAt( text2.length - 1 ) ) {
+            if (!text1 || !text2 ||
+                text1.charAt(text1.length - 1) !== text2.charAt(text2.length - 1)) {
                 return 0;
             }
 
             // Binary search.
             // Performance analysis: https://neil.fraser.name/news/2007/10/09/
             pointermin = 0;
-            pointermax = Math.min( text1.length, text2.length );
+            pointermax = Math.min(text1.length, text2.length);
             pointermid = pointermax;
             pointerend = 0;
-            while ( pointermin < pointermid ) {
-                if ( text1.substring( text1.length - pointermid, text1.length - pointerend ) ===
-                    text2.substring( text2.length - pointermid, text2.length - pointerend ) ) {
+            while (pointermin < pointermid) {
+                if (text1.substring(text1.length - pointermid, text1.length - pointerend) ===
+                    text2.substring(text2.length - pointermid, text2.length - pointerend)) {
                     pointermin = pointermid;
                     pointerend = pointermin;
                 } else {
                     pointermax = pointermid;
                 }
-                pointermid = Math.floor( ( pointermax - pointermin ) / 2 + pointermin );
+                pointermid = Math.floor(( pointermax - pointermin ) / 2 + pointermin);
             }
             return pointermid;
         };
@@ -3478,82 +3488,82 @@
          * @return {!Array.<!DiffMatchPatch.Diff>} Array of diff tuples.
          * @private
          */
-        DiffMatchPatch.prototype.diffCompute = function( text1, text2, checklines, deadline ) {
+        DiffMatchPatch.prototype.diffCompute = function (text1, text2, checklines, deadline) {
             var diffs, longtext, shorttext, i, hm,
                 text1A, text2A, text1B, text2B,
                 midCommon, diffsA, diffsB;
 
-            if ( !text1 ) {
+            if (!text1) {
 
                 // Just add some text (speedup).
                 return [
-                    [ DIFF_INSERT, text2 ]
+                    [DIFF_INSERT, text2]
                 ];
             }
 
-            if ( !text2 ) {
+            if (!text2) {
 
                 // Just delete some text (speedup).
                 return [
-                    [ DIFF_DELETE, text1 ]
+                    [DIFF_DELETE, text1]
                 ];
             }
 
             longtext = text1.length > text2.length ? text1 : text2;
             shorttext = text1.length > text2.length ? text2 : text1;
-            i = longtext.indexOf( shorttext );
-            if ( i !== -1 ) {
+            i = longtext.indexOf(shorttext);
+            if (i !== -1) {
 
                 // Shorter text is inside the longer text (speedup).
                 diffs = [
-                    [ DIFF_INSERT, longtext.substring( 0, i ) ],
-                    [ DIFF_EQUAL, shorttext ],
-                    [ DIFF_INSERT, longtext.substring( i + shorttext.length ) ]
+                    [DIFF_INSERT, longtext.substring(0, i)],
+                    [DIFF_EQUAL, shorttext],
+                    [DIFF_INSERT, longtext.substring(i + shorttext.length)]
                 ];
 
                 // Swap insertions for deletions if diff is reversed.
-                if ( text1.length > text2.length ) {
-                    diffs[ 0 ][ 0 ] = diffs[ 2 ][ 0 ] = DIFF_DELETE;
+                if (text1.length > text2.length) {
+                    diffs[0][0] = diffs[2][0] = DIFF_DELETE;
                 }
                 return diffs;
             }
 
-            if ( shorttext.length === 1 ) {
+            if (shorttext.length === 1) {
 
                 // Single character string.
                 // After the previous speedup, the character can't be an equality.
                 return [
-                    [ DIFF_DELETE, text1 ],
-                    [ DIFF_INSERT, text2 ]
+                    [DIFF_DELETE, text1],
+                    [DIFF_INSERT, text2]
                 ];
             }
 
             // Check to see if the problem can be split in two.
-            hm = this.diffHalfMatch( text1, text2 );
-            if ( hm ) {
+            hm = this.diffHalfMatch(text1, text2);
+            if (hm) {
 
                 // A half-match was found, sort out the return data.
-                text1A = hm[ 0 ];
-                text1B = hm[ 1 ];
-                text2A = hm[ 2 ];
-                text2B = hm[ 3 ];
-                midCommon = hm[ 4 ];
+                text1A = hm[0];
+                text1B = hm[1];
+                text2A = hm[2];
+                text2B = hm[3];
+                midCommon = hm[4];
 
                 // Send both pairs off for separate processing.
-                diffsA = this.DiffMain( text1A, text2A, checklines, deadline );
-                diffsB = this.DiffMain( text1B, text2B, checklines, deadline );
+                diffsA = this.DiffMain(text1A, text2A, checklines, deadline);
+                diffsB = this.DiffMain(text1B, text2B, checklines, deadline);
 
                 // Merge the results.
-                return diffsA.concat( [
-                    [ DIFF_EQUAL, midCommon ]
-                ], diffsB );
+                return diffsA.concat([
+                    [DIFF_EQUAL, midCommon]
+                ], diffsB);
             }
 
-            if ( checklines && text1.length > 100 && text2.length > 100 ) {
-                return this.diffLineMode( text1, text2, deadline );
+            if (checklines && text1.length > 100 && text2.length > 100) {
+                return this.diffLineMode(text1, text2, deadline);
             }
 
-            return this.diffBisect( text1, text2, deadline );
+            return this.diffBisect(text1, text2, deadline);
         };
 
         /**
@@ -3567,14 +3577,14 @@
          *     text2 and the common middle.  Or null if there was no match.
          * @private
          */
-        DiffMatchPatch.prototype.diffHalfMatch = function( text1, text2 ) {
+        DiffMatchPatch.prototype.diffHalfMatch = function (text1, text2) {
             var longtext, shorttext, dmp,
                 text1A, text2B, text2A, text1B, midCommon,
                 hm1, hm2, hm;
 
             longtext = text1.length > text2.length ? text1 : text2;
             shorttext = text1.length > text2.length ? text2 : text1;
-            if ( longtext.length < 4 || shorttext.length * 2 < longtext.length ) {
+            if (longtext.length < 4 || shorttext.length * 2 < longtext.length) {
                 return null; // Pointless.
             }
             dmp = this; // 'this' becomes 'window' in a closure.
@@ -3591,30 +3601,30 @@
              *     of shorttext and the common middle.  Or null if there was no match.
              * @private
              */
-            function diffHalfMatchI( longtext, shorttext, i ) {
+            function diffHalfMatchI(longtext, shorttext, i) {
                 var seed, j, bestCommon, prefixLength, suffixLength,
                     bestLongtextA, bestLongtextB, bestShorttextA, bestShorttextB;
 
                 // Start with a 1/4 length substring at position i as a seed.
-                seed = longtext.substring( i, i + Math.floor( longtext.length / 4 ) );
+                seed = longtext.substring(i, i + Math.floor(longtext.length / 4));
                 j = -1;
                 bestCommon = "";
-                while ( ( j = shorttext.indexOf( seed, j + 1 ) ) !== -1 ) {
-                    prefixLength = dmp.diffCommonPrefix( longtext.substring( i ),
-                        shorttext.substring( j ) );
-                    suffixLength = dmp.diffCommonSuffix( longtext.substring( 0, i ),
-                        shorttext.substring( 0, j ) );
-                    if ( bestCommon.length < suffixLength + prefixLength ) {
-                        bestCommon = shorttext.substring( j - suffixLength, j ) +
-                            shorttext.substring( j, j + prefixLength );
-                        bestLongtextA = longtext.substring( 0, i - suffixLength );
-                        bestLongtextB = longtext.substring( i + prefixLength );
-                        bestShorttextA = shorttext.substring( 0, j - suffixLength );
-                        bestShorttextB = shorttext.substring( j + prefixLength );
+                while (( j = shorttext.indexOf(seed, j + 1) ) !== -1) {
+                    prefixLength = dmp.diffCommonPrefix(longtext.substring(i),
+                        shorttext.substring(j));
+                    suffixLength = dmp.diffCommonSuffix(longtext.substring(0, i),
+                        shorttext.substring(0, j));
+                    if (bestCommon.length < suffixLength + prefixLength) {
+                        bestCommon = shorttext.substring(j - suffixLength, j) +
+                            shorttext.substring(j, j + prefixLength);
+                        bestLongtextA = longtext.substring(0, i - suffixLength);
+                        bestLongtextB = longtext.substring(i + prefixLength);
+                        bestShorttextA = shorttext.substring(0, j - suffixLength);
+                        bestShorttextB = shorttext.substring(j + prefixLength);
                     }
                 }
-                if ( bestCommon.length * 2 >= longtext.length ) {
-                    return [ bestLongtextA, bestLongtextB,
+                if (bestCommon.length * 2 >= longtext.length) {
+                    return [bestLongtextA, bestLongtextB,
                         bestShorttextA, bestShorttextB, bestCommon
                     ];
                 } else {
@@ -3623,39 +3633,39 @@
             }
 
             // First check if the second quarter is the seed for a half-match.
-            hm1 = diffHalfMatchI( longtext, shorttext,
-                Math.ceil( longtext.length / 4 ) );
+            hm1 = diffHalfMatchI(longtext, shorttext,
+                Math.ceil(longtext.length / 4));
 
             // Check again based on the third quarter.
-            hm2 = diffHalfMatchI( longtext, shorttext,
-                Math.ceil( longtext.length / 2 ) );
-            if ( !hm1 && !hm2 ) {
+            hm2 = diffHalfMatchI(longtext, shorttext,
+                Math.ceil(longtext.length / 2));
+            if (!hm1 && !hm2) {
                 return null;
-            } else if ( !hm2 ) {
+            } else if (!hm2) {
                 hm = hm1;
-            } else if ( !hm1 ) {
+            } else if (!hm1) {
                 hm = hm2;
             } else {
 
                 // Both matched.  Select the longest.
-                hm = hm1[ 4 ].length > hm2[ 4 ].length ? hm1 : hm2;
+                hm = hm1[4].length > hm2[4].length ? hm1 : hm2;
             }
 
             // A half-match was found, sort out the return data.
             text1A, text1B, text2A, text2B;
-            if ( text1.length > text2.length ) {
-                text1A = hm[ 0 ];
-                text1B = hm[ 1 ];
-                text2A = hm[ 2 ];
-                text2B = hm[ 3 ];
+            if (text1.length > text2.length) {
+                text1A = hm[0];
+                text1B = hm[1];
+                text2A = hm[2];
+                text2B = hm[3];
             } else {
-                text2A = hm[ 0 ];
-                text2B = hm[ 1 ];
-                text1A = hm[ 2 ];
-                text1B = hm[ 3 ];
+                text2A = hm[0];
+                text2B = hm[1];
+                text1A = hm[2];
+                text1B = hm[3];
             }
-            midCommon = hm[ 4 ];
-            return [ text1A, text1B, text2A, text2B, midCommon ];
+            midCommon = hm[4];
+            return [text1A, text1B, text2A, text2B, midCommon];
         };
 
         /**
@@ -3668,54 +3678,54 @@
          * @return {!Array.<!DiffMatchPatch.Diff>} Array of diff tuples.
          * @private
          */
-        DiffMatchPatch.prototype.diffLineMode = function( text1, text2, deadline ) {
+        DiffMatchPatch.prototype.diffLineMode = function (text1, text2, deadline) {
             var a, diffs, linearray, pointer, countInsert,
                 countDelete, textInsert, textDelete, j;
 
             // Scan the text on a line-by-line basis first.
-            a = this.diffLinesToChars( text1, text2 );
+            a = this.diffLinesToChars(text1, text2);
             text1 = a.chars1;
             text2 = a.chars2;
             linearray = a.lineArray;
 
-            diffs = this.DiffMain( text1, text2, false, deadline );
+            diffs = this.DiffMain(text1, text2, false, deadline);
 
             // Convert the diff back to original text.
-            this.diffCharsToLines( diffs, linearray );
+            this.diffCharsToLines(diffs, linearray);
 
             // Eliminate freak matches (e.g. blank lines)
-            this.diffCleanupSemantic( diffs );
+            this.diffCleanupSemantic(diffs);
 
             // Rediff any replacement blocks, this time character-by-character.
             // Add a dummy entry at the end.
-            diffs.push( [ DIFF_EQUAL, "" ] );
+            diffs.push([DIFF_EQUAL, ""]);
             pointer = 0;
             countDelete = 0;
             countInsert = 0;
             textDelete = "";
             textInsert = "";
-            while ( pointer < diffs.length ) {
-                switch ( diffs[ pointer ][ 0 ] ) {
+            while (pointer < diffs.length) {
+                switch (diffs[pointer][0]) {
                     case DIFF_INSERT:
                         countInsert++;
-                        textInsert += diffs[ pointer ][ 1 ];
+                        textInsert += diffs[pointer][1];
                         break;
                     case DIFF_DELETE:
                         countDelete++;
-                        textDelete += diffs[ pointer ][ 1 ];
+                        textDelete += diffs[pointer][1];
                         break;
                     case DIFF_EQUAL:
 
                         // Upon reaching an equality, check for prior redundancies.
-                        if ( countDelete >= 1 && countInsert >= 1 ) {
+                        if (countDelete >= 1 && countInsert >= 1) {
 
                             // Delete the offending records and add the merged ones.
-                            diffs.splice( pointer - countDelete - countInsert,
-                                countDelete + countInsert );
+                            diffs.splice(pointer - countDelete - countInsert,
+                                countDelete + countInsert);
                             pointer = pointer - countDelete - countInsert;
-                            a = this.DiffMain( textDelete, textInsert, false, deadline );
-                            for ( j = a.length - 1; j >= 0; j-- ) {
-                                diffs.splice( pointer, 0, a[ j ] );
+                            a = this.DiffMain(textDelete, textInsert, false, deadline);
+                            for (j = a.length - 1; j >= 0; j--) {
+                                diffs.splice(pointer, 0, a[j]);
                             }
                             pointer = pointer + a.length;
                         }
@@ -3742,7 +3752,7 @@
          * @return {!Array.<!DiffMatchPatch.Diff>} Array of diff tuples.
          * @private
          */
-        DiffMatchPatch.prototype.diffBisect = function( text1, text2, deadline ) {
+        DiffMatchPatch.prototype.diffBisect = function (text1, text2, deadline) {
             var text1Length, text2Length, maxD, vOffset, vLength,
                 v1, v2, x, delta, front, k1start, k1end, k2start,
                 k2end, k2Offset, k1Offset, x1, x2, y1, y2, d, k1, k2;
@@ -3750,20 +3760,20 @@
             // Cache the text lengths to prevent multiple calls.
             text1Length = text1.length;
             text2Length = text2.length;
-            maxD = Math.ceil( ( text1Length + text2Length ) / 2 );
+            maxD = Math.ceil(( text1Length + text2Length ) / 2);
             vOffset = maxD;
             vLength = 2 * maxD;
-            v1 = new Array( vLength );
-            v2 = new Array( vLength );
+            v1 = new Array(vLength);
+            v2 = new Array(vLength);
 
             // Setting all elements to -1 is faster in Chrome & Firefox than mixing
             // integers and undefined.
-            for ( x = 0; x < vLength; x++ ) {
-                v1[ x ] = -1;
-                v2[ x ] = -1;
+            for (x = 0; x < vLength; x++) {
+                v1[x] = -1;
+                v2[x] = -1;
             }
-            v1[ vOffset + 1 ] = 0;
-            v2[ vOffset + 1 ] = 0;
+            v1[vOffset + 1] = 0;
+            v2[vOffset + 1] = 0;
             delta = text1Length - text2Length;
 
             // If the total number of characters is odd, then the front path will collide
@@ -3776,87 +3786,87 @@
             k1end = 0;
             k2start = 0;
             k2end = 0;
-            for ( d = 0; d < maxD; d++ ) {
+            for (d = 0; d < maxD; d++) {
 
                 // Bail out if deadline is reached.
-                if ( ( new Date() ).getTime() > deadline ) {
+                if (( new Date() ).getTime() > deadline) {
                     break;
                 }
 
                 // Walk the front path one step.
-                for ( k1 = -d + k1start; k1 <= d - k1end; k1 += 2 ) {
+                for (k1 = -d + k1start; k1 <= d - k1end; k1 += 2) {
                     k1Offset = vOffset + k1;
-                    if ( k1 === -d || ( k1 !== d && v1[ k1Offset - 1 ] < v1[ k1Offset + 1 ] ) ) {
-                        x1 = v1[ k1Offset + 1 ];
+                    if (k1 === -d || ( k1 !== d && v1[k1Offset - 1] < v1[k1Offset + 1] )) {
+                        x1 = v1[k1Offset + 1];
                     } else {
-                        x1 = v1[ k1Offset - 1 ] + 1;
+                        x1 = v1[k1Offset - 1] + 1;
                     }
                     y1 = x1 - k1;
-                    while ( x1 < text1Length && y1 < text2Length &&
-                    text1.charAt( x1 ) === text2.charAt( y1 ) ) {
+                    while (x1 < text1Length && y1 < text2Length &&
+                    text1.charAt(x1) === text2.charAt(y1)) {
                         x1++;
                         y1++;
                     }
-                    v1[ k1Offset ] = x1;
-                    if ( x1 > text1Length ) {
+                    v1[k1Offset] = x1;
+                    if (x1 > text1Length) {
 
                         // Ran off the right of the graph.
                         k1end += 2;
-                    } else if ( y1 > text2Length ) {
+                    } else if (y1 > text2Length) {
 
                         // Ran off the bottom of the graph.
                         k1start += 2;
-                    } else if ( front ) {
+                    } else if (front) {
                         k2Offset = vOffset + delta - k1;
-                        if ( k2Offset >= 0 && k2Offset < vLength && v2[ k2Offset ] !== -1 ) {
+                        if (k2Offset >= 0 && k2Offset < vLength && v2[k2Offset] !== -1) {
 
                             // Mirror x2 onto top-left coordinate system.
-                            x2 = text1Length - v2[ k2Offset ];
-                            if ( x1 >= x2 ) {
+                            x2 = text1Length - v2[k2Offset];
+                            if (x1 >= x2) {
 
                                 // Overlap detected.
-                                return this.diffBisectSplit( text1, text2, x1, y1, deadline );
+                                return this.diffBisectSplit(text1, text2, x1, y1, deadline);
                             }
                         }
                     }
                 }
 
                 // Walk the reverse path one step.
-                for ( k2 = -d + k2start; k2 <= d - k2end; k2 += 2 ) {
+                for (k2 = -d + k2start; k2 <= d - k2end; k2 += 2) {
                     k2Offset = vOffset + k2;
-                    if ( k2 === -d || ( k2 !== d && v2[ k2Offset - 1 ] < v2[ k2Offset + 1 ] ) ) {
-                        x2 = v2[ k2Offset + 1 ];
+                    if (k2 === -d || ( k2 !== d && v2[k2Offset - 1] < v2[k2Offset + 1] )) {
+                        x2 = v2[k2Offset + 1];
                     } else {
-                        x2 = v2[ k2Offset - 1 ] + 1;
+                        x2 = v2[k2Offset - 1] + 1;
                     }
                     y2 = x2 - k2;
-                    while ( x2 < text1Length && y2 < text2Length &&
-                    text1.charAt( text1Length - x2 - 1 ) ===
-                    text2.charAt( text2Length - y2 - 1 ) ) {
+                    while (x2 < text1Length && y2 < text2Length &&
+                    text1.charAt(text1Length - x2 - 1) ===
+                    text2.charAt(text2Length - y2 - 1)) {
                         x2++;
                         y2++;
                     }
-                    v2[ k2Offset ] = x2;
-                    if ( x2 > text1Length ) {
+                    v2[k2Offset] = x2;
+                    if (x2 > text1Length) {
 
                         // Ran off the left of the graph.
                         k2end += 2;
-                    } else if ( y2 > text2Length ) {
+                    } else if (y2 > text2Length) {
 
                         // Ran off the top of the graph.
                         k2start += 2;
-                    } else if ( !front ) {
+                    } else if (!front) {
                         k1Offset = vOffset + delta - k2;
-                        if ( k1Offset >= 0 && k1Offset < vLength && v1[ k1Offset ] !== -1 ) {
-                            x1 = v1[ k1Offset ];
+                        if (k1Offset >= 0 && k1Offset < vLength && v1[k1Offset] !== -1) {
+                            x1 = v1[k1Offset];
                             y1 = vOffset + x1 - k1Offset;
 
                             // Mirror x2 onto top-left coordinate system.
                             x2 = text1Length - x2;
-                            if ( x1 >= x2 ) {
+                            if (x1 >= x2) {
 
                                 // Overlap detected.
-                                return this.diffBisectSplit( text1, text2, x1, y1, deadline );
+                                return this.diffBisectSplit(text1, text2, x1, y1, deadline);
                             }
                         }
                     }
@@ -3866,8 +3876,8 @@
             // Diff took too long and hit the deadline or
             // number of diffs equals number of characters, no commonality at all.
             return [
-                [ DIFF_DELETE, text1 ],
-                [ DIFF_INSERT, text2 ]
+                [DIFF_DELETE, text1],
+                [DIFF_INSERT, text2]
             ];
         };
 
@@ -3882,25 +3892,25 @@
          * @return {!Array.<!DiffMatchPatch.Diff>} Array of diff tuples.
          * @private
          */
-        DiffMatchPatch.prototype.diffBisectSplit = function( text1, text2, x, y, deadline ) {
+        DiffMatchPatch.prototype.diffBisectSplit = function (text1, text2, x, y, deadline) {
             var text1a, text1b, text2a, text2b, diffs, diffsb;
-            text1a = text1.substring( 0, x );
-            text2a = text2.substring( 0, y );
-            text1b = text1.substring( x );
-            text2b = text2.substring( y );
+            text1a = text1.substring(0, x);
+            text2a = text2.substring(0, y);
+            text1b = text1.substring(x);
+            text2b = text2.substring(y);
 
             // Compute both diffs serially.
-            diffs = this.DiffMain( text1a, text2a, false, deadline );
-            diffsb = this.DiffMain( text1b, text2b, false, deadline );
+            diffs = this.DiffMain(text1a, text2a, false, deadline);
+            diffsb = this.DiffMain(text1b, text2b, false, deadline);
 
-            return diffs.concat( diffsb );
+            return diffs.concat(diffsb);
         };
 
         /**
          * Reduce the number of edits by eliminating semantically trivial equalities.
          * @param {!Array.<!DiffMatchPatch.Diff>} diffs Array of diff tuples.
          */
-        DiffMatchPatch.prototype.diffCleanupSemantic = function( diffs ) {
+        DiffMatchPatch.prototype.diffCleanupSemantic = function (diffs) {
             var changes, equalities, equalitiesLength, lastequality,
                 pointer, lengthInsertions2, lengthDeletions2, lengthInsertions1,
                 lengthDeletions1, deletion, insertion, overlapLength1, overlapLength2;
@@ -3920,44 +3930,44 @@
             // Number of characters that changed after the equality.
             lengthInsertions2 = 0;
             lengthDeletions2 = 0;
-            while ( pointer < diffs.length ) {
-                if ( diffs[ pointer ][ 0 ] === DIFF_EQUAL ) { // Equality found.
-                    equalities[ equalitiesLength++ ] = pointer;
+            while (pointer < diffs.length) {
+                if (diffs[pointer][0] === DIFF_EQUAL) { // Equality found.
+                    equalities[equalitiesLength++] = pointer;
                     lengthInsertions1 = lengthInsertions2;
                     lengthDeletions1 = lengthDeletions2;
                     lengthInsertions2 = 0;
                     lengthDeletions2 = 0;
-                    lastequality = diffs[ pointer ][ 1 ];
+                    lastequality = diffs[pointer][1];
                 } else { // An insertion or deletion.
-                    if ( diffs[ pointer ][ 0 ] === DIFF_INSERT ) {
-                        lengthInsertions2 += diffs[ pointer ][ 1 ].length;
+                    if (diffs[pointer][0] === DIFF_INSERT) {
+                        lengthInsertions2 += diffs[pointer][1].length;
                     } else {
-                        lengthDeletions2 += diffs[ pointer ][ 1 ].length;
+                        lengthDeletions2 += diffs[pointer][1].length;
                     }
 
                     // Eliminate an equality that is smaller or equal to the edits on both
                     // sides of it.
-                    if ( lastequality && ( lastequality.length <=
-                        Math.max( lengthInsertions1, lengthDeletions1 ) ) &&
-                        ( lastequality.length <= Math.max( lengthInsertions2,
-                            lengthDeletions2 ) ) ) {
+                    if (lastequality && ( lastequality.length <=
+                        Math.max(lengthInsertions1, lengthDeletions1) ) &&
+                        ( lastequality.length <= Math.max(lengthInsertions2,
+                            lengthDeletions2) )) {
 
                         // Duplicate record.
                         diffs.splice(
-                            equalities[ equalitiesLength - 1 ],
+                            equalities[equalitiesLength - 1],
                             0,
-                            [ DIFF_DELETE, lastequality ]
+                            [DIFF_DELETE, lastequality]
                         );
 
                         // Change second copy to insert.
-                        diffs[ equalities[ equalitiesLength - 1 ] + 1 ][ 0 ] = DIFF_INSERT;
+                        diffs[equalities[equalitiesLength - 1] + 1][0] = DIFF_INSERT;
 
                         // Throw away the equality we just deleted.
                         equalitiesLength--;
 
                         // Throw away the previous equality (it needs to be reevaluated).
                         equalitiesLength--;
-                        pointer = equalitiesLength > 0 ? equalities[ equalitiesLength - 1 ] : -1;
+                        pointer = equalitiesLength > 0 ? equalities[equalitiesLength - 1] : -1;
 
                         // Reset the counters.
                         lengthInsertions1 = 0;
@@ -3972,8 +3982,8 @@
             }
 
             // Normalize the diff.
-            if ( changes ) {
-                this.diffCleanupMerge( diffs );
+            if (changes) {
+                this.diffCleanupMerge(diffs);
             }
 
             // Find any overlaps between deletions and insertions.
@@ -3983,46 +3993,46 @@
             //   -> <ins>def</ins>xxx<del>abc</del>
             // Only extract an overlap if it is as big as the edit ahead or behind it.
             pointer = 1;
-            while ( pointer < diffs.length ) {
-                if ( diffs[ pointer - 1 ][ 0 ] === DIFF_DELETE &&
-                    diffs[ pointer ][ 0 ] === DIFF_INSERT ) {
-                    deletion = diffs[ pointer - 1 ][ 1 ];
-                    insertion = diffs[ pointer ][ 1 ];
-                    overlapLength1 = this.diffCommonOverlap( deletion, insertion );
-                    overlapLength2 = this.diffCommonOverlap( insertion, deletion );
-                    if ( overlapLength1 >= overlapLength2 ) {
-                        if ( overlapLength1 >= deletion.length / 2 ||
-                            overlapLength1 >= insertion.length / 2 ) {
+            while (pointer < diffs.length) {
+                if (diffs[pointer - 1][0] === DIFF_DELETE &&
+                    diffs[pointer][0] === DIFF_INSERT) {
+                    deletion = diffs[pointer - 1][1];
+                    insertion = diffs[pointer][1];
+                    overlapLength1 = this.diffCommonOverlap(deletion, insertion);
+                    overlapLength2 = this.diffCommonOverlap(insertion, deletion);
+                    if (overlapLength1 >= overlapLength2) {
+                        if (overlapLength1 >= deletion.length / 2 ||
+                            overlapLength1 >= insertion.length / 2) {
 
                             // Overlap found.  Insert an equality and trim the surrounding edits.
                             diffs.splice(
                                 pointer,
                                 0,
-                                [ DIFF_EQUAL, insertion.substring( 0, overlapLength1 ) ]
+                                [DIFF_EQUAL, insertion.substring(0, overlapLength1)]
                             );
-                            diffs[ pointer - 1 ][ 1 ] =
-                                deletion.substring( 0, deletion.length - overlapLength1 );
-                            diffs[ pointer + 1 ][ 1 ] = insertion.substring( overlapLength1 );
+                            diffs[pointer - 1][1] =
+                                deletion.substring(0, deletion.length - overlapLength1);
+                            diffs[pointer + 1][1] = insertion.substring(overlapLength1);
                             pointer++;
                         }
                     } else {
-                        if ( overlapLength2 >= deletion.length / 2 ||
-                            overlapLength2 >= insertion.length / 2 ) {
+                        if (overlapLength2 >= deletion.length / 2 ||
+                            overlapLength2 >= insertion.length / 2) {
 
                             // Reverse overlap found.
                             // Insert an equality and swap and trim the surrounding edits.
                             diffs.splice(
                                 pointer,
                                 0,
-                                [ DIFF_EQUAL, deletion.substring( 0, overlapLength2 ) ]
+                                [DIFF_EQUAL, deletion.substring(0, overlapLength2)]
                             );
 
-                            diffs[ pointer - 1 ][ 0 ] = DIFF_INSERT;
-                            diffs[ pointer - 1 ][ 1 ] =
-                                insertion.substring( 0, insertion.length - overlapLength2 );
-                            diffs[ pointer + 1 ][ 0 ] = DIFF_DELETE;
-                            diffs[ pointer + 1 ][ 1 ] =
-                                deletion.substring( overlapLength2 );
+                            diffs[pointer - 1][0] = DIFF_INSERT;
+                            diffs[pointer - 1][1] =
+                                insertion.substring(0, insertion.length - overlapLength2);
+                            diffs[pointer + 1][0] = DIFF_DELETE;
+                            diffs[pointer + 1][1] =
+                                deletion.substring(overlapLength2);
                             pointer++;
                         }
                     }
@@ -4040,7 +4050,7 @@
          *     string and the start of the second string.
          * @private
          */
-        DiffMatchPatch.prototype.diffCommonOverlap = function( text1, text2 ) {
+        DiffMatchPatch.prototype.diffCommonOverlap = function (text1, text2) {
             var text1Length, text2Length, textLength,
                 best, length, pattern, found;
 
@@ -4049,20 +4059,20 @@
             text2Length = text2.length;
 
             // Eliminate the null case.
-            if ( text1Length === 0 || text2Length === 0 ) {
+            if (text1Length === 0 || text2Length === 0) {
                 return 0;
             }
 
             // Truncate the longer string.
-            if ( text1Length > text2Length ) {
-                text1 = text1.substring( text1Length - text2Length );
-            } else if ( text1Length < text2Length ) {
-                text2 = text2.substring( 0, text1Length );
+            if (text1Length > text2Length) {
+                text1 = text1.substring(text1Length - text2Length);
+            } else if (text1Length < text2Length) {
+                text2 = text2.substring(0, text1Length);
             }
-            textLength = Math.min( text1Length, text2Length );
+            textLength = Math.min(text1Length, text2Length);
 
             // Quick check for the worst case.
-            if ( text1 === text2 ) {
+            if (text1 === text2) {
                 return textLength;
             }
 
@@ -4071,15 +4081,15 @@
             // Performance analysis: https://neil.fraser.name/news/2010/11/04/
             best = 0;
             length = 1;
-            while ( true ) {
-                pattern = text1.substring( textLength - length );
-                found = text2.indexOf( pattern );
-                if ( found === -1 ) {
+            while (true) {
+                pattern = text1.substring(textLength - length);
+                found = text2.indexOf(pattern);
+                if (found === -1) {
                     return best;
                 }
                 length += found;
-                if ( found === 0 || text1.substring( textLength - length ) ===
-                    text2.substring( 0, length ) ) {
+                if (found === 0 || text1.substring(textLength - length) ===
+                    text2.substring(0, length)) {
                     best = length;
                     length++;
                 }
@@ -4097,14 +4107,14 @@
          *     The zeroth element of the array of unique strings is intentionally blank.
          * @private
          */
-        DiffMatchPatch.prototype.diffLinesToChars = function( text1, text2 ) {
+        DiffMatchPatch.prototype.diffLinesToChars = function (text1, text2) {
             var lineArray, lineHash, chars1, chars2;
             lineArray = []; // E.g. lineArray[4] === 'Hello\n'
             lineHash = {};  // E.g. lineHash['Hello\n'] === 4
 
             // '\x00' is a valid character, but various debuggers don't like it.
             // So we'll insert a junk entry to avoid generating a null character.
-            lineArray[ 0 ] = "";
+            lineArray[0] = "";
 
             /**
              * Split a text into an array of strings.  Reduce the texts to a string of
@@ -4114,7 +4124,7 @@
              * @return {string} Encoded string.
              * @private
              */
-            function diffLinesToCharsMunge( text ) {
+            function diffLinesToCharsMunge(text) {
                 var chars, lineStart, lineEnd, lineArrayLength, line;
                 chars = "";
 
@@ -4126,28 +4136,28 @@
 
                 // Keeping our own length variable is faster than looking it up.
                 lineArrayLength = lineArray.length;
-                while ( lineEnd < text.length - 1 ) {
-                    lineEnd = text.indexOf( "\n", lineStart );
-                    if ( lineEnd === -1 ) {
+                while (lineEnd < text.length - 1) {
+                    lineEnd = text.indexOf("\n", lineStart);
+                    if (lineEnd === -1) {
                         lineEnd = text.length - 1;
                     }
-                    line = text.substring( lineStart, lineEnd + 1 );
+                    line = text.substring(lineStart, lineEnd + 1);
                     lineStart = lineEnd + 1;
 
-                    if ( lineHash.hasOwnProperty ? lineHash.hasOwnProperty( line ) :
-                            ( lineHash[ line ] !== undefined ) ) {
-                        chars += String.fromCharCode( lineHash[ line ] );
+                    if (lineHash.hasOwnProperty ? lineHash.hasOwnProperty(line) :
+                            ( lineHash[line] !== undefined )) {
+                        chars += String.fromCharCode(lineHash[line]);
                     } else {
-                        chars += String.fromCharCode( lineArrayLength );
-                        lineHash[ line ] = lineArrayLength;
-                        lineArray[ lineArrayLength++ ] = line;
+                        chars += String.fromCharCode(lineArrayLength);
+                        lineHash[line] = lineArrayLength;
+                        lineArray[lineArrayLength++] = line;
                     }
                 }
                 return chars;
             }
 
-            chars1 = diffLinesToCharsMunge( text1 );
-            chars2 = diffLinesToCharsMunge( text2 );
+            chars1 = diffLinesToCharsMunge(text1);
+            chars2 = diffLinesToCharsMunge(text2);
             return {
                 chars1: chars1,
                 chars2: chars2,
@@ -4162,15 +4172,15 @@
          * @param {!Array.<string>} lineArray Array of unique strings.
          * @private
          */
-        DiffMatchPatch.prototype.diffCharsToLines = function( diffs, lineArray ) {
+        DiffMatchPatch.prototype.diffCharsToLines = function (diffs, lineArray) {
             var x, chars, text, y;
-            for ( x = 0; x < diffs.length; x++ ) {
-                chars = diffs[ x ][ 1 ];
+            for (x = 0; x < diffs.length; x++) {
+                chars = diffs[x][1];
                 text = [];
-                for ( y = 0; y < chars.length; y++ ) {
-                    text[ y ] = lineArray[ chars.charCodeAt( y ) ];
+                for (y = 0; y < chars.length; y++) {
+                    text[y] = lineArray[chars.charCodeAt(y)];
                 }
-                diffs[ x ][ 1 ] = text.join( "" );
+                diffs[x][1] = text.join("");
             }
         };
 
@@ -4179,85 +4189,85 @@
          * Any edit section can move as long as it doesn't cross an equality.
          * @param {!Array.<!DiffMatchPatch.Diff>} diffs Array of diff tuples.
          */
-        DiffMatchPatch.prototype.diffCleanupMerge = function( diffs ) {
+        DiffMatchPatch.prototype.diffCleanupMerge = function (diffs) {
             var pointer, countDelete, countInsert, textInsert, textDelete,
                 commonlength, changes, diffPointer, position;
-            diffs.push( [ DIFF_EQUAL, "" ] ); // Add a dummy entry at the end.
+            diffs.push([DIFF_EQUAL, ""]); // Add a dummy entry at the end.
             pointer = 0;
             countDelete = 0;
             countInsert = 0;
             textDelete = "";
             textInsert = "";
             commonlength;
-            while ( pointer < diffs.length ) {
-                switch ( diffs[ pointer ][ 0 ] ) {
+            while (pointer < diffs.length) {
+                switch (diffs[pointer][0]) {
                     case DIFF_INSERT:
                         countInsert++;
-                        textInsert += diffs[ pointer ][ 1 ];
+                        textInsert += diffs[pointer][1];
                         pointer++;
                         break;
                     case DIFF_DELETE:
                         countDelete++;
-                        textDelete += diffs[ pointer ][ 1 ];
+                        textDelete += diffs[pointer][1];
                         pointer++;
                         break;
                     case DIFF_EQUAL:
 
                         // Upon reaching an equality, check for prior redundancies.
-                        if ( countDelete + countInsert > 1 ) {
-                            if ( countDelete !== 0 && countInsert !== 0 ) {
+                        if (countDelete + countInsert > 1) {
+                            if (countDelete !== 0 && countInsert !== 0) {
 
                                 // Factor out any common prefixes.
-                                commonlength = this.diffCommonPrefix( textInsert, textDelete );
-                                if ( commonlength !== 0 ) {
-                                    if ( ( pointer - countDelete - countInsert ) > 0 &&
-                                        diffs[ pointer - countDelete - countInsert - 1 ][ 0 ] ===
-                                        DIFF_EQUAL ) {
-                                        diffs[ pointer - countDelete - countInsert - 1 ][ 1 ] +=
-                                            textInsert.substring( 0, commonlength );
+                                commonlength = this.diffCommonPrefix(textInsert, textDelete);
+                                if (commonlength !== 0) {
+                                    if (( pointer - countDelete - countInsert ) > 0 &&
+                                        diffs[pointer - countDelete - countInsert - 1][0] ===
+                                        DIFF_EQUAL) {
+                                        diffs[pointer - countDelete - countInsert - 1][1] +=
+                                            textInsert.substring(0, commonlength);
                                     } else {
-                                        diffs.splice( 0, 0, [ DIFF_EQUAL,
-                                            textInsert.substring( 0, commonlength )
-                                        ] );
+                                        diffs.splice(0, 0, [DIFF_EQUAL,
+                                            textInsert.substring(0, commonlength)
+                                        ]);
                                         pointer++;
                                     }
-                                    textInsert = textInsert.substring( commonlength );
-                                    textDelete = textDelete.substring( commonlength );
+                                    textInsert = textInsert.substring(commonlength);
+                                    textDelete = textDelete.substring(commonlength);
                                 }
 
                                 // Factor out any common suffixies.
-                                commonlength = this.diffCommonSuffix( textInsert, textDelete );
-                                if ( commonlength !== 0 ) {
-                                    diffs[ pointer ][ 1 ] = textInsert.substring( textInsert.length -
-                                            commonlength ) + diffs[ pointer ][ 1 ];
-                                    textInsert = textInsert.substring( 0, textInsert.length -
-                                        commonlength );
-                                    textDelete = textDelete.substring( 0, textDelete.length -
-                                        commonlength );
+                                commonlength = this.diffCommonSuffix(textInsert, textDelete);
+                                if (commonlength !== 0) {
+                                    diffs[pointer][1] = textInsert.substring(textInsert.length -
+                                            commonlength) + diffs[pointer][1];
+                                    textInsert = textInsert.substring(0, textInsert.length -
+                                        commonlength);
+                                    textDelete = textDelete.substring(0, textDelete.length -
+                                        commonlength);
                                 }
                             }
 
                             // Delete the offending records and add the merged ones.
-                            if ( countDelete === 0 ) {
-                                diffs.splice( pointer - countInsert,
-                                    countDelete + countInsert, [ DIFF_INSERT, textInsert ] );
-                            } else if ( countInsert === 0 ) {
-                                diffs.splice( pointer - countDelete,
-                                    countDelete + countInsert, [ DIFF_DELETE, textDelete ] );
+                            if (countDelete === 0) {
+                                diffs.splice(pointer - countInsert,
+                                    countDelete + countInsert, [DIFF_INSERT, textInsert]);
+                            } else if (countInsert === 0) {
+                                diffs.splice(pointer - countDelete,
+                                    countDelete + countInsert, [DIFF_DELETE, textDelete]);
                             } else {
                                 diffs.splice(
                                     pointer - countDelete - countInsert,
                                     countDelete + countInsert,
-                                    [ DIFF_DELETE, textDelete ], [ DIFF_INSERT, textInsert ]
+                                    [DIFF_DELETE, textDelete], [DIFF_INSERT, textInsert]
                                 );
                             }
                             pointer = pointer - countDelete - countInsert +
                                 ( countDelete ? 1 : 0 ) + ( countInsert ? 1 : 0 ) + 1;
-                        } else if ( pointer !== 0 && diffs[ pointer - 1 ][ 0 ] === DIFF_EQUAL ) {
+                        } else if (pointer !== 0 && diffs[pointer - 1][0] === DIFF_EQUAL) {
 
                             // Merge this equality with the previous one.
-                            diffs[ pointer - 1 ][ 1 ] += diffs[ pointer ][ 1 ];
-                            diffs.splice( pointer, 1 );
+                            diffs[pointer - 1][1] += diffs[pointer][1];
+                            diffs.splice(pointer, 1);
                         } else {
                             pointer++;
                         }
@@ -4268,7 +4278,7 @@
                         break;
                 }
             }
-            if ( diffs[ diffs.length - 1 ][ 1 ] === "" ) {
+            if (diffs[diffs.length - 1][1] === "") {
                 diffs.pop(); // Remove the dummy entry at the end.
             }
 
@@ -4279,35 +4289,35 @@
             pointer = 1;
 
             // Intentionally ignore the first and last element (don't need checking).
-            while ( pointer < diffs.length - 1 ) {
-                if ( diffs[ pointer - 1 ][ 0 ] === DIFF_EQUAL &&
-                    diffs[ pointer + 1 ][ 0 ] === DIFF_EQUAL ) {
+            while (pointer < diffs.length - 1) {
+                if (diffs[pointer - 1][0] === DIFF_EQUAL &&
+                    diffs[pointer + 1][0] === DIFF_EQUAL) {
 
-                    diffPointer = diffs[ pointer ][ 1 ];
+                    diffPointer = diffs[pointer][1];
                     position = diffPointer.substring(
-                        diffPointer.length - diffs[ pointer - 1 ][ 1 ].length
+                        diffPointer.length - diffs[pointer - 1][1].length
                     );
 
                     // This is a single edit surrounded by equalities.
-                    if ( position === diffs[ pointer - 1 ][ 1 ] ) {
+                    if (position === diffs[pointer - 1][1]) {
 
                         // Shift the edit over the previous equality.
-                        diffs[ pointer ][ 1 ] = diffs[ pointer - 1 ][ 1 ] +
-                            diffs[ pointer ][ 1 ].substring( 0, diffs[ pointer ][ 1 ].length -
-                                diffs[ pointer - 1 ][ 1 ].length );
-                        diffs[ pointer + 1 ][ 1 ] =
-                            diffs[ pointer - 1 ][ 1 ] + diffs[ pointer + 1 ][ 1 ];
-                        diffs.splice( pointer - 1, 1 );
+                        diffs[pointer][1] = diffs[pointer - 1][1] +
+                            diffs[pointer][1].substring(0, diffs[pointer][1].length -
+                                diffs[pointer - 1][1].length);
+                        diffs[pointer + 1][1] =
+                            diffs[pointer - 1][1] + diffs[pointer + 1][1];
+                        diffs.splice(pointer - 1, 1);
                         changes = true;
-                    } else if ( diffPointer.substring( 0, diffs[ pointer + 1 ][ 1 ].length ) ===
-                        diffs[ pointer + 1 ][ 1 ] ) {
+                    } else if (diffPointer.substring(0, diffs[pointer + 1][1].length) ===
+                        diffs[pointer + 1][1]) {
 
                         // Shift the edit over the next equality.
-                        diffs[ pointer - 1 ][ 1 ] += diffs[ pointer + 1 ][ 1 ];
-                        diffs[ pointer ][ 1 ] =
-                            diffs[ pointer ][ 1 ].substring( diffs[ pointer + 1 ][ 1 ].length ) +
-                            diffs[ pointer + 1 ][ 1 ];
-                        diffs.splice( pointer + 1, 1 );
+                        diffs[pointer - 1][1] += diffs[pointer + 1][1];
+                        diffs[pointer][1] =
+                            diffs[pointer][1].substring(diffs[pointer + 1][1].length) +
+                            diffs[pointer + 1][1];
+                        diffs.splice(pointer + 1, 1);
                         changes = true;
                     }
                 }
@@ -4315,17 +4325,17 @@
             }
 
             // If shifts were made, the diff needs reordering and another shift sweep.
-            if ( changes ) {
-                this.diffCleanupMerge( diffs );
+            if (changes) {
+                this.diffCleanupMerge(diffs);
             }
         };
 
-        return function( o, n ) {
+        return function (o, n) {
             var diff, output, text;
             diff = new DiffMatchPatch();
-            output = diff.DiffMain( o, n );
-            diff.diffCleanupEfficiency( output );
-            text = diff.diffPrettyHtml( output );
+            output = diff.DiffMain(o, n);
+            diff.diffCleanupEfficiency(output);
+            text = diff.diffPrettyHtml(output);
 
             return text;
         };
