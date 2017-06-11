@@ -1,10 +1,9 @@
 class Card {
   constructor(type) {
-    this.id = (++cardCounter);
+    this.id = this.nextId();
 
     var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card",
-      fullscreen: false});
+    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
     this.card = card;
 
     var header = document.createElement('div');
@@ -16,7 +15,6 @@ class Card {
     $(close_button).click(function () {
       this.closest('.card').remove();
     });
-
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
@@ -30,6 +28,17 @@ class Card {
     this.buildFaces(card, type);
     this.setDraggable();
     this.setDroppable();
+  }
+
+  nextId() {
+    var ids = $.map($('.card'), function(card) {
+      return parseInt($(card).attr('id').split("_")[1]);
+    });
+    if (ids.length < 1) return 1; // no cards on the canvas yet
+
+    var next = 1;
+    while(ids.indexOf(next += 1) > -1);
+    return next;
   }
 
   setDraggable() {
@@ -57,7 +66,8 @@ class Card {
         // handle stack-to-card drop event
         if ($(ui.draggable).hasClass('stack')) {
           var stack = new Stack($(this));
-          ui.draggable.children().each((index, card) => stack.addCard($(card)));
+          ui.draggable.children('.card')
+            .each((index, card) => stack.addCard($(card)));
           stack.cascadeCards();
           stack.resizeStack();
           $(ui.draggable).remove();
@@ -88,8 +98,7 @@ class Card {
     if (type === "editor")
       $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
         $(this).attr({
-          class: "editor", id: card.id + "textEditor_" + idx, maxLength: "5000",
-          cols: "25", rows: "19"
+          id: card.id + "textEditor_" + idx, class: "editor"
         });
       });
     else if (type === "sketch")
@@ -113,50 +122,22 @@ class Card {
   }
 
   toggleFullScreen() {
-    // handle unexpanded card transitioning to fullscreen
-    if ($(this.card).attr('fullscreen') === 'false') {
-      $(this.card).attr({
-          prevWidth: $(this.card).width(),
-          prevHeight: $(this.card).height(),
-          prevTop: $(this.card).offset().top,
-          prevLeft: $(this.card).offset().left,
-          prevZIndex: $(this.card).css('zIndex'),
-          fullscreen: true})
-        .hide()
-        .css({zIndex: 1000})
-        .animate({top: 0, left: 0, width: "100%", height: "100%"}, 0.10)
-        .show();
-
-      $("#flip_button_" + this.id).hide();
-
-      $(this.card.children).each(function () {
-        if ($(this).hasClass('card-header')) {
-          $(this).animate({top: 0, left: 0, width: '100%'}, 0.10);
-        } else {
-          $(this).animate({top: 0, left: 0, width: "100%", height: "100%"},
-            0.10);
-        }
-      });
-      $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-    // handle fullscreen card transitioning to unexpanded
-    } else {
-      $(this.card)
-        .animate({
-          width: $(this.card).attr('prevWidth'),
-          height: $(this.card).attr('prevHeight'),
-          top: $(this.card).attr('prevTop'),
-          left: $(this.card).attr('prevLeft')}, 100)
-        .css({zIndex: $(this.card).attr('prevZIndex')});
-      $(this.card.children).each(function () {
-        if (!this.classList.contains("flip"))
-          $(this).animate({
-            width: $(this.card).attr('prevWidth'),
-            height: $(this.card).attr('prevHeight')}, 100);
-      });
-      $("#fullscreen_button_" + this.id).toggleClass('expand collapse');
-      $("#flip_button_" + this.id).show();
-      $(this.card).removeAttr('prevWidth prevHeight prevTop prevLeft prevZIndex');
-      $(this.card).attr('fullscreen', false);
+    if (!$(this.card).hasClass('fullscreen')) {  // transtion to fullscreen
+      $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
+      $(this.card).addClass('fullscreen').removeAttr('style');
+      $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
+      // $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+      //   $(this).attr({cols: "25", rows: "19"});
+      // });
+    } else {  // transition back from fullscreen
+      $(this.card).removeClass("fullscreen");
+      $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
+      $(this.card).removeAttr('prevStyle');
+      $(this.card.children).each((index, child) => $(child).removeAttr('style'));
+      $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
+      // $([face1_editor, face2_editor, face3_editor]).each(function (idx) {
+      //   $(this).attr({cols: "25", rows: "19", maxLength: "5000"});
+      // });
     }
   }
 }
