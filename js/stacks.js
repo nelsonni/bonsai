@@ -45,7 +45,6 @@ class Stack {
     $(this.stack).remove();
   }
 
-
   // add individual card to the top of the stack
   addCard(card) {
     let cur = this.getCardObject(card);

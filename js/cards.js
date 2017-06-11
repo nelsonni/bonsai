@@ -9,21 +9,13 @@ class Card {
       class: "card"
     });
     this.card = card;
+
     var header = document.createElement('div');
     $(header).attr({
       id: "header_" + this.id,
       class: "card-header"
     });
     $(header).html("card: " + this.id);
-
-    var close_button = document.createElement('button');
-    $(close_button).attr({
-      id: "close_button_" + this.id,
-      class: "close"
-    });
-    $(close_button).click(function() {
-      this.closest('.card').remove();
-    });
 
     var close_button = document.createElement('button');
     $(close_button).attr({

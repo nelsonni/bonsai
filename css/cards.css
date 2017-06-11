@@ -83,16 +83,13 @@ button.expand {
     url("../assets/expand_dark.svg");
   border-radius: 0;
 }
+
 button.expand:hover, button.expand:active {
   background-image: url("../assets/expand_active.svg");
 }
 
 button.expand.fullscreen {
-  height: 18px;
-  width: 18px;
-  margin: 4px;
   background-image: url("../assets/collapse_dark.svg");
-  border-radius: 0;
 }
 button.expand.fullscreen:hover, button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
