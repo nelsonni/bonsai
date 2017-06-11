@@ -1,69 +1,70 @@
 class sketchCard extends Card {
-    constructor(type) {
-        super(type);
-        this.sketches = [];
-        this.pens = [];
-        this.setDrawEffects();
-        this.eventListeners();
-    }
+  constructor(type) {
+    super(type);
+    this.type = type;
+    this.sketches = [];
+    this.pens = [];
+    this.setDrawEffects();
+    this.eventListeners();
+  }
 
-    addButtons() {
-        let red = document.createElement("button");
-        let blue = document.createElement("button");
-        let green = document.createElement("button");
-        let black = document.createElement("button");
-        let erase = document.createElement("button");
-        let colors = ["red", "blue", "green", "black"];
-        let cur = this;
-        $([red, blue, green, black]).each(function(idx) {
-            $(this).addClass("colorBtn").attr({
-                id: "pen_" + colors[idx] + cur.id,
-                value: colors[idx]
-            }).css({
-                backgroundColor: colors[idx]
-            });
-            $(cur.card).find(".editor").append(this);
-            cur.pens.push($(this)[0]);
-        });
-        $(erase).attr({
-            id: "pen_erase" + cur.id
-        }).addClass("eraser");
-        $(cur.card).find(".editor").append(erase);
-        $(erase).on("click", function() {
-            for (let i in cur.sketches) {
-                if (cur.sketches[i].getState().editing === true)
-                    cur.sketches[i].editing("erase");
-                else
-                    cur.sketches[i].editing(true);
-            };
-        });
-    }
+  addButtons() {
+    let red = document.createElement("button");
+    let blue = document.createElement("button");
+    let green = document.createElement("button");
+    let black = document.createElement("button");
+    let erase = document.createElement("button");
+    let colors = ["red", "blue", "green", "black"];
+    let cur = this;
+    $([red, blue, green, black]).each(function(idx) {
+      $(this).addClass("colorBtn").attr({
+        id: "pen_" + colors[idx] + cur.id,
+        value: colors[idx]
+      }).css({
+        backgroundColor: colors[idx]
+      });
+      $(cur.card).find(".editor").append(this);
+      cur.pens.push($(this)[0]);
+    });
+    $(erase).attr({
+      id: "pen_erase" + cur.id
+    }).addClass("eraser");
+    $(cur.card).find(".editor").append(erase);
+    $(erase).on("click", function() {
+      for (let i in cur.sketches) {
+        if (cur.sketches[i].getState().editing === true)
+          cur.sketches[i].editing("erase");
+        else
+          cur.sketches[i].editing(true);
+      };
+    });
+  }
 
-    setDrawEffects() {
-        let canvases = [];
-        for (let i = 0; i < 3; i++)
-            canvases.push("card_" + this.id + "sketch_" + i);
-        var curCard = this;
-        $(canvases).each(function(idx) {
-            let sketchPad = Raphael.sketchpad(canvases[idx], {
-                height: "100%",
-                width: "100%",
-                editing: true
-            });
-            curCard.sketches.push(sketchPad);
-        });
-        this.addButtons();
-    }
+  setDrawEffects() {
+    let canvases = [];
+    for (let i = 0; i < 3; i++)
+      canvases.push("card_" + this.id + "sketch_" + i);
+    var curCard = this;
+    $(canvases).each(function(idx) {
+      let sketchPad = Raphael.sketchpad(canvases[idx], {
+        height: "100%",
+        width: "100%",
+        editing: true
+      });
+      curCard.sketches.push(sketchPad);
+    });
+    this.addButtons();
+  }
 
-    eventListeners() {
-        let cur = this;
-        $(cur.pens).each(function(idx) {
-            let penColor = $(this)[0].value;
-            $("#" + $(this)[0].id).on("click", function(event) {
-                $(cur.sketches).each(function() { // go through each sketch pad on current card
-                    $(this)[0].pen().color(penColor); // switch the pen to that color.
-                });
-            });
+  eventListeners() {
+    let cur = this;
+    $(cur.pens).each(function(idx) {
+      let penColor = $(this)[0].value;
+      $("#" + $(this)[0].id).on("click", function(event) {
+        $(cur.sketches).each(function() { // go through each sketch pad on current card
+          $(this)[0].pen().color(penColor); // switch the pen to that color.
         });
-    }
+      });
+    });
+  }
 }

@@ -4,7 +4,10 @@ class Stack {
     this.id = this.nextId();
     this.cards = [];
     var stack = document.createElement('div');
-    $(stack).attr({id: "stack_" + this.id, class: "stack"})
+    $(stack).attr({
+        id: "stack_" + this.id,
+        class: "stack"
+      })
       .css({
         top: $(cards[0]).offset().top - 25,
         left: $(cards[0]).offset().left - 25
@@ -12,8 +15,10 @@ class Stack {
     this.stack = stack;
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_stack_" + this.id,
-      class: "stack_close"});
+    $(close_button).attr({
+      id: "close_button_stack_" + this.id,
+      class: "stack_close"
+    });
     $(close_button).click(() => this.destructor());
     this.stack.appendChild(close_button);
 
@@ -26,7 +31,10 @@ class Stack {
     this.resizeStack();
 
     var annotation = document.createElement('textarea');
-    $(annotation).attr({id: "annotation_stack_" + this.id, class:"annotation"})
+    $(annotation).attr({
+        id: "annotation_stack_" + this.id,
+        class: "annotation"
+      })
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
@@ -40,14 +48,16 @@ class Stack {
 
   // add individual card to the top of the stack
   addCard(card) {
+    let cur = this.getCardObject(card);
     var ids = jQuery.map(this.cards, function(stackCard) {
-      return parseInt($(stackCard).attr('id').split("_")[1]);
+      return parseInt(stackCard.card.id.split("_")[1]);
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
-
-    this.cards.push(card);
-    this.stack.appendChild($(card)[0]);
+    this.cards.push(cur);
+    this.stack.appendChild(cur.card);
+    if (cur.type == "sketch")
+      this.disableSketchCards(cur);
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
       $(button).attr('disabled', true);
@@ -99,9 +109,8 @@ class Stack {
       return parseInt($(stack).attr('id').split("_")[1]);
     });
     if (ids.length < 1) return 1; // no stacks on the canvas yet
-
     var next = 1;
-    while(ids.indexOf(next += 1) > -1);
+    while (ids.indexOf(next += 1) > -1);
     return next;
   }
 
