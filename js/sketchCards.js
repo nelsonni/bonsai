@@ -2,13 +2,10 @@ class sketchCard extends Card {
   constructor(type) {
     super(type)
     this.type = type;
-    this.contentBuilder(this.card);
-
-    this.setDraggable();
-    this.setDroppable();
-
     this.sketches = [];
     this.pens = [];
+
+    this.contentBuilder(this.card);
     this.setDrawEffects();
     this.eventListeners();
   }

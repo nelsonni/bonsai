@@ -3,9 +3,6 @@ class editorCard extends Card {
     super(type);
     this.type = type;
     this.contentBuilder(this.card);
-    this.setDraggable();
-    this.setDroppable();
-
   }
 
 

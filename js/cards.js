@@ -33,6 +33,8 @@ class Card {
 
     card.appendChild(header);
     document.body.appendChild(card);
+    this.setDraggable();
+    this.setDroppable();
   }
 
 

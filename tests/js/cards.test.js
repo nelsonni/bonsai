@@ -7,7 +7,7 @@
 
   test("Single card spawn and drag", function(assert) {
     done = assert.async(2);
-    $("li").hide();
+    //$("li").hide();
     $("#createCard").simulate("click");
     var curCard = returnCard();
     var cardHeader = $(curCard[0].firstElementChild);
@@ -438,7 +438,7 @@
 
   function createAndReturnCard() {
     $("#createCard").simulate("click");
-    $("li").hide();
+    //$("li").hide();
     return returnCard();
   }
 
