@@ -85,9 +85,8 @@ class Stack {
     let id = (card[0].id).split("_");
     let cleanID = parseInt(id[id.length - 1]);
     this.cards.forEach((card, idx) => {
-      if (card.id == cleanID)
-        if (card.type == "sketch")
-          this.enableSketchCards(card)
+      if (card.id == cleanID && card.type == "sketch")
+        this.enableSketchCards(card)
     });
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function(n) {
@@ -146,7 +145,6 @@ class Stack {
       },
       out: (event, ui) => {
         this.removeCard($(ui.draggable));
-
         if (this.cards.length < 2) {
           this.destructor();
           return;
