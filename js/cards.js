@@ -35,6 +35,12 @@ class Card {
     });
     header.appendChild(close_button);
 
+    var fullscreen_button = document.createElement('button');
+    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
+      class: "expand"});
+    $(fullscreen_button).click(() => this.toggleFullScreen());
+    header.appendChild(fullscreen_button);
+
     card.appendChild(header);
     document.body.appendChild(card);
     this.buildFaces(card, type);
