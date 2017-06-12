@@ -54,7 +54,6 @@
                     editor.session.setMode("ace/mode/javascript");
                 }
             });
-
             return card;
         }
         function newSketchCard() {
@@ -66,13 +65,10 @@
         function playground() {
             document.location.href = "playground/playground.html"
         }
-
-
         function loadFile() {
             let test = newCard();
             $("#" + test.card.id +"textEditor_0").load("./main.js");
         }
-
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
         }
@@ -89,7 +85,6 @@
                 }
             }
         }
-
     </script>
 </head>
 
