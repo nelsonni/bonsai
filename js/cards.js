@@ -4,8 +4,8 @@ class Card {
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
-    const username = require('username');
-    this.creator = username.sync();
+    //const username = require('username');
+    //this.creator = username.sync();
 
     var card = document.createElement('div');
     $(card).attr({
@@ -36,13 +36,13 @@ class Card {
     });
     header.appendChild(close_button);
 
-        var fullscreen_button = document.createElement('button');
-        $(fullscreen_button).attr({
-            id: "fullscreen_button_" + this.id,
-            class: "expand"
-        });
-        $(fullscreen_button).click(() => this.toggleFullScreen());
-        header.appendChild(fullscreen_button);
+    var fullscreen_button = document.createElement('button');
+    $(fullscreen_button).attr({
+      id: "fullscreen_button_" + this.id,
+      class: "expand"
+    });
+    $(fullscreen_button).click(() => this.toggleFullScreen());
+    header.appendChild(fullscreen_button);
 
     card.appendChild(header);
     document.body.appendChild(card);
@@ -122,4 +122,5 @@ class Card {
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
     }
+  }
 }

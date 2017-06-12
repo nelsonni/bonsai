@@ -32,5 +32,12 @@ class editorCard extends Card {
       focusOnSelect: true
     });
     card.appendChild(content);
+    $(faces).each(function(idx) {
+      if (this.lastElementChild.id !== "") {
+        let editor = ace.edit(this.lastElementChild.id);
+        editor.setTheme("ace/theme/twilight");
+        editor.session.setMode("ace/mode/javascript");
+      }
+    });
   }
 }
