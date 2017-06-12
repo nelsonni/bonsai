@@ -5,6 +5,14 @@ class editorCard extends Card {
     this.contentBuilder(this.card);
   }
 
+  disableSwipe() {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", false, false);
+  }
+
+  enableSwipe() {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", true, false);
+  }
+
 
   contentBuilder(card) {
     var content = document.createElement('div');

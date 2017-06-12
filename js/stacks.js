@@ -116,7 +116,18 @@ class Stack {
     $(this.stack).draggable({
       containment: 'window',
       stack: '.stack, .card',
-      drag: (event, ui) => this.cascadeCards()
+      drag: (event, ui) => this.cascadeCards(),
+      start: () => {
+        // toggle swipe effects on drag so cards don't move.
+        this.cards.forEach((e, i) => {
+          e.disableSwipe()
+        });
+      },
+      stop: () => {
+        this.cards.forEach((e, i) => {
+          e.enableSwipe()
+        });
+      }
     });
   }
 
