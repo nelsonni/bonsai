@@ -6,12 +6,8 @@ class editorCard extends Card {
     this.contentBuilder(this.card);
   }
 
-  disableSwipe() {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", false, false);
-  }
-
-  enableSwipe() {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", true, false);
+  toggleSwipe(value) {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
   }
 
   // since the fullscreen class doesn't work on the ace_editor manually resize
