@@ -1,6 +1,11 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.creation_timestamp = new Date().toString();
+    this.interaction_timestamp = this.creation_timestamp;
+    // npm module: username, url: https://www.npmjs.com/package/username
+    const username = require('username');
+    this.creator = username.sync();
 
     var card = document.createElement('div');
     $(card).attr({
@@ -31,12 +36,17 @@ class Card {
     });
     header.appendChild(close_button);
 
+    var fullscreen_button = document.createElement('button');
+    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
+      class: "expand"});
+    $(fullscreen_button).click(() => this.toggleFullScreen());
+    header.appendChild(fullscreen_button);
+
     card.appendChild(header);
     document.body.appendChild(card);
     this.setDraggable();
     this.setDroppable();
   }
-
 
   getCardObject(card) {
     let id = (card[0].id).split("_");
@@ -63,6 +73,9 @@ class Card {
       stack: '.card, .stack',
       start: function(event, ui) {
         $(this.card).removeClass('atSpawn');
+      },
+      drag: (event, ui) => {
+        this.interaction_timestamp = new Date().toString();
       }
     });
   }
@@ -92,6 +105,10 @@ class Card {
   }
 
   toggleFullScreen() {
+    console.log("creation: " + this.creation_timestamp);
+    console.log("interaction: " + this.interaction_timestamp);
+    console.log("username: " + this.creator);
+
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');

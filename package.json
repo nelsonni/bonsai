@@ -4,7 +4,8 @@
   "main": "main.js",
   "scripts": {
     "package": "electron-forge make --arch all",
-    "start": "electron-forge start"
+    "rebuild": "electron-rebuild -f -w bonsai",
+    "start": "electron ."
   },
   "repository": "https://github.com/nelsonni/bonsai",
   "keywords": [
@@ -15,8 +16,13 @@
   "author": "nelsonni",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.6.10",
     "electron-forge": "^2.2.0",
-    "electron-packager": "^8.7.0"
+    "electron-packager": "^8.7.0",
+    "electron-prebuilt": "^1.4.13",
+    "electron-rebuild": "^1.5.11"
+  },
+  "dependencies": {
+    "electron": "^1.6.10",
+    "username": "^2.3.0"
   }
 }
