@@ -1,7 +1,12 @@
 class sketchCard extends Card {
   constructor(type) {
-    super(type);
+    super(type)
     this.type = type;
+    this.contentBuilder(this.card);
+
+    this.setDraggable();
+    this.setDroppable();
+
     this.sketches = [];
     this.pens = [];
     this.setDrawEffects();
@@ -26,10 +31,13 @@ class sketchCard extends Card {
       $(cur.card).find(".editor").append(this);
       cur.pens.push($(this)[0]);
     });
+
     $(erase).attr({
       id: "pen_erase" + cur.id
     }).addClass("eraser");
+
     $(cur.card).find(".editor").append(erase);
+
     $(erase).on("click", function() {
       for (let i in cur.sketches) {
         if (cur.sketches[i].getState().editing === true)
@@ -44,7 +52,7 @@ class sketchCard extends Card {
     let canvases = [];
     for (let i = 0; i < 3; i++)
       canvases.push("card_" + this.id + "sketch_" + i);
-    var curCard = this;
+    let curCard = this;
     $(canvases).each(function(idx) {
       let sketchPad = Raphael.sketchpad(canvases[idx], {
         height: "100%",
@@ -66,5 +74,36 @@ class sketchCard extends Card {
         });
       });
     });
+  }
+
+  contentBuilder(card) {
+    var content = document.createElement('div');
+    $(content).attr({
+      class: "editor",
+      id: card.id + "_editor_" + this.id
+    });
+    let faces = [];
+    for (let i = 0; i < 3; i++) {
+      let face = document.createElement('div');
+      let face_editor = document.createElement("div");
+      face.appendChild(face_editor);
+      faces.push(face);
+    }
+
+    faces.forEach(function(element, idx) {
+      $(element.firstChild).attr({
+        class: "sketchEditor",
+        id: card.id + "sketch_" + idx
+      });
+      content.appendChild(element)
+    });
+
+    $(content).slick({
+      dots: true,
+      swipe: false,
+      accessiblity: true,
+      focusOnSelect: true
+    });
+    card.appendChild(content);
   }
 }

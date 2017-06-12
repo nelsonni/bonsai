@@ -21,6 +21,7 @@
     <script type="text/javascript" src="js/canvas.js"></script>
     <script type="text/javascript" src="js/cards.js"></script>
     <script type="text/javascript" src="js/stacks.js"></script>
+    <script type="text/javascript" src="js/editorCards.js"></script>
     <script type="text/javascript" src="js/sketchCards.js"></script>
     <link rel="stylesheet" type="text/css" href="css/canvas.css">
     <link rel="stylesheet" type="text/css" href="css/cards.css">
@@ -33,7 +34,7 @@
         let currentCards = {};
 
         function newCard() {
-            var card = new Card("editor");
+            var card = new editorCard("editor");
             currentCards[card.id] = card;
             return card;
         }
