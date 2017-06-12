@@ -1,6 +1,10 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.creation_timestamp = new Date().toString();
+    // npm module: username, url: https://www.npmjs.com/package/username
+    const username = require('username');
+    this.creator = username.sync();
 
     var card = document.createElement('div');
     $(card).attr({
@@ -36,7 +40,11 @@ class Card {
     this.buildFaces(card, type);
     this.setDraggable();
     this.setDroppable();
+
+    console.log("timestamp: " + this.creation_timestamp);
+    console.log("username: " + this.creator);
   }
+
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);
@@ -101,7 +109,6 @@ class Card {
     });
   }
 
-
   buildFaces(card, type) {
     var eleTypeToCreate = "";
     if (type === "editor")
@@ -155,6 +162,8 @@ class Card {
   }
 
   toggleFullScreen() {
+    console.log("username: " + this.creator);
+
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
