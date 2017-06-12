@@ -2,6 +2,7 @@ class editorCard extends Card {
   constructor(type) {
     super(type);
     this.type = type;
+    this.editors = [];
     this.contentBuilder(this.card);
   }
 
@@ -11,6 +12,17 @@ class editorCard extends Card {
 
   enableSwipe() {
     $(this.card.lastElementChild).slick("slickSetOption", "swipe", true, false);
+  }
+
+  // since the fullscreen class doesn't work on the ace_editor manually resize
+  toggleAceFullscreen(h, w) {
+    $(this.card).find(".ace_editor").each((idx, ele) => {
+      $(ele).css({
+        height: h,
+        width: w
+      }); // resizes the code editor so everything scales properly.
+      this.editors.forEach((e, i) => e.resize())
+    });
   }
 
 
@@ -40,12 +52,16 @@ class editorCard extends Card {
       focusOnSelect: true
     });
     card.appendChild(content);
+    this.initAce(faces);
+  }
+
+  initAce(faces) {
+    let cur = this;
     $(faces).each(function(idx) {
-      if (this.lastElementChild.id !== "") {
-        let editor = ace.edit(this.lastElementChild.id);
-        editor.setTheme("ace/theme/twilight");
-        editor.session.setMode("ace/mode/javascript");
-      }
+      let editor = ace.edit(this.lastElementChild.id);
+      editor.setTheme("ace/theme/twilight");
+      editor.session.setMode("ace/mode/javascript");
+      cur.editors.push(editor);
     });
   }
 }

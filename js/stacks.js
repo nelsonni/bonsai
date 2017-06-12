@@ -118,7 +118,7 @@ class Stack {
       stack: '.stack, .card',
       drag: (event, ui) => this.cascadeCards(),
       start: () => {
-        // toggle swipe effects on drag so cards don't move.
+        // toggle swipe effects on drag so faces don't move.
         this.cards.forEach((e, i) => {
           e.disableSwipe()
         });
