@@ -100,8 +100,7 @@ class Sketchpad extends Card {
     $(content).slick({
       dots: true,
       swipe: false,
-      accessiblity: true,
-      focusOnSelect: true
+      accessiblity: true
     });
     card.appendChild(content);
   }

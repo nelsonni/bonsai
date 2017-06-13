@@ -78,7 +78,8 @@ class Card {
     let id = "#card_" + this.id + cardType + "_2"; // needs to adjust to last card
     let interaction = this.interaction_timestamp;
     let createTime = "CREATED: " + this.creation_timestamp;
-    $(id).html(interaction + "<br/><br/>" + this.creator + "<br/><br/>" + createTime);
+    $(id).html(interaction + "<br/><br/>CREATOR: " + this.creator + "<br/><br/>" + createTime);
+    $(this.card.lastElementChild).slick("slickGoTo", 0, true);
   }
 
   setDraggable() {
