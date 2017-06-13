@@ -4,8 +4,8 @@ class Card {
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
-    //const username = require('username');
-    //this.creator = username.sync();
+    const username = require('username');
+    this.creator = username.sync();
 
     var card = document.createElement('div');
     $(card).attr({
