@@ -53,7 +53,8 @@ class CodeEditor extends Card {
       focusOnSelect: true
     });
     card.appendChild(content);
-    this.initAce(faces.slice(0, 2));
+    // leave out last card so it can be used for metadata
+    this.initAce(faces.slice(0, faces.length - 1));
   }
 
   initAce(faces) {
