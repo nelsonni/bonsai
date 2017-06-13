@@ -1,10 +1,14 @@
-class editorCard extends Card {
+class TextEditor extends Card {
   constructor(type) {
     super(type);
     this.type = type;
+    this.editors = [];
     this.contentBuilder(this.card);
   }
 
+  toggleSwipe(value) {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
+  }
 
   contentBuilder(card) {
     var content = document.createElement('div');
@@ -22,7 +26,7 @@ class editorCard extends Card {
     faces.forEach(function(element, idx) {
       $(element.firstChild).attr({
         class: "editor",
-        id: card.id + "textEditor_" + idx
+        id: card.id + "codeEditor_" + idx
       });
       content.appendChild(element)
     });
