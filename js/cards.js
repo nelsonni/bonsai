@@ -4,8 +4,8 @@ class Card {
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
-    //const username = require('username');
-    //this.creator = username.sync();
+    const username = require('username');
+    this.creator = username.sync();
 
     var card = document.createElement('div');
     $(card).attr({
@@ -70,16 +70,16 @@ class Card {
 
   updateMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2";
-    $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + "--USERNAME--");
+    $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + this.creator);
     $(id).append("<br><br>CREATED: " + this.creation_timestamp);
   }
 
   buildMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2"; // needs to adjust to last card
     let interaction = this.interaction_timestamp;
-    let creation = "-- Username here --";
     let createTime = "CREATED: " + this.creation_timestamp;
-    $(id).html(interaction + "<br/><br/>" + creation + "<br/><br/>" + createTime);
+    $(id).html(interaction + "<br/><br/>CREATOR: " + this.creator + "<br/><br/>" + createTime);
+    $(this.card.lastElementChild).slick("slickGoTo", 0, true);
   }
 
   setDraggable() {
