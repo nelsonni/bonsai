@@ -38,7 +38,6 @@ class TextEditor extends Card {
     });
     $(content).slick({
       dots: true,
-      accessiblity: true,
       focusOnSelect: true
     });
     card.appendChild(content);
