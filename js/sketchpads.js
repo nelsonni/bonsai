@@ -8,6 +8,7 @@ class Sketchpad extends Card {
     this.contentBuilder(this.card);
     this.setDrawEffects();
     this.eventListeners();
+    this.buildMetadata("sketch")
   }
 
   addButtons() {
@@ -57,6 +58,7 @@ class Sketchpad extends Card {
         editing: true
       });
       curCard.sketches.push(sketchPad);
+      sketchPad.change(() => curCard.updateMetadata("sketch"))
     });
     this.addButtons();
   }
@@ -98,8 +100,7 @@ class Sketchpad extends Card {
     $(content).slick({
       dots: true,
       swipe: false,
-      accessiblity: true,
-      focusOnSelect: true
+      accessiblity: true
     });
     card.appendChild(content);
   }

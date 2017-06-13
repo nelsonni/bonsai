@@ -68,6 +68,20 @@ class Card {
     return next;
   }
 
+  updateMetadata(cardType) {
+    let id = "#card_" + this.id + cardType + "_2";
+    $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + this.creator);
+    $(id).append("<br><br>CREATED: " + this.creation_timestamp);
+  }
+
+  buildMetadata(cardType) {
+    let id = "#card_" + this.id + cardType + "_2"; // needs to adjust to last card
+    let interaction = this.interaction_timestamp;
+    let createTime = "CREATED: " + this.creation_timestamp;
+    $(id).html(interaction + "<br/><br/>CREATOR: " + this.creator + "<br/><br/>" + createTime);
+    $(this.card.lastElementChild).slick("slickGoTo", 0, true);
+  }
+
   setDraggable() {
     $(this.card).draggable({
       handle: '.card-header',

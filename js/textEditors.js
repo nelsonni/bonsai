@@ -4,6 +4,7 @@ class TextEditor extends Card {
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
+    this.buildMetadata("codeEditor")
   }
 
   toggleSwipe(value) {
@@ -17,9 +18,13 @@ class TextEditor extends Card {
       id: card.id + "_editor_" + this.id
     });
     let faces = [];
+    let cur = this;
     for (let i = 0; i < 3; i++) {
       let face = document.createElement('div');
-      let face_editor = document.createElement("textarea");
+      if (i == 2)
+        var face_editor = document.createElement("div");
+      else
+        var face_editor = document.createElement("textarea");
       face.appendChild(face_editor);
       faces.push(face);
     }
@@ -28,11 +33,11 @@ class TextEditor extends Card {
         class: "editor",
         id: card.id + "codeEditor_" + idx
       });
+      $(element.firstChild).on("change", () => cur.updateMetadata("codeEditor"));
       content.appendChild(element)
     });
     $(content).slick({
       dots: true,
-      accessiblity: true,
       focusOnSelect: true
     });
     card.appendChild(content);
