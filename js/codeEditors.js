@@ -4,6 +4,7 @@ class CodeEditor extends Card {
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
+    this.buildMetadata("codeEditor");
   }
 
   toggleSwipe(value) {
@@ -31,10 +32,14 @@ class CodeEditor extends Card {
     let faces = [];
     for (let i = 0; i < 3; i++) {
       let face = document.createElement('div');
-      let face_editor = document.createElement("textarea");
+      if (i == 2)
+        var face_editor = document.createElement("div");
+      else
+        var face_editor = document.createElement("textarea");
       face.appendChild(face_editor);
       faces.push(face);
     }
+
     faces.forEach(function(element, idx) {
       $(element.firstChild).attr({
         class: "editor",
@@ -48,7 +53,7 @@ class CodeEditor extends Card {
       focusOnSelect: true
     });
     card.appendChild(content);
-    this.initAce(faces);
+    this.initAce(faces.slice(0, 2));
   }
 
   initAce(faces) {
@@ -57,6 +62,7 @@ class CodeEditor extends Card {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
       editor.session.setMode("ace/mode/javascript");
+      editor.on("change", () => cur.updateMetadata("codeEditor"));
       cur.editors.push(editor);
     });
   }
