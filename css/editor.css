@@ -1,3 +1,15 @@
+div.editor {
+  height: calc(100% - (29px + 2px));
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgba(40, 44, 52, 1.0);
+  color: rgba(171, 178, 191, 1.0);
+  padding: 0;
+  resize: none;
+  border: 0px;
+  border-radius: 0 0 5px 5px;
+}
+
 textarea.editor {
   height: 100%;
   width: 100%;
@@ -57,16 +69,13 @@ div.sketchEditor {
     border-radius: 0 0 5px 5px;
 }
 
-div.editor {
-  height: calc(100% - (29px + 2px));
-  width: 100%;
-  box-sizing: border-box;
-  background-color: rgba(40, 44, 52, 1.0);
-  color: rgba(171, 178, 191, 1.0);
-  padding: 0;
-  resize: none;
-  border: 0px;
-  border-radius: 0 0 5px 5px;
+.ace_editor {
+    border: 1px solid lightgray;
+    margin: auto;
+    left: 0px;
+    height: 250px;
+    width: 197px;
+    overflow: hidden;
 }
 
 /*div.editor:hover .slick-next,
