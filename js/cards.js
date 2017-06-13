@@ -70,7 +70,6 @@ class Card {
 
   updateMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2";
-    let old = $(id).html().split("<br>").slice(1, 10);
     $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + "--USERNAME--");
     $(id).append("<br><br>CREATED: " + this.creation_timestamp);
   }
