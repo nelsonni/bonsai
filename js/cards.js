@@ -37,8 +37,10 @@ class Card {
     header.appendChild(close_button);
 
     var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({id: "fullscreen_button_" + this.id,
-      class: "expand"});
+    $(fullscreen_button).attr({
+      id: "fullscreen_button_" + this.id,
+      class: "expand"
+    });
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -113,12 +115,16 @@ class Card {
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
+      let height = $(this)[0].card.clientHeight;
+      let width = $(this)[0].card.clientWidth;
+      this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
+      this.toggleAceFullscreen("250px", "197px");
     }
   }
 }

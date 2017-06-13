@@ -20,11 +20,12 @@
 
 
     <!-- Ace Library -->
-    <script src="./../ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./../libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
     <script type="text/javascript" src="../js/canvas.js"></script>
     <script type="text/javascript" src="../js/cards.js"></script>
     <script type="text/javascript" src="../js/stacks.js"></script>
+    <script type="text/javascript" src="../js/editorCards.js"></script>
     <script type="text/javascript" src="../js/sketchCards.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/canvas.css">
     <link rel="stylesheet" type="text/css" href="../css/cards.css">
@@ -45,16 +46,15 @@
         let cardCounter = 0;
         let stackCounter = 0;
         function newCard() {
-            var card = new Card("editor");
+            var card = new editorCard("editor");
             console.log(card.card.id);
-            $('textarea.editor', $('#' + card.card.id)).each(function(){
+            $('textarea.editor').each(function(){
                 if (this.id !== "") {
                     let editor = ace.edit(this.id);
                     editor.setTheme("ace/theme/twilight");
                     editor.session.setMode("ace/mode/javascript");
                 }
             });
-
             return card;
         }
         function newSketchCard() {
@@ -66,13 +66,10 @@
         function playground() {
             document.location.href = "playground/playground.html"
         }
-
-
         function loadFile() {
             let test = newCard();
             $("#" + test.card.id +"textEditor_0").load("./main.js");
         }
-
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
         }
@@ -89,7 +86,6 @@
                 }
             }
         }
-
     </script>
 </head>
 

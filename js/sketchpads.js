@@ -1,4 +1,4 @@
-class sketchCard extends Card {
+class Sketchpad extends Card {
   constructor(type) {
     super(type)
     this.type = type;
