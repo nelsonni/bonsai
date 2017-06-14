@@ -7,10 +7,6 @@
     <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
-    <link rel="stylesheet" type="text/css" href="css/canvas.css">
-    <link rel="stylesheet" type="text/css" href="css/cards.css">
-    <link rel="stylesheet" type="text/css" href="css/editor.css">
-    <link rel="stylesheet" type="text/css" href="css/stacks.css">
 
     <!-- JQuery and JQuery UI libraries -->
     <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
@@ -26,13 +22,42 @@
     <!-- Ace Library -->
     <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
-    <!-- Bonsai IDE modules -->
-    <script type="text/javascript" src="js/canvas.js"></script>
-    <script type="text/javascript" src="js/cards.js"></script>
-    <script type="text/javascript" src="js/stacks.js"></script>
-    <script type="text/javascript" src="js/textEditors.js"></script>
-    <script type="text/javascript" src="js/codeEditors.js"></script>
-    <script type="text/javascript" src="js/sketchpads.js"></script>
+<script>
+  // recursively read and filter all files below the specified directory
+  function fromDir(startPath, filter, callback){
+    let fsb = require('fs');
+    let path = require('path');
+    if (!fsb.existsSync(startPath)){
+      console.log("no dir: ",startPath);
+      return;
+    }
+    var files = fsb.readdirSync(startPath);
+    for(var i = 0; i < files.length; i++){
+      var filename = path.join(startPath, files[i]);
+      var stat = fsb.lstatSync(filename);
+      if (stat.isDirectory()){
+        fromDir(filename, filter, callback); //recurse
+      }
+      else if (filename.indexOf(filter) >= 0) callback(filename);
+    };
+  };
+
+  // dynamically load all CSS files
+  fromDir('css', '.css', function(filename) {
+    let ref = document.createElement('link');
+    ref.setAttribute('rel', 'stylesheet');
+    ref.setAttribute('type', 'text/css');
+    ref.setAttribute('href', filename);
+    document.getElementsByTagName('head')[0].appendChild(ref);
+  });
+
+  fromDir('js', '.js', function(filename) {
+    let ref = document.createElement('script');
+    ref.setAttribute('type', 'text/javascript');
+    ref.setAttribute('src', filename);
+    document.getElementsByTagName('head')[0].appendChild(ref);
+  });
+</script>
 </head>
 
 
