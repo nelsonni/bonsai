@@ -3,61 +3,60 @@ let stackCounter = 0;
 let currentCards = {};
 
 function newTextEditor() {
-    let card = new TextEditor("editor");
-    currentCards[card.id] = card;
+  let card = new TextEditor("editor");
+  currentCards[card.id] = card;
 }
 
 function newSketchpad() {
-    let card = new Sketchpad("sketch");
-    currentCards[card.id] = card;
+  let card = new Sketchpad("sketch");
+  currentCards[card.id] = card;
 }
 
 function newCodeEditor() {
-    let card = new CodeEditor("editor");
-    currentCards[card.id] = card;
+  let card = new CodeEditor("editor");
+  currentCards[card.id] = card;
 }
 
 function Testing() {
-    document.location.href = "tests/test.html"
+  document.location.href = "tests/test.html"
 }
+
 function playground() {
-    document.location.href = "playground/playground.html"
+  document.location.href = "playground/playground.html"
 }
 
 
 function loadFile() {
-    var getFileName = getFileExt($('#openFile')[0].files[0].name);
-    if(getFileName == '.txt'){
-      newTextEditor('editor');
-      let temp = Object.values(currentCards);
-      let card = temp[temp.length - 1];
-      $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
-    }
-    if(getFileName == '.png' || getFileName == '.jpg'){
-      newSketchpad('sketch');
-      let temp = Object.values(currentCards);
-      let card = temp[temp.length - 1];
-      console.log('url(' + $('#openFile')[0].files[0].path +")");
-      $("#card_" + card.id + 'sketch_0').css({
-        // backgroundImage: 'url(' + $('#openFile')[0].files[0].path + ')'
-        backgroundImage: "url(file:///C:/Users/Lauren/Downloads/09_17_2016_12_15_10_Lauren_Gastinono.jpg)"
-      });
-    }
+  var getFileName = getFileExt($('#openFile')[0].files[0].name);
+  if (getFileName == '.txt') {
+    newTextEditor('editor');
+    let temp = Object.values(currentCards);
+    let card = temp[temp.length - 1];
+    $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
+  }
+  if (getFileName == '.png' || getFileName == '.jpg') {
+    newSketchpad('sketch');
+    let temp = Object.values(currentCards);
+    let card = temp[temp.length - 1];
+    $("#card_" + card.id + 'sketch_0').css({
+      backgroundImage: 'url(' + $('#openFile')[0].files[0].path + ")"
+    });
+  }
 }
 
 function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
+  document.getElementById("myDropdown").classList.toggle("show");
 }
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function (event) {
-    if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
     }
+  }
 }
