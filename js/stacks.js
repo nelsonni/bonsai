@@ -37,6 +37,16 @@ class Stack {
       })
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
+    let expansion_button = document.createElement("button");
+    this.stack.append(expansion_button)
+    $(expansion_button).attr({
+      id: "expand_button" + this.id,
+      class: "expand_button"
+    }).css({
+      left: parseInt(this.stack.style.width) - 30,
+      top: parseInt(this.stack.style.height) - 20
+    });
+
     this.stack.appendChild(annotation);
   }
 
@@ -180,6 +190,10 @@ class Stack {
     $(this.stack).css({
       width: boundary_right - boundary_left,
       height: boundary_bottom - boundary_top
+    });
+    $("#expand_button" + this.id).css({
+      left: parseInt(this.stack.style.width) - 30,
+      top: parseInt(this.stack.style.height) - 20
     });
   }
 
