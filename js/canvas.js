@@ -37,12 +37,21 @@ function loadFile() {
       newSketchpad('sketch');
       let temp = Object.values(currentCards);
       let card = temp[temp.length - 1];
-      console.log('url(' + $('#openFile')[0].files[0].path +")");
+      var url = 'url(file:///' + $('#openFile')[0].files[0].path +")";
+      // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
+      console.log(url);
       $("#card_" + card.id + 'sketch_0').css({
-        // backgroundImage: 'url(' + $('#openFile')[0].files[0].path + ')'
-        backgroundImage: "url(file:///C:/Users/Lauren/Downloads/09_17_2016_12_15_10_Lauren_Gastinono.jpg)"
+        backgroundImage: url
       });
     }
+    else{
+      console.log(getFileName);
+      newCodeEditor('codeEditor', getFileName);
+
+    }
+    // else{
+    //   alert("The selected file cannot be loaded.")
+    // }
 }
 
 function myFunction() {
