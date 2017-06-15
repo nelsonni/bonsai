@@ -8,30 +8,20 @@ class Card {
     this.creator = username.sync();
 
     var card = document.createElement('div');
-    $(card).attr({
-      id: "card_" + this.id,
-      type: type,
-      class: "card"
-    });
+    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
     this.card = card;
 
     var header = document.createElement('div');
-    $(header).attr({
-      id: "header_" + this.id,
-      class: "card-header"
-    });
+    $(header).attr({id: "header_" + this.id, class: "card-header"});
     $(header).html("card: " + this.id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({
-      id: "close_button_" + this.id,
-      class: "close"
-    });
+    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
     $(close_button).click(function() {
-      let card = this.closest(".card");
+      let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
-      delete currentCards[cleanID]
+      delete currentCards[cleanID];
       this.closest('.card').remove();
     });
     header.appendChild(close_button);
@@ -48,6 +38,10 @@ class Card {
     document.body.appendChild(card);
     this.setDraggable();
     this.setDroppable();
+  }
+
+  toggleSwipe(value) {
+    alert("ERROR: Child class extending Card class is missing a reimplement of toggleSwipe() function.");
   }
 
   getCardObject(card) {

@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Bonsai IDE</title>
+    <!-- Stylesheets for all libraries -->
+    <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
+
     <!-- JQuery and JQuery UI libraries -->
     <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="libs/jquery/jquery-ui.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
 
     <!-- Slick.js library -->
     <script type="text/javascript" src="libs/slick/slick.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
 
     <!-- Raphael.js library -->
     <script type="text/javascript" src="./libs/sketching/raphael.min.js"></script>
@@ -21,72 +23,27 @@
     <!-- Ace Library -->
     <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
-    <script type="text/javascript" src="js/canvas.js"></script>
-    <script type="text/javascript" src="js/cards.js"></script>
-    <script type="text/javascript" src="js/stacks.js"></script>
-    <script type="text/javascript" src="js/textEditors.js"></script>
-    <script type="text/javascript" src="js/codeEditors.js"></script>
-    <script type="text/javascript" src="js/sketchpads.js"></script>
+    <!-- Bonsai CSS/JS dynamic dependency manager -->
+    <script type="text/javascript" src="dep_manager.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/canvas.css">
-    <link rel="stylesheet" type="text/css" href="css/cards.css">
-    <link rel="stylesheet" type="text/css" href="css/editor.css">
-    <link rel="stylesheet" type="text/css" href="css/stacks.css">
-    <link rel="stylesheet" type="text/css" href="css/ace_editor.css">
+<script>
+  // dynamically load all CSS files
+  fromDir('css', '.css', function(filename) {
+    let ref = document.createElement('link');
+    ref.setAttribute('rel', 'stylesheet');
+    ref.setAttribute('type', 'text/css');
+    ref.setAttribute('href', filename);
+    document.getElementsByTagName('head')[0].appendChild(ref);
+  });
 
-    <script>
-        let cardCounter = 0;
-        let stackCounter = 0;
-        let currentCards = {};
-
-        function newTextEditor() {
-            let card = new TextEditor("editor");
-            currentCards[card.id] = card;
-        }
-
-        function newSketchpad() {
-            let card = new Sketchpad("sketch");
-            currentCards[card.id] = card;
-        }
-
-        function newCodeEditor() {
-            let card = new CodeEditor("editor");
-            currentCards[card.id] = card;
-        }
-
-        function Testing() {
-            document.location.href = "tests/test.html"
-        }
-        function playground() {
-            document.location.href = "playground/playground.html"
-        }
-
-
-        function loadFile() {
-            let test = newCodeEditor();
-            $("#" + test.card.id +"codeEditor_0").load("./main.js");
-        }
-
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-        // Close the dropdown menu if the user clicks outside of it
-        window.onclick = function (event) {
-            if (!event.target.matches('.dropbtn')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-
-    </script>
+  fromDir('js', '.js', function(filename) {
+    let ref = document.createElement('script');
+    ref.setAttribute('type', 'text/javascript');
+    ref.setAttribute('src', filename);
+    document.getElementsByTagName('head')[0].appendChild(ref);
+  });
+</script>
 </head>
-
 
 <body class="container">
 
@@ -107,6 +64,5 @@
 </div>
 
 </body>
-
 
 </html>
