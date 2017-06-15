@@ -1,6 +1,8 @@
 const CARD_PADDING = 35;
 const CARD_WIDTH = 250;
 const TOTAL_SIZE = CARD_WIDTH + CARD_PADDING;
+const OFFSET_LEFT = 35;
+const OFFSET_TOP = 15;
 
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
@@ -48,8 +50,8 @@ class Stack {
       id: "expand_button" + this.id,
       class: "expand_button"
     }).css({
-      left: parseInt(this.stack.style.width) - 30,
-      top: parseInt(this.stack.style.height) - 20
+      left: parseInt(this.stack.style.width) - OFFSET_LEFT,
+      top: parseInt(this.stack.style.height) - OFFSET_TOP
     }).click(() => this.toggleExpansion());
     this.stack.appendChild(annotation);
   }
@@ -89,10 +91,10 @@ class Stack {
       $(this.stack).draggable("disable");
       this.moveCards(stackPos);
       let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
-      $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + 15);
+      $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + OFFSET_TOP);
       $("#expand_button" + this.id).css({
-        left: parseInt(this.stack.style.width) - 30,
-        top: parseInt(this.stack.style.height) - 20
+        left: parseInt(this.stack.style.width) - OFFSET_LEFT,
+        top: parseInt(this.stack.style.height) - OFFSET_TOP
       });
       this.state = "expanded";
     } else {

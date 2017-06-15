@@ -31,8 +31,8 @@ textarea.annotation{
 }
 button.expand_button{
   position: relative;
-  height: 10px;
-  width: 10px;
+  height: 20px;
+  width: 20px;
 }
 /*div.stack button.stack_close:hover,
 div.stack button.stack_close:focus {
