@@ -80,7 +80,7 @@ class Stack {
   }
 
   toggleExpansion() { // add animations at a later date?
-    let stackPos = $(this.stack).offset(); // to keep under 80 LOC
+    let stackPos = $(this.stack).offset(); // to keep under 80 char
     let windowDiff = window.innerWidth - stackPos.left;
     let expandWidth = ($(this.stack).width()) * (this.cards.length);
     if (this.state == "collapsed") {
@@ -92,10 +92,6 @@ class Stack {
       this.moveCards(stackPos);
       let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
       $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + OFFSET_TOP);
-      $("#expand_button" + this.id).css({
-        left: parseInt(this.stack.style.width) - OFFSET_LEFT,
-        top: parseInt(this.stack.style.height) - OFFSET_TOP
-      });
       this.state = "expanded";
     } else {
       $(this.stack).draggable("enable")
