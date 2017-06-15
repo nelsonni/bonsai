@@ -26,8 +26,23 @@ function playground() {
 
 
 function loadFile() {
-    let test = newCodeEditor();
-    $("#" + test.card.id +"codeEditor_0").load("./main.js");
+    var getFileName = getFileExt($('#openFile')[0].files[0].name);
+    if(getFileName == '.txt'){
+      newTextEditor('editor');
+      let temp = Object.values(currentCards);
+      let card = temp[temp.length - 1];
+      $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
+    }
+    if(getFileName == '.png' || getFileName == '.jpg'){
+      newSketchpad('sketch');
+      let temp = Object.values(currentCards);
+      let card = temp[temp.length - 1];
+      console.log('url(' + $('#openFile')[0].files[0].path +")");
+      $("#card_" + card.id + 'sketch_0').css({
+        // backgroundImage: 'url(' + $('#openFile')[0].files[0].path + ')'
+        backgroundImage: "url(file:///C:/Users/Lauren/Downloads/09_17_2016_12_15_10_Lauren_Gastinono.jpg)"
+      });
+    }
 }
 
 function myFunction() {
