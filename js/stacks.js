@@ -1,5 +1,6 @@
 const CARD_PADDING = 35;
 const CARD_WIDTH = 250;
+const TOTAL_SIZE = CARD_WIDTH + CARD_PADDING;
 
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
@@ -60,29 +61,42 @@ class Stack {
     $(this.stack).remove();
   }
 
+  moveCards(stackPos) {
+    this.cards.forEach((ele, idx) => {
+      if (stackPos.left + (TOTAL_SIZE) * (idx + 1) + CARD_PADDING >= window.innerWidth)
+        $(ele.card).css({
+          zIndex: ele.card.style.zIndex - 2,
+          top: $(this.cards[idx - 1].card).offset().top - CARD_PADDING,
+          left: $(this.cards[idx - 1].card).offset().left - CARD_PADDING
+        });
+      else
+        $(ele.card).css({
+          top: stackPos.top + CARD_PADDING,
+          left: stackPos.left + ((TOTAL_SIZE) * idx) + CARD_PADDING
+        });
+    });
+  }
+
   toggleExpansion() { // add animations at a later date?
     let stackPos = $(this.stack).offset(); // to keep under 80 LOC
     let windowDiff = window.innerWidth - stackPos.left;
     let expandWidth = ($(this.stack).width()) * (this.cards.length);
     if (this.state == "collapsed") {
-      if (stackPos.left + $(this.stack).width() + CARD_WIDTH >= window.innerWidth) {
+      if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
         alert("Can't expand at all");
         return;
       }
-      $(this.stack).width(expandWidth);
-      this.cards.forEach((ele, idx) => {
-        $(ele.card).css({
-          top: stackPos.top + CARD_PADDING,
-          left: stackPos.left + ((CARD_WIDTH + CARD_PADDING) * idx) + CARD_PADDING
-        });
-      });
-
+      $(this.stack).draggable("disable");
+      this.moveCards(stackPos);
+      let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
+      $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + 15);
       $("#expand_button" + this.id).css({
         left: parseInt(this.stack.style.width) - 30,
         top: parseInt(this.stack.style.height) - 20
       });
       this.state = "expanded";
     } else {
+      $(this.stack).draggable("enable")
       this.state = "collapsed";
       this.cascadeCards();
       this.resizeStack();
