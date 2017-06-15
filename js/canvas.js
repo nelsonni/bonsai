@@ -1,8 +1,3 @@
-function getFileExt(file) {
-  let path = require('path');
-  return path.extname(file);
-}
-
 let cardCounter = 0;
 let stackCounter = 0;
 let currentCards = {};

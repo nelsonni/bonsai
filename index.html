@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Bonsai IDE</title>
+    <!-- Stylesheets for all libraries -->
     <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
@@ -22,26 +23,10 @@
     <!-- Ace Library -->
     <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 
-<script>
-  // recursively read and filter all files below the specified directory
-  function fromDir(startPath, filter, callback){
-    let fsb = require('fs');
-    let path = require('path');
-    if (!fsb.existsSync(startPath)){
-      console.log("no dir: ",startPath);
-      return;
-    }
-    var files = fsb.readdirSync(startPath);
-    for(var i = 0; i < files.length; i++){
-      var filename = path.join(startPath, files[i]);
-      var stat = fsb.lstatSync(filename);
-      if (stat.isDirectory()){
-        fromDir(filename, filter, callback); //recurse
-      }
-      else if (filename.indexOf(filter) >= 0) callback(filename);
-    };
-  };
+    <!-- Bonsai CSS/JS dynamic dependency manager -->
+    <script type="text/javascript" src="dep_manager.js"></script>
 
+<script>
   // dynamically load all CSS files
   fromDir('css', '.css', function(filename) {
     let ref = document.createElement('link');
@@ -59,7 +44,6 @@
   });
 </script>
 </head>
-
 
 <body class="container">
 
@@ -80,6 +64,5 @@
 </div>
 
 </body>
-
 
 </html>
