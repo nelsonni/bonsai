@@ -1,5 +1,5 @@
-const cardPadding = 25;
-const cardWidth = 250;
+const CARD_PADDING = 35;
+const CARD_WIDTH = 250;
 
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
@@ -60,28 +60,32 @@ class Stack {
     $(this.stack).remove();
   }
 
-  toggleExpansion() {
-    let padding = 25;
+  toggleExpansion() { // add animations at a later date?
     let stackPos = $(this.stack).offset(); // to keep under 80 LOC
     let windowDiff = window.innerWidth - stackPos.left;
-    let expandWidth = ($(this.stack).width() + padding) * (this.cards.length);
+    let expandWidth = ($(this.stack).width()) * (this.cards.length);
     if (this.state == "collapsed") {
-      if (stackPos.left + $(this.stack).width() + cardWidth >= window.innerWidth) {
+      if (stackPos.left + $(this.stack).width() + CARD_WIDTH >= window.innerWidth) {
         alert("Can't expand at all");
         return;
       }
       $(this.stack).width(expandWidth);
       this.cards.forEach((ele, idx) => {
         $(ele.card).css({
-          top: stackPos.top + padding,
-          left: stackPos.left + ((cardWidth * idx) + cardPadding)
+          top: stackPos.top + CARD_PADDING,
+          left: stackPos.left + ((CARD_WIDTH + CARD_PADDING) * idx) + CARD_PADDING
         });
       });
 
-      //this.state = "expanded"
-
+      $("#expand_button" + this.id).css({
+        left: parseInt(this.stack.style.width) - 30,
+        top: parseInt(this.stack.style.height) - 20
+      });
+      this.state = "expanded";
     } else {
-
+      this.state = "collapsed";
+      this.cascadeCards();
+      this.resizeStack();
     }
   }
 
@@ -221,6 +225,7 @@ class Stack {
       width: boundary_right - boundary_left,
       height: boundary_bottom - boundary_top
     });
+
     $("#expand_button" + this.id).css({
       left: parseInt(this.stack.style.width) - 30,
       top: parseInt(this.stack.style.height) - 20
@@ -228,14 +233,6 @@ class Stack {
   }
 
   // keep all characters visible within annotation textarea
-  checkScroll() {
-    var annot = this.annotation;
-    if ($(annot).prop('scrollHeight') > annot.offsetHeight) {
-      while ($(this.annotation).prop('scrollHeight') > annot.offsetHeight) {
-        annot.value = annot.value.substr(0, annot.value.length - 1);
-      }
-    }
-  }
   checkScroll() {
     var annot = this.annotation;
     if ($(annot).prop('scrollHeight') > annot.offsetHeight) {
