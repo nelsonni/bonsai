@@ -1,3 +1,4 @@
+require("./libs/ace/ext-modelist.js") // Don't delete me! Needed by ace.req
 class CodeEditor extends Card {
   constructor(type, fileExt) {
     super(type);
@@ -60,7 +61,6 @@ class CodeEditor extends Card {
     $(faces).each(function(idx) {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
-      require("./libs/ace/ext-modelist.js") // don't delete me!Needed by ace.req
       var modelist = ace.require("ace/ext/modelist");
       if (cur.fileExt != undefined) {
         var mode = modelist.getModeForPath(cur.fileExt).mode;
