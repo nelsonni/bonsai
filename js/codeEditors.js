@@ -2,7 +2,6 @@ class CodeEditor extends Card {
   constructor(type, fileExt) {
     super(type);
     this.fileExt = fileExt;
-    console.log(this.fileExt)
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
@@ -61,11 +60,12 @@ class CodeEditor extends Card {
     $(faces).each(function(idx) {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
-      require("./libs/ace/ext-modelist.js") // don't delete me!
+      require("./libs/ace/ext-modelist.js") // don't delete me!Needed by ace.req
       var modelist = ace.require("ace/ext/modelist");
-      var mode = modelist.getModeForPath(cur.fileExt).mode;
-      console.log(mode);
-      editor.session.setMode(mode);
+      if (cur.fileExt != undefined) {
+        var mode = modelist.getModeForPath(cur.fileExt).mode;
+        editor.session.setMode(mode);
+      }
       editor.on("change", () => cur.updateMetadata("codeEditor"));
       cur.editors.push(editor);
     });

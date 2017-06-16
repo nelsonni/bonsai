@@ -13,7 +13,7 @@ function newSketchpad() {
 }
 
 function newCodeEditor(fileExt) {
-  let card = new CodeEditor("editor", fileExt);
+  let card = new CodeEditor("codeEditor", fileExt);
   currentCards[card.id] = card;
 }
 
@@ -25,32 +25,32 @@ function playground() {
   document.location.href = "playground/playground.html"
 }
 
+function getLastCard() {
+  let temp = Object.values(currentCards);
+  return temp[temp.length - 1];
+}
 
 function loadFile() {
-  var getFileName = getFileExt($('#openFile')[0].files[0].name);
+  let file = $('#openFile')[0].files[0];
+  var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt') {
     newTextEditor('editor');
-    let temp = Object.values(currentCards);
-    let card = temp[temp.length - 1];
-    $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
+    let card = getLastCard();
+    $("#card_" + card.id + 'codeEditor_0').load(file.path);
+    return;
   }
   if (getFileName == '.png' || getFileName == '.jpg') {
     newSketchpad('sketch');
-    let temp = Object.values(currentCards);
-    let card = temp[temp.length - 1];
-    var url = 'url(file:///' + $('#openFile')[0].files[0].path + ")";
+    let card = getLastCard();
+    var url = 'url(file:///' + file.path + ")";
     // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
     console.log(url);
-    $("#card_" + card.id + 'sketch_0').css({
-      backgroundImage: url
-    });
+    $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
   } else {
     newCodeEditor(getFileName);
-
+    let card = getLastCard();
+    $.get(file.path, (r) => card.editors[0].setValue(r));
   }
-  // else{
-  //   alert("The selected file cannot be loaded.")
-  // }
 }
 
 function myFunction() {
