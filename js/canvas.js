@@ -12,8 +12,8 @@ function newSketchpad() {
   currentCards[card.id] = card;
 }
 
-function newCodeEditor() {
-  let card = new CodeEditor("editor");
+function newCodeEditor(fileExt) {
+  let card = new CodeEditor("editor", fileExt);
   currentCards[card.id] = card;
 }
 
@@ -27,32 +27,30 @@ function playground() {
 
 
 function loadFile() {
-    var getFileName = getFileExt($('#openFile')[0].files[0].name);
-    if(getFileName == '.txt'){
-      newTextEditor('editor');
-      let temp = Object.values(currentCards);
-      let card = temp[temp.length - 1];
-      $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
-    }
-    if(getFileName == '.png' || getFileName == '.jpg'){
-      newSketchpad('sketch');
-      let temp = Object.values(currentCards);
-      let card = temp[temp.length - 1];
-      var url = 'url(file:///' + $('#openFile')[0].files[0].path +")";
-      // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
-      console.log(url);
-      $("#card_" + card.id + 'sketch_0').css({
-        backgroundImage: url
-      });
-    }
-    else{
-      console.log(getFileName);
-      newCodeEditor('codeEditor', getFileName);
+  var getFileName = getFileExt($('#openFile')[0].files[0].name);
+  if (getFileName == '.txt') {
+    newTextEditor('editor');
+    let temp = Object.values(currentCards);
+    let card = temp[temp.length - 1];
+    $("#card_" + card.id + 'codeEditor_0').load($('#openFile')[0].files[0].path);
+  }
+  if (getFileName == '.png' || getFileName == '.jpg') {
+    newSketchpad('sketch');
+    let temp = Object.values(currentCards);
+    let card = temp[temp.length - 1];
+    var url = 'url(file:///' + $('#openFile')[0].files[0].path + ")";
+    // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
+    console.log(url);
+    $("#card_" + card.id + 'sketch_0').css({
+      backgroundImage: url
+    });
+  } else {
+    newCodeEditor(getFileName);
 
-    }
-    // else{
-    //   alert("The selected file cannot be loaded.")
-    // }
+  }
+  // else{
+  //   alert("The selected file cannot be loaded.")
+  // }
 }
 
 function myFunction() {
