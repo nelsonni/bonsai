@@ -39,17 +39,24 @@ function loadFile() {
     $("#card_" + card.id + 'codeEditor_0').load(file.path);
     return;
   }
-  if (getFileName == '.png' || getFileName == '.jpg') {
+  if (getFileName == '.png' || getFileName == '.jpg' || getFileName == '.gif' || getFileName == '.webp') {
     newSketchpad('sketch');
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ")";
-    // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
+    url = url.replace(/\\/g,"/");
     console.log(url);
     $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
+    return;
   } else {
-    newCodeEditor(getFileName);
-    let card = getLastCard();
-    $.get(file.path, (r) => card.editors[0].setValue(r));
+    // if (newCodeEditor(getFileName) == undefined){
+    //   alert("The selected file cannot be loaded.");
+    // }
+    // else{
+      newCodeEditor(getFileName);
+      let card = getLastCard();
+      $.get(file.path, (r) => card.editors[0].setValue(r));
+      return;
+    // }
   }
 }
 
