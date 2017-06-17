@@ -7,10 +7,6 @@ class CodeEditor extends Card {
     this.buildMetadata("codeEditor");
   }
 
-  toggleSwipe(value) {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
-  }
-
   // since the fullscreen class doesn't work on the ace_editor manually resize
   toggleAceFullscreen(h, w) {
     $(this.card).find(".ace_editor").each((idx, ele) => {

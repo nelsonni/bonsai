@@ -7,10 +7,6 @@ class TextEditor extends Card {
     this.buildMetadata("codeEditor")
   }
 
-  toggleSwipe(value) {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
-  }
-
   contentBuilder(card) {
     var content = document.createElement('div');
     $(content).attr({

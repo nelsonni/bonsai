@@ -22,14 +22,6 @@ class Stack {
     $(close_button).click(() => this.destructor());
     this.stack.appendChild(close_button);
 
-    document.body.appendChild(stack);
-    this.setDraggable();
-    this.setDroppable();
-
-    cards.forEach(card => this.addCard(card));
-    this.cascadeCards();
-    this.resizeStack();
-
     var annotation = document.createElement('textarea');
     $(annotation).attr({
         id: "annotation_stack_" + this.id,
@@ -38,6 +30,14 @@ class Stack {
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
+
+    document.body.appendChild(stack);
+    this.setDraggable();
+    this.setDroppable();
+
+    cards.forEach(card => this.addCard(card));
+    this.cascadeCards();
+    this.resizeStack();
   }
 
   destructor() {
@@ -49,13 +49,13 @@ class Stack {
   addCard(card) {
     let cur = this.getCardObject(card);
     var ids = jQuery.map(this.cards, function(stackCard) {
-      return parseInt(stackCard.card.id.split("_")[1]);
+      return parseInt(stackCard.card.id.split("_")[1]); // TODO: Stack shouldn't be aware of things outside of Stack!
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    if (cur.type == "sketch")
+    if (cur.type == "sketch") // TODO: Stack should not be aware of particular card types
       this.disableSketchCards(cur);
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
@@ -63,11 +63,13 @@ class Stack {
     });
   }
 
+  // TODO: either remove this method, or refactor into Sketchpad.js
   disableSketchCards(cur) {
     for (let i in cur.sketches)
       cur.sketches[i].editing(false);
   }
 
+  // TODO: either remove this method, or refactor into Sketchpad.js
   enableSketchCards(cur) {
     for (let i in cur.sketches)
       cur.sketches[i].editing(true);
@@ -86,7 +88,7 @@ class Stack {
     let cleanID = parseInt(id[id.length - 1]);
     this.cards.forEach((card, idx) => {
       if (card.id == cleanID && card.type == "sketch")
-        this.enableSketchCards(card)
+        this.enableSketchCards(card) // TODO: Stack should not be aware of particular card types
     });
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function(n) {
