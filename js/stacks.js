@@ -1,8 +1,15 @@
+const CARD_PADDING = 35;
+const CARD_WIDTH = 250;
+const TOTAL_SIZE = CARD_WIDTH + CARD_PADDING;
+const OFFSET_LEFT = 35;
+const OFFSET_TOP = 15;
+
 class Stack {
   // constructor uses ECMA-262 rest parameters and spread syntax
   constructor(...cards) {
     this.id = this.nextId();
     this.cards = [];
+    this.state = "collapsed";
     var stack = document.createElement('div');
     $(stack).attr({
         id: "stack_" + this.id,
@@ -38,11 +45,58 @@ class Stack {
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
+
+    let expansion_button = document.createElement("button");
+    $(expansion_button).attr({
+      id: "expand_button" + this.id,
+      class: "expand_button"
+    }).click(() => this.toggleExpansion());
+    this.stack.append(expansion_button);
   }
+
+
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
     $(this.stack).remove();
+  }
+
+  moveCards(stackPos, windowDiff) {
+    let cardCount = parseInt((windowDiff - TOTAL_SIZE) / TOTAL_SIZE);
+    let last = this.cards.length;
+    let lastFit = this.cards[this.cards.length - 1 - cardCount]; //last card in stack
+    if (this.cards.length - 1 - cardCount < 0)
+      lastFit = this.cards[0], cardCount = 1; // if fittable cards > cur cards
+    while (cardCount > 0) {
+      $(this.cards[last - 1].card).css({
+        top: $(lastFit.card).offset().top,
+        left: $(lastFit.card).offset().left + TOTAL_SIZE * (cardCount)
+      }); // move last card to last fitting pos. & fill backwards
+      cardCount--;
+      last--;
+    };
+  }
+
+  toggleExpansion() { // add animations at a later date?
+    let stackPos = $(this.stack).offset(); // to keep under 80 char
+    let windowDiff = window.innerWidth - stackPos.left;
+    console.log(windowDiff);
+    if (this.state == "collapsed") {
+      if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
+        alert("Can't expand at all");
+        return;
+      }
+      $(this.stack).draggable("disable");
+      this.moveCards(stackPos, windowDiff);
+      let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
+      $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + OFFSET_TOP);
+      this.state = "expanded";
+    } else {
+      $(this.stack).draggable("enable")
+      this.state = "collapsed";
+      this.cascadeCards();
+      this.resizeStack();
+    }
   }
 
   // add individual card to the top of the stack

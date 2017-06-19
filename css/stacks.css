@@ -20,7 +20,7 @@ div.stack button.stack_close {
 
 textarea.annotation{
   position: absolute;
-  width: calc(100% - 5px);
+  width: calc(100% - 35px);
   background: transparent;
   border: none;
   bottom: 0;
@@ -28,4 +28,16 @@ textarea.annotation{
   border-radius: 5px;
   overflow: hidden;
   resize: none;
+}
+
+div.stack button.expand_button{
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+    url("../assets/stack_expand_light.svg");
+  height: 20px;
+  width: 20px;
+  border: none;
+  margin: 4px;
+  top: calc(100% - 30px);
+  left: calc(100% - 30px);
+  position: absolute;
 }
