@@ -60,6 +60,9 @@ class Card {
     let obj = currentCards[last]
     return obj;
   }
+  toggleSwipe(value) {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
+  }
 
   nextId() {
     var ids = $.map($('.card'), function(card) {
@@ -132,14 +135,16 @@ class Card {
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      this.toggleAceFullscreen(height, width); // TODO: Card should be aware of card types that extend from it
+      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
+        this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
-      this.toggleAceFullscreen("250px", "197px"); // TODO: Card should be aware of card types that extend from it
+      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
+        this.toggleAceFullscreen("250px", "197px");
     }
   }
 }
