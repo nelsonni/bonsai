@@ -52,9 +52,7 @@ class Stack {
       class: "expand_button"
     }).click(() => this.toggleExpansion());
     this.stack.append(expansion_button);
-    foo.ipcRenderer.send("test", "fart")
   }
-
 
 
   destructor() {
@@ -81,7 +79,6 @@ class Stack {
   toggleExpansion() { // add animations at a later date?
     let stackPos = $(this.stack).offset(); // to keep under 80 char
     let windowDiff = window.innerWidth - stackPos.left;
-    console.log(windowDiff);
     if (this.state == "collapsed") {
       if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
         alert("Can't expand at all");
@@ -103,6 +100,8 @@ class Stack {
   // add individual card to the top of the stack
   addCard(card) {
     let cur = this.getCardObject(card);
+    cur.parentStackID = this.id;
+    cur.ipcListeners();
     var ids = jQuery.map(this.cards, function(stackCard) {
       return parseInt(stackCard.card.id.split("_")[1]);
     });
@@ -110,17 +109,11 @@ class Stack {
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    if (cur.type == "sketch")
-      this.disableSketchCards(cur);
+    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id,false)
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
       $(button).attr('disabled', true);
     });
-  }
-
-  disableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(false);
   }
 
   enableSketchCards(cur) {

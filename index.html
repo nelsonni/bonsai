@@ -27,11 +27,8 @@
     <script type="text/javascript" src="dep_manager.js"></script>
 
 <script>
-  let foo = require("electron");
-  console.log(foo);
-  foo.remote.ipcMain.on("test",(e,a)=>{
-    console.log("LKSDJFLKJ")
-  })
+  let __IPC = require("electron");
+  console.log(__IPC);
 
   // dynamically load all CSS files
   fromDir('css', '.css', function(filename) {

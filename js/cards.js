@@ -1,6 +1,7 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.parentStackID;
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -94,6 +95,7 @@ class Card {
   }
 
   setDroppable() {
+    let cur = this;
     $(this.card).droppable({
       accept: '.card, .stack',
       classes: {
