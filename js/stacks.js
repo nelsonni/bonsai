@@ -9,6 +9,7 @@ class Stack {
   constructor(...cards) {
     this.id = this.nextId();
     this.cards = [];
+    this.channels = [];
     this.state = "collapsed";
     var stack = document.createElement('div');
     $(stack).attr({
@@ -57,6 +58,7 @@ class Stack {
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
+    this.channels.forEach(channel => __IPC.ipcRenderer.removeAllListeners(channel));
     $(this.stack).remove();
   }
 
@@ -110,6 +112,8 @@ class Stack {
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
     __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id,false)
+    this.channels.push("card" + cur.id + "_toggle_sketches" + this.id);
+
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
       $(button).attr('disabled', true);
@@ -127,7 +131,6 @@ class Stack {
   removeCard(card) {
     let cleanID = card[0].id.split("_")[1];
     __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id,true)
-
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function(n) {
       return $(n.card).attr("id") !== card.attr('id');
