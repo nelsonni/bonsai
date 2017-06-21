@@ -116,11 +116,6 @@ class Stack {
     });
   }
 
-  enableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(true);
-  }
-
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);
@@ -130,12 +125,9 @@ class Stack {
 
   // remove individual card from the stack
   removeCard(card) {
-    let id = (card[0].id).split("_");
-    let cleanID = parseInt(id[id.length - 1]);
-    this.cards.forEach((card, idx) => {
-      if (card.id == cleanID && card.type == "sketch")
-        this.enableSketchCards(card)
-    });
+    let cleanID = card[0].id.split("_")[1];
+    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id,true)
+
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function(n) {
       return $(n.card).attr("id") !== card.attr('id');

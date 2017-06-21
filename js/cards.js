@@ -41,10 +41,13 @@ class Card {
     this.setDroppable();
   }
 
-  toggleSwipe(value) {
+  ipcListeners(){
+  }
+  /*
+  toggleSwipe(value) { //Do we need this double definition of toggleswipe?
     alert("ERROR: Child class extending Card class is missing a reimplement of toggleSwipe() function.");
   }
-
+  */
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);

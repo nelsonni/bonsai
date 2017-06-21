@@ -79,10 +79,12 @@ class Sketchpad extends Card {
     let cleanSketches = "card" + this.id + "_toggle_sketches" +this.parentStackID
     __IPC.remote.ipcMain.on(cleanSketches, (event, args) => {
       this.sketches.forEach((ele, idx) => ele.editing(args));
-    });
+    }); // toggle editing ability upon stack appendage / removal
   }
 
-
+  toggleSwipe(value) {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", false, false);
+  }// as swipe method should not be available on sketch cards
 
   contentBuilder(card) {
     var content = document.createElement('div');
