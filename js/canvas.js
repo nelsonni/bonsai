@@ -48,15 +48,21 @@ function loadFile() {
     $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
     return;
   } else {
-    // if (newCodeEditor(getFileName) == undefined){
-    //   alert("The selected file cannot be loaded.");
-    // }
-    // else{
       newCodeEditor(getFileName);
       let card = getLastCard();
+      console.log(file.path);
       $.get(file.path, (r) => card.editors[0].setValue(r));
+      // $.get(file.path, function(data, error){
+      //   if(data != ){
+      //     (data) => card.editors[0].setValue(data);
+      //     console.log('success');
+      //   }
+      //   else{
+      //     alert("The selected file cannot be loaded.")
+      //     console.log('fail')
+      //   }
+      // });
       return;
-    // }
   }
 }
 
