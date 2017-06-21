@@ -1,6 +1,7 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.parentStackID;
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -50,10 +51,13 @@ class Card {
     this.setDroppable();
   }
 
-  toggleSwipe(value) {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
+  ipcListeners(){
   }
-
+  /*
+  toggleSwipe(value) { //Do we need this double definition of toggleswipe?
+    alert("ERROR: Child class extending Card class is missing a reimplement of toggleSwipe() function.");
+  }
+  */
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);
@@ -105,6 +109,7 @@ class Card {
   }
 
   setDroppable() {
+    let cur = this;
     $(this.card).droppable({
       accept: '.card, .stack',
       classes: {

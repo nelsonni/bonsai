@@ -7,7 +7,7 @@ class Sketchpad extends Card {
 
     this.contentBuilder(this.card);
     this.setDrawEffects();
-    this.eventListeners();
+    this.penListeners();
     this.buildMetadata("sketch")
   }
 
@@ -63,7 +63,7 @@ class Sketchpad extends Card {
     this.addButtons();
   }
 
-  eventListeners() {
+  penListeners() {
     let cur = this;
     $(cur.pens).each(function(idx) {
       let penColor = $(this)[0].value;
@@ -74,6 +74,17 @@ class Sketchpad extends Card {
       });
     });
   }
+
+  ipcListeners(){
+    let cleanSketches = "card" + this.id + "_toggle_sketches" +this.parentStackID
+    __IPC.remote.ipcMain.on(cleanSketches, (event, args) => {
+      this.sketches.forEach((ele, idx) => ele.editing(args));
+    }); // toggle editing ability upon stack appendage / removal
+  }
+
+  toggleSwipe(value) {
+    $(this.card.lastElementChild).slick("slickSetOption", "swipe", false, false);
+  }// as swipe method should not be available on sketch cards
 
   contentBuilder(card) {
     var content = document.createElement('div');

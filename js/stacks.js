@@ -9,6 +9,7 @@ class Stack {
   constructor(...cards) {
     this.id = this.nextId();
     this.cards = [];
+    this.channels = [];
     this.state = "collapsed";
     var stack = document.createElement('div');
     $(stack).attr({
@@ -52,13 +53,12 @@ class Stack {
       class: "expand_button"
     }).click(() => this.toggleExpansion());
     this.stack.append(expansion_button);
-    foo.ipcRenderer.send("test", "fart")
   }
-
 
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
+    this.channels.forEach(channel => __IPC.ipcRenderer.removeAllListeners(channel));
     $(this.stack).remove();
   }
 
@@ -81,7 +81,6 @@ class Stack {
   toggleExpansion() { // add animations at a later date?
     let stackPos = $(this.stack).offset(); // to keep under 80 char
     let windowDiff = window.innerWidth - stackPos.left;
-    console.log(windowDiff);
     if (this.state == "collapsed") {
       if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
         alert("Can't expand at all");
@@ -103,6 +102,8 @@ class Stack {
   // add individual card to the top of the stack
   addCard(card) {
     let cur = this.getCardObject(card);
+    cur.parentStackID = this.id;
+    cur.ipcListeners();
     var ids = jQuery.map(this.cards, function(stackCard) {
       return parseInt(stackCard.card.id.split("_")[1]); // TODO: Stack shouldn't be aware of things outside of Stack!
     });
@@ -110,24 +111,13 @@ class Stack {
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    if (cur.type == "sketch") // TODO: Stack should not be aware of particular card types
-      this.disableSketchCards(cur);
+    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id,false)
+    this.channels.push("card" + cur.id + "_toggle_sketches" + this.id);
+
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
       $(button).attr('disabled', true);
     });
-  }
-
-  // TODO: either remove this method, or refactor into Sketchpad.js
-  disableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(false);
-  }
-
-  // TODO: either remove this method, or refactor into Sketchpad.js
-  enableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(true);
   }
 
   getCardObject(card) {
@@ -139,12 +129,8 @@ class Stack {
 
   // remove individual card from the stack
   removeCard(card) {
-    let id = (card[0].id).split("_");
-    let cleanID = parseInt(id[id.length - 1]);
-    this.cards.forEach((card, idx) => {
-      if (card.id == cleanID && card.type == "sketch")
-        this.enableSketchCards(card) // TODO: Stack should not be aware of particular card types
-    });
+    let cleanID = card[0].id.split("_")[1];
+    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id,true)
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function(n) {
       return $(n.card).attr("id") !== card.attr('id');
