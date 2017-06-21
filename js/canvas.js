@@ -1,5 +1,3 @@
-let cardCounter = 0;
-let stackCounter = 0;
 let currentCards = {};
 
 function newTextEditor() {

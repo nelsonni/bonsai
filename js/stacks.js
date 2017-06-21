@@ -52,6 +52,7 @@ class Stack {
       class: "expand_button"
     }).click(() => this.toggleExpansion());
     this.stack.append(expansion_button);
+    foo.ipcRenderer.send("test", "fart")
   }
 
 
