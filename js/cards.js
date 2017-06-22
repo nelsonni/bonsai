@@ -28,7 +28,7 @@ class Card {
       id: "close_button_" + this.id,
       class: "close"
     });
-    $(close_button).click(function() {
+    $(close_button).click(() => {
       let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
@@ -51,13 +51,8 @@ class Card {
     this.setDroppable();
   }
 
-  ipcListeners(){
-  }
-  /*
-  toggleSwipe(value) { //Do we need this double definition of toggleswipe?
-    alert("ERROR: Child class extending Card class is missing a reimplement of toggleSwipe() function.");
-  }
-  */
+  ipcListeners() {}
+
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);
@@ -69,7 +64,7 @@ class Card {
   }
 
   nextId() {
-    var ids = $.map($('.card'), function(card) {
+    var ids = $.map($('.card'), (card) => {
       return parseInt($(card).attr('id').split("_")[1]);
     });
     if (ids.length < 1) return 1; // no cards on the canvas yet
@@ -87,10 +82,10 @@ class Card {
 
   buildMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2"; // TODO: needs to adjust to last card
-    $(id).attr({class: "card-metadata"});
-    $(id).html("interaction: " + this.interaction_timestamp
-      + "<br/><br/>creator: " + this.creator
-      + "<br/><br/>created: " + this.creation_timestamp);
+    $(id).attr({ class: "card-metadata" });
+    $(id).html("interaction: " + this.interaction_timestamp +
+      "<br/><br/>creator: " + this.creator +
+      "<br/><br/>created: " + this.creation_timestamp);
     $(this.card.lastElementChild).slick("slickGoTo", 0, true);
   }
 
@@ -99,7 +94,7 @@ class Card {
       handle: '.card-header',
       containment: 'window',
       stack: '.card, .stack',
-      start: function(event, ui) {
+      start: (event, ui) => {
         $(this.card).removeClass('atSpawn');
       },
       drag: (event, ui) => {
@@ -115,7 +110,7 @@ class Card {
       classes: {
         'ui-droppable-hover': 'highlight'
       },
-      drop: function(event, ui) {
+      drop: function (event, ui) {
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));
@@ -140,6 +135,8 @@ class Card {
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
+      console.log("card" + this.id + "_toggle_fullscreen");
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", true)
       if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen

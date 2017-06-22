@@ -5,8 +5,9 @@ class TextEditor extends Card {
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata("codeEditor")
+    this.ipcListeners();
+    console.log(this);
   }
-
   contentBuilder(card) {
     var content = document.createElement('div');
     $(content).attr({
@@ -19,17 +20,21 @@ class TextEditor extends Card {
       let face = document.createElement('div');
       if (i == 2)
         var face_editor = document.createElement("div");
-      else
+      else {
         var face_editor = document.createElement("textarea");
+        this.editors.push(face_editor)
+      }
       face.appendChild(face_editor);
       faces.push(face);
     }
-    faces.forEach(function(element, idx) {
+    faces.forEach((element, idx) => {
       $(element.firstChild).attr({
-        class: "editor",
-        id: card.id + "codeEditor_" + idx
-      });
-      $(element.firstChild).on("change", () => cur.updateMetadata("codeEditor"));
+          class: "editor",
+          id: card.id + "codeEditor_" + idx,
+          rows: 19,
+          cols: 200
+        })
+        .on("change", () => cur.updateMetadata("codeEditor"));
       content.appendChild(element)
     });
     $(content).slick({
@@ -37,5 +42,17 @@ class TextEditor extends Card {
       focusOnSelect: true
     });
     card.appendChild(content);
+  }
+
+  ipcListeners() {
+    __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
+      if (args == true)
+        this.editors.forEach((ele, idx) => {
+          $(this.editors[idx]).css({
+            height: this.card.offsetHeight - 30,
+            width: this.card.offsetWidth - 10
+          })
+        });
+    });
   }
 }
