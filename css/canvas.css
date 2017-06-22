@@ -5,13 +5,19 @@
 }
 
 body {
-  padding:10px;
+  height: calc(100vh - 16px);
+  width: auto;
   background: linear-gradient(
     rgba(105, 102, 96, 0.45),
     rgba(105, 102, 96, 0.45)),
     url("../assets/topography.png");
   position: relative;
 }
+
+/*.container {
+  height: 500px;
+  width: 500px;
+}*/
 
 .notransition {
   -webkit-transition: none !important;
@@ -90,6 +96,13 @@ body {
 /*.hidden {
   display: none;
 }*/
+
+div.canvas-sketch {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color : transparent;
+}
 
 /*styling for onoff-switch to show/hide sketch and annotation buttons*/
 .onoff-content {

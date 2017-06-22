@@ -22,7 +22,6 @@ function playground() {
     document.location.href = "playground/playground.html"
 }
 
-
 function loadFile() {
     let test = newCodeEditor();
     $("#" + test.card.id +"codeEditor_0").load("./main.js");
@@ -30,6 +29,18 @@ function loadFile() {
 
 function myFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function canvasSketch() {
+  // var canvas = document.querySelector('.container');
+  var canvasPad = document.createElement('div');
+  $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+  document.body.appendChild(canvasPad);
+  let canvasSketchpad = Raphael.sketchpad("canvasPad", {
+    height: '100%',
+    width: '100%',
+    editing: true
+  });
 }
 
 // spans new textarea for canvas annotation
