@@ -2,6 +2,7 @@ class Card {
   constructor(type) {
     this.id = this.nextId();
     this.parentStackID;
+    this.channels = [];
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -15,6 +16,7 @@ class Card {
       class: "card"
     });
     this.card = card;
+    let cur = this;
 
     var header = document.createElement('div');
     $(header).attr({
@@ -33,6 +35,7 @@ class Card {
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
       delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
+      cur.destructor();
       this.closest('.card').remove();
     });
     header.appendChild(close_button);
@@ -49,6 +52,10 @@ class Card {
     document.body.appendChild(card);
     this.setDraggable();
     this.setDroppable();
+  }
+
+  destructor() {
+    this.channels.forEach(ele => __IPC.removeAllListeners(ele));
   }
 
   ipcListeners() {}
@@ -135,8 +142,8 @@ class Card {
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      console.log("card" + this.id + "_toggle_fullscreen");
       __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen")
+      this.channels.push("card" + this.id + "_toggle_fullscreen")
       if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
