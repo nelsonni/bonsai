@@ -28,7 +28,7 @@ class Card {
       id: "close_button_" + this.id,
       class: "close"
     });
-    $(close_button).click(() => {
+    $(close_button).click(function () {
       let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
@@ -136,7 +136,7 @@ class Card {
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
       console.log("card" + this.id + "_toggle_fullscreen");
-      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", true)
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen")
       if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
@@ -145,6 +145,7 @@ class Card {
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen")
       if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen("250px", "197px");
     }

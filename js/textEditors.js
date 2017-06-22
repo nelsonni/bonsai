@@ -1,3 +1,4 @@
+const VERTICAL_PADDING = 30;
 class TextEditor extends Card {
   constructor(type) {
     super(type);
@@ -46,13 +47,12 @@ class TextEditor extends Card {
 
   ipcListeners() {
     __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
-      if (args == true)
-        this.editors.forEach((ele, idx) => {
-          $(this.editors[idx]).css({
-            height: this.card.offsetHeight - 30,
-            width: this.card.offsetWidth - 10
-          })
-        });
+      this.editors.forEach((ele, idx) => {
+        $(this.editors[idx]).css({
+          height: this.card.offsetHeight - VERTICAL_PADDING,
+          width: this.card.offsetWidth
+        })
+      });
     });
   }
 }
