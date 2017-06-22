@@ -48,12 +48,15 @@
     ref.setAttribute('src', filename);
     document.getElementsByTagName('head')[0].appendChild(ref);
   });
+
+  $(".newDiv").draggable();
 </script>
 </head>
 
 <body class="container">
 
 <div id="create">
+<!-- ondrop="drop(event);" ondragover="dragOver(event);"> -->
     <input id="openFile" type="file" onchange="loadFile()">Open</button>
     <button id="saveFile">Save</button>
     <button onclick="Testing()">Test Suite</button>
@@ -65,9 +68,29 @@
             <button onclick="newTextEditor()" class="dropdownBtn">Text Editor</button>
             <button onclick="newSketchpad()" class="dropdownBtn">Sketchpad</button>
             <button onclick="newCodeEditor()" class="dropdownBtn">Code Editor</button>
+            <!-- <button onclick="dynamicCardCreationText()" class="dropdownBtn">Create new card!</button>
+            <button onclick="dynamicCardCreationCode()" class="dropdownBtn">Create new card!</button> -->
         </div>
-    </div>
-</div>
+      </div>
+  </div>
+  <div id="sketched-and-annotations">
+        <div id = "onoffswitch" class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+          <label class="onoffswitch-label" for="myonoffswitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+          </label>
+        </div>
+        <div id="onoffButtons" class="onoff-content">
+          <button onclick="canvasSketch()" >Sketch</button>
+          <button onclick="canvasAnnotation()">Annotate</button>
+          <button onclick="canvasSnapshot()">Snapshot</button>
+          <button onclick="clearCanvas()">Clear</button>
+        </div>
+      </div>
+
+
+
 
 </body>
 
