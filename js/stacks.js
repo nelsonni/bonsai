@@ -105,7 +105,7 @@ class Stack {
     cur.parentStackID = this.id;
     cur.ipcListeners();
     var ids = jQuery.map(this.cards, function(stackCard) {
-      return parseInt(stackCard.card.id.split("_")[1]); // TODO: Stack shouldn't be aware of things outside of Stack!
+      return parseInt(stackCard.card.id.split("_")[1]);
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack

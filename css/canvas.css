@@ -4,85 +4,266 @@
     #background: transparent;
 }
 
-body {
-  padding:10px;
+html {
   background: linear-gradient(
     rgba(105, 102, 96, 0.45),
     rgba(105, 102, 96, 0.45)),
     url("../assets/topography.png");
+  font-family: sans-serif;
+}
+
+body {
+  padding:10px;
+}
+
+button {
+  border: solid 1px #ccc;
   position: relative;
+  float: left;
+  outline: none;
+  font-family: inherit;
+  font-size: 100%;
+  transition: all 0.3s ease 0s;
 }
 
-.notransition {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -o-transition: none !important;
-  -ms-transition: none !important;
-  transition: none !important;
+/* container for drop-down menus */
+div.dropdown {
+  position: relative;
+  display: inline-block;
+  float: left;
+  margin: 0 5px;
+}
+div.dropdown:hover div.dropdown-content {
+  display: block;
+}
+div.dropdown:hover .dropdown-button {
+  background-color: #fff;
+  border-color: #66CC75;
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
 }
 
-.noselection {
-  user-select: none !important;
-  -moz-user-select: none !important;
-  -khtml-user-select: none !important;
-  -webkit-user-select: none !important;
-  -o-user-select: none !important;
+/* button to trigger the drop-down menu */
+button.dropdown-button {
+  border-radius: 10em;
+  cursor: pointer;
+}
+button.dropdown-button:focus {
+  background-color: #fff;
+  border-color: #66CC75;
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+}
+button.dropdown-button:hover {
+  background-color: #fff;
 }
 
-.dropdownBtn {
+/* container for menu options; hidden by default */
+div.dropdown-content {
+  display: none;
+  position: absolute;
+  color: #ccc;
+  background: linear-gradient(#444, #444);
+  border-radius: 3px;
+  box-shadow: 0px 0px 20px #999;
+  margin: 44px 0px 0px 0px;
+	min-height: 50px;
+  min-width: 120px;
+	border: 1px solid #333;
+	text-shadow: 0 0 1px #000;
+  background-color: #fff;
+  z-index: 1;
+}
+div.dropdown-content::before {
+	content: "";
+	width: 0px;
+	height: 0px;
+	border: 0.8em solid transparent;
+	position: absolute;
+}
+div.dropdown-content.top-left::before {
+  left: 7px;
+	top: -20px;
+	border-bottom: 10px solid #444;
+}
+
+div.dropdown-content .first {
+  border-radius: 3px 3px 0 0;
+}
+div.dropdown-content .last {
+  border-radius: 0 0 3px 3px;
+}
+
+div.dropdown-content button {
+  color: #ccc;
+  display: block;
+  min-width: inherit;
+  background: linear-gradient(#444, #444);
+  padding: 12px 16px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+div.dropdown-content button:hover {
+  border: 1px solid #66CC75;
+}
+
+button.new_card {
+  height: 38px;
+  width: 38px;
+  padding: 9px 10px 9px 10px;
+  background: #ededed url("../assets/new-card.png") no-repeat center;
+  background-size: 24px;
+  transition: all .5s;
+}
+
+button.test {
+  height: 38px;
+  width: 38px;
+  padding: 9px 10px 9px 10px;
+  background: #ededed url("../assets/test-icon.png") no-repeat center;
+  background-size: 24px;
+  transition: all .5s;
+  border-radius: 10em;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+button.version {
+  height: 38px;
+  width: 38px;
+  padding: 9px 10px 9px 10px;
+  background: #ededed url("../assets/version-icon.png") no-repeat center;
+  background-size: 24px;
+  transition: all .5s;
+  border-radius: 10em;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+button.playground {
+  height: 38px;
+  width: 38px;
+  padding: 9px 10px 9px 10px;
+  background: #ededed url("../assets/playground-icon.png") no-repeat center;
+  background-size: 24px;
+  transition: all .5s;
+  border-radius: 10em;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+input {
+  outline: none;
+}
+
+input[type=search] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  font-family: inherit;
+  font-size: 100%;
+  float: left;
+  margin: 0 5px;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+  display: none;
+}
+
+input[type=search] {
+  background: #ededed url("../assets/search-icon.png") no-repeat 9px center;
+  border: solid 1px #ccc;
+  padding: 9px 10px 9px 32px;
+  width: 55px;
+
+  border-radius: 10em;
+  transition: all .5s;
+}
+input[type=search]:focus {
+  width: 130px;
+  background-color: #fff;
+  border-color: #66CC75;
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+}
+input::-webkit-input-placeholder {
+  color: #999;
+}
+
+.expander input[type=search] {
+	width: 15px;
+	padding-left: 10px;
+	color: transparent;
+	cursor: pointer;
+}
+.expander input[type=search]:hover {
+	background-color: #fff;
+}
+.expander input[type=search]:focus {
+	width: 130px;
+	padding-left: 32px;
+	color: #000;
+	background-color: #fff;
+	cursor: auto;
+}
+.expander input::-webkit-input-placeholder {
+	color: transparent;
+}
+
+/* Unfinished rules */
+/* -------------------------------------------------------------------------- */
+
+/*.dropdownBtn {
     width: 100%;
     padding: 5px;
-}
+}*/
 
 /*
  ----------------------------------- Stuff taken kindly from W3 for dropdown menu-------------------------------------
 */
 
 /* Dropdown Button */
-.dropbtn {
+/*.dropbtn {
     background-color: #4CAF50;
     color: white;
     padding: 16px;
     font-size: 16px;
     border: none;
     cursor: pointer;
-}
+}*/
 
 /* Dropdown button on hover & focus */
-.dropbtn:hover, .dropbtn:focus {
+/*.dropbtn:hover, .dropbtn:focus {
     background-color: #3e8e41;
-}
+}*/
 
 /* The container <div> - needed to position the dropdown content */
-.dropdown {
+/*.dropdown {
     position: relative;
     display: inline-block;
-}
+}*/
 
 /* Dropdown Content (Hidden by Default) */
-.dropdown-content {
+/*.dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-}
+}*/
 
 /* Links inside the dropdown */
-.dropdown-content a {
+/*.dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-}
+}*/
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {
+/*.dropdown-content a:hover {
     background-color: #f1f1f1
-}
+}*/
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {
+/*.show {
     display: block;
-}
+}*/
