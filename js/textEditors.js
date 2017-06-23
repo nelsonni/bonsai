@@ -44,8 +44,7 @@ class TextEditor extends Card {
     });
     card.appendChild(content);
   }
-
-  ipcListeners() {
+  toggleFullscreen() {
     __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
       this.editors.forEach((ele, idx) => {
         $(this.editors[idx]).css({
@@ -54,5 +53,9 @@ class TextEditor extends Card {
         })
       });
     });
+  }
+
+  ipcListeners() {
+    this.toggleFullscreen();
   }
 }
