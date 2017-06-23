@@ -13,22 +13,6 @@ body {
   position: relative;
 }
 
-.notransition {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -o-transition: none !important;
-  -ms-transition: none !important;
-  transition: none !important;
-}
-
-.noselection {
-  user-select: none !important;
-  -moz-user-select: none !important;
-  -khtml-user-select: none !important;
-  -webkit-user-select: none !important;
-  -o-user-select: none !important;
-}
-
 .dropdownBtn {
     width: 100%;
     padding: 5px;
