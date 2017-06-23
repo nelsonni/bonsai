@@ -1,7 +1,7 @@
 let currentCards = {};
 
 function newTextEditor() {
-  let card = new TextEditor("editor");
+  let card = new TextEditor("textEditor");
   currentCards[card.id] = card;
 }
 
@@ -11,7 +11,7 @@ function newSketchpad() {
 }
 
 function newCodeEditor() {
-  let card = new CodeEditor("editor");
+  let card = new CodeEditor("codeEditor");
   currentCards[card.id] = card;
 }
 

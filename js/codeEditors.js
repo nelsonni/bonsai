@@ -14,10 +14,16 @@ class CodeEditor extends Card {
         height: h,
         width: w
       }); // resizes the code editor so everything scales properly.
+      $(ele).click();
       this.editors.forEach((e, i) => e.resize())
     });
   }
 
+  ipcListeners() {
+    __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
+      this.toggleAceFullscreen(args[0], args[1]);
+    });
+  }
 
   contentBuilder(card) {
     var content = document.createElement('div');
@@ -36,7 +42,7 @@ class CodeEditor extends Card {
       faces.push(face);
     }
 
-    faces.forEach(function(element, idx) {
+    faces.forEach(function (element, idx) {
       $(element.firstChild).attr({
         class: "editor",
         id: card.id + "codeEditor_" + idx
@@ -55,7 +61,7 @@ class CodeEditor extends Card {
 
   initAce(faces) {
     let cur = this;
-    $(faces).each(function(idx) {
+    $(faces).each(function (idx) {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
       editor.session.setMode("ace/mode/javascript");

@@ -52,10 +52,11 @@ class Card {
     document.body.appendChild(card);
     this.setDraggable();
     this.setDroppable();
+    this.ipcListeners();
   }
 
   destructor() {
-    this.channels.forEach(ele => __IPC.removeAllListeners(ele));
+    this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
   ipcListeners() {}
@@ -139,22 +140,17 @@ class Card {
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
-      $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen")
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [height, width])
       this.channels.push("card" + this.id + "_toggle_fullscreen")
-      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
-        this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
-      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen")
-      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
-        this.toggleAceFullscreen("250px", "197px");
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [250, 200])
     }
   }
 }

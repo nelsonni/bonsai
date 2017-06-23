@@ -5,8 +5,7 @@ class TextEditor extends Card {
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
-    this.buildMetadata("codeEditor")
-    this.ipcListeners();
+    this.buildMetadata("codeEditor");
     console.log(this);
   }
   contentBuilder(card) {
