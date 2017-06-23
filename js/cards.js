@@ -1,6 +1,7 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.parentStackID;
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -8,20 +9,30 @@ class Card {
     this.creator = username.sync();
 
     var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
+    $(card).attr({
+      id: "card_" + this.id,
+      type: type,
+      class: "card"
+    });
     this.card = card;
 
     var header = document.createElement('div');
-    $(header).attr({id: "header_" + this.id, class: "card-header"});
+    $(header).attr({
+      id: "header_" + this.id,
+      class: "card-header"
+    });
     $(header).html("card: " + this.id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
+    $(close_button).attr({
+      id: "close_button_" + this.id,
+      class: "close"
+    });
     $(close_button).click(function() {
       let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
-      delete currentCards[cleanID];
+      delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
       this.closest('.card').remove();
     });
     header.appendChild(close_button);
@@ -40,10 +51,13 @@ class Card {
     this.setDroppable();
   }
 
-  toggleSwipe(value) {
+  ipcListeners(){
+  }
+  /*
+  toggleSwipe(value) { //Do we need this double definition of toggleswipe?
     alert("ERROR: Child class extending Card class is missing a reimplement of toggleSwipe() function.");
   }
-
+  */
   getCardObject(card) {
     let id = (card[0].id).split("_");
     let last = parseInt(id[id.length - 1]);
@@ -67,15 +81,16 @@ class Card {
 
   updateMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2";
-    $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + this.creator);
-    $(id).append("<br><br>CREATED: " + this.creation_timestamp);
+    $(id).html("interaction: " + new Date().toString() + "<br><br>" + this.creator);
+    $(id).append("<br><br>created: " + this.creation_timestamp);
   }
 
   buildMetadata(cardType) {
-    let id = "#card_" + this.id + cardType + "_2"; // needs to adjust to last card
-    let interaction = this.interaction_timestamp;
-    let createTime = "CREATED: " + this.creation_timestamp;
-    $(id).html(interaction + "<br/><br/>CREATOR: " + this.creator + "<br/><br/>" + createTime);
+    let id = "#card_" + this.id + cardType + "_2"; // TODO: needs to adjust to last card
+    $(id).attr({class: "card-metadata"});
+    $(id).html("interaction: " + this.interaction_timestamp
+      + "<br/><br/>creator: " + this.creator
+      + "<br/><br/>created: " + this.creation_timestamp);
     $(this.card.lastElementChild).slick("slickGoTo", 0, true);
   }
 
@@ -94,6 +109,7 @@ class Card {
   }
 
   setDroppable() {
+    let cur = this;
     $(this.card).droppable({
       accept: '.card, .stack',
       classes: {
@@ -118,17 +134,13 @@ class Card {
   }
 
   toggleFullScreen() {
-    console.log("creation: " + this.creation_timestamp);
-    console.log("interaction: " + this.interaction_timestamp);
-    console.log("username: " + this.creator);
-
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
       $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      if (this.type == "codeEditor")
+      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen(height, width);
     } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
@@ -136,7 +148,7 @@ class Card {
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
-      if (this.type == "codeEditor")
+      if (this.type == "codeEditor") // TODO: Card should not be aware of card types that extend from it
         this.toggleAceFullscreen("250px", "197px");
     }
   }

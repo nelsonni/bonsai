@@ -7,7 +7,6 @@ class CodeEditor extends Card {
     this.buildMetadata("codeEditor");
   }
 
-
   // since the fullscreen class doesn't work on the ace_editor manually resize
   toggleAceFullscreen(h, w) {
     $(this.card).find(".ace_editor").each((idx, ele) => {
