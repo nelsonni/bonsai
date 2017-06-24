@@ -18,8 +18,13 @@ function newCodeEditor() {
 function Testing() {
   document.location.href = "tests/test.html"
 }
+
 function Playground() {
   document.location.href = "playground/playground.html"
+}
+
+function backPage(){
+  document.location.href = "../index.html";
 }
 
 function loadFile() {
