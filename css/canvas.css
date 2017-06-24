@@ -127,6 +127,18 @@ button.test {
   margin: 0 5px;
 }
 
+button.back {
+  height: 38px;
+  width: 38px;
+  padding: 9px 10px 9px 10px;
+  background: #ededed url("../assets/back-icon.png") no-repeat center;
+  background-size: 24px;
+  transition: all .5s;
+  border-radius: 10em;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
 button.version {
   height: 38px;
   width: 38px;
