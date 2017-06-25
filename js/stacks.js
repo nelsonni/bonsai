@@ -9,6 +9,7 @@ class Stack {
   constructor(...cards) {
     this.id = this.nextId();
     this.cards = [];
+    this.channels = [];
     this.state = "collapsed";
     var stack = document.createElement('div');
     $(stack).attr({
@@ -44,58 +45,51 @@ class Stack {
       })
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
+    this.stack.appendChild(annotation);
+
     let expansion_button = document.createElement("button");
-    this.stack.append(expansion_button)
     $(expansion_button).attr({
       id: "expand_button" + this.id,
       class: "expand_button"
-    }).css({
-      left: parseInt(this.stack.style.width) - OFFSET_LEFT,
-      top: parseInt(this.stack.style.height) - OFFSET_TOP
     }).click(() => this.toggleExpansion());
-    this.stack.appendChild(annotation);
+    this.stack.append(expansion_button);
   }
-
 
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
+    this.channels.forEach(channel => __IPC.ipcRenderer.removeAllListeners(channel));
     $(this.stack).remove();
   }
 
-  moveCards(stackPos) {
-    this.cards.forEach((ele, idx) => {
-      if (stackPos.left + (TOTAL_SIZE) * (idx + 1) + CARD_PADDING >= window.innerWidth)
-        $(ele.card).css({
-          zIndex: ele.card.style.zIndex - 2,
-          top: $(this.cards[idx - 1].card).offset().top - CARD_PADDING,
-          left: $(this.cards[idx - 1].card).offset().left - CARD_PADDING
-        });
-      else
-        $(ele.card).css({
-          top: stackPos.top + CARD_PADDING,
-          left: stackPos.left + ((TOTAL_SIZE) * idx) + CARD_PADDING
-        });
-    });
+  moveCards(stackPos, windowDiff) {
+    let cardCount = parseInt((windowDiff - TOTAL_SIZE) / TOTAL_SIZE);
+    let last = this.cards.length;
+    let lastFit = this.cards[this.cards.length - 1 - cardCount]; //last card in stack
+    if (this.cards.length - 1 - cardCount < 0)
+      lastFit = this.cards[0], cardCount = 1; // if fittable cards > cur cards
+    while (cardCount > 0) {
+      $(this.cards[last - 1].card).css({
+        top: $(lastFit.card).offset().top,
+        left: $(lastFit.card).offset().left + TOTAL_SIZE * (cardCount)
+      }); // move last card to last fitting pos. & fill backwards
+      cardCount--;
+      last--;
+    };
   }
 
   toggleExpansion() { // add animations at a later date?
-    let stackPos = $(this.stack).offset(); // to keep under 80 LOC
+    let stackPos = $(this.stack).offset(); // to keep under 80 char
     let windowDiff = window.innerWidth - stackPos.left;
-    let expandWidth = ($(this.stack).width()) * (this.cards.length);
     if (this.state == "collapsed") {
       if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
         alert("Can't expand at all");
         return;
       }
       $(this.stack).draggable("disable");
-      this.moveCards(stackPos);
+      this.moveCards(stackPos, windowDiff);
       let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
       $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + OFFSET_TOP);
-      $("#expand_button" + this.id).css({
-        left: parseInt(this.stack.style.width) - OFFSET_LEFT,
-        top: parseInt(this.stack.style.height) - OFFSET_TOP
-      });
       this.state = "expanded";
     } else {
       $(this.stack).draggable("enable")
@@ -108,6 +102,8 @@ class Stack {
   // add individual card to the top of the stack
   addCard(card) {
     let cur = this.getCardObject(card);
+    cur.parentStackID = this.id;
+    cur.ipcListeners();
     var ids = jQuery.map(this.cards, function(stackCard) {
       return parseInt(stackCard.card.id.split("_")[1]);
     });
@@ -115,22 +111,13 @@ class Stack {
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    if (cur.type == "sketch")
-      this.disableSketchCards(cur);
+    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id, false)
+    this.channels.push("card" + cur.id + "_toggle_sketches" + this.id);
+
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
       $(button).attr('disabled', true);
     });
-  }
-
-  disableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(false);
-  }
-
-  enableSketchCards(cur) {
-    for (let i in cur.sketches)
-      cur.sketches[i].editing(true);
   }
 
   getCardObject(card) {
@@ -142,14 +129,10 @@ class Stack {
 
   // remove individual card from the stack
   removeCard(card) {
-    let id = (card[0].id).split("_");
-    let cleanID = parseInt(id[id.length - 1]);
-    this.cards.forEach((card, idx) => {
-      if (card.id == cleanID && card.type == "sketch")
-        this.enableSketchCards(card)
-    });
+    let cleanID = card[0].id.split("_")[1];
+    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id, true)
     // grep returning only cards that do not contain the target id
-    this.cards = $.grep(this.cards, function(n) {
+    this.cards = $.grep(this.cards, function (n) {
       return $(n.card).attr("id") !== card.attr('id');
     });
     $(card).css({
@@ -163,7 +146,7 @@ class Stack {
   }
 
   nextId() {
-    var ids = $.map($('.stack'), function(stack) {
+    var ids = $.map($('.stack'), function (stack) {
       return parseInt($(stack).attr('id').split("_")[1]);
     });
     if (ids.length < 1) return 1; // no stacks on the canvas yet
@@ -179,7 +162,7 @@ class Stack {
       drag: (event, ui) => this.cascadeCards(),
       start: () => this.cards.forEach((e, i) => e.toggleSwipe(false)),
       stop: () => this.cards.forEach((e, i) => e.toggleSwipe(true))
-    });
+    }); // change start / stop to IPC stuff
   }
 
   setDroppable() {
@@ -240,11 +223,6 @@ class Stack {
     $(this.stack).css({
       width: boundary_right - boundary_left,
       height: boundary_bottom - boundary_top
-    });
-
-    $("#expand_button" + this.id).css({
-      left: parseInt(this.stack.style.width) - 30,
-      top: parseInt(this.stack.style.height) - 20
     });
   }
 

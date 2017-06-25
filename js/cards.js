@@ -1,6 +1,8 @@
 class Card {
   constructor(type) {
     this.id = this.nextId();
+    this.parentStackID;
+    this.channels = [];
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -8,20 +10,32 @@ class Card {
     this.creator = username.sync();
 
     var card = document.createElement('div');
-    $(card).attr({id: "card_" + this.id, type: type, class: "card"});
+    $(card).attr({
+      id: "card_" + this.id,
+      type: type,
+      class: "card"
+    });
     this.card = card;
+    let cur = this;
 
     var header = document.createElement('div');
-    $(header).attr({id: "header_" + this.id, class: "card-header"});
+    $(header).attr({
+      id: "header_" + this.id,
+      class: "card-header"
+    });
     $(header).html("card: " + this.id);
 
     var close_button = document.createElement('button');
-    $(close_button).attr({id: "close_button_" + this.id, class: "close"});
-    $(close_button).click(function() {
+    $(close_button).attr({
+      id: "close_button_" + this.id,
+      class: "close"
+    });
+    $(close_button).click(function () {
       let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
-      delete currentCards[cleanID];
+      delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
+      cur.destructor();
       this.closest('.card').remove();
     });
     header.appendChild(close_button);
@@ -31,6 +45,7 @@ class Card {
       id: "fullscreen_button_" + this.id,
       class: "expand"
     });
+    console.log(this);
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -38,7 +53,14 @@ class Card {
     document.body.appendChild(card);
     this.setDraggable();
     this.setDroppable();
+    this.ipcListeners();
   }
+
+  destructor() {
+    this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
+  }
+
+  ipcListeners() {}
 
   getCardObject(card) {
     let id = (card[0].id).split("_");
@@ -51,7 +73,7 @@ class Card {
   }
 
   nextId() {
-    var ids = $.map($('.card'), function(card) {
+    var ids = $.map($('.card'), (card) => {
       return parseInt($(card).attr('id').split("_")[1]);
     });
     if (ids.length < 1) return 1; // no cards on the canvas yet
@@ -63,15 +85,18 @@ class Card {
 
   updateMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2";
-    $(id).html("UPDATED: " + new Date().toString() + "<br><br>" + this.creator);
-    $(id).append("<br><br>CREATED: " + this.creation_timestamp);
+    $(id).html("interaction: " + new Date().toString() + "<br><br>" + this.creator);
+    $(id).append("<br><br>created: " + this.creation_timestamp);
   }
 
   buildMetadata(cardType) {
-    let id = "#card_" + this.id + cardType + "_2"; // needs to adjust to last card
-    let interaction = this.interaction_timestamp;
-    let createTime = "CREATED: " + this.creation_timestamp;
-    $(id).html(interaction + "<br/><br/>CREATOR: " + this.creator + "<br/><br/>" + createTime);
+    let id = "#card_" + this.id + cardType + "_2"; // TODO: needs to adjust to last card
+    $(id).attr({
+      class: "card-metadata"
+    });
+    $(id).html("interaction: " + this.interaction_timestamp +
+      "<br/><br/>creator: " + this.creator +
+      "<br/><br/>created: " + this.creation_timestamp);
     $(this.card.lastElementChild).slick("slickGoTo", 0, true);
   }
 
@@ -80,7 +105,7 @@ class Card {
       handle: '.card-header',
       containment: 'window',
       stack: '.card, .stack',
-      start: function(event, ui) {
+      start: (event, ui) => {
         $(this.card).removeClass('atSpawn');
       },
       drag: (event, ui) => {
@@ -90,12 +115,13 @@ class Card {
   }
 
   setDroppable() {
+    let cur = this;
     $(this.card).droppable({
       accept: '.card, .stack',
       classes: {
         'ui-droppable-hover': 'highlight'
       },
-      drop: function(event, ui) {
+      drop: function (event, ui) {
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));
@@ -114,26 +140,22 @@ class Card {
   }
 
   toggleFullScreen() {
-    console.log("creation: " + this.creation_timestamp);
-    console.log("interaction: " + this.interaction_timestamp);
-    console.log("username: " + this.creator);
-
+    console.log(this)
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
+
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
-      $(this.card).find('*').each((index, child) => $(child).addClass('fullscreen'));
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      if (this.type == "codeEditor")
-        this.toggleAceFullscreen(height, width);
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [height, width])
+      this.channels.push("card" + this.id + "_toggle_fullscreen")
     } else { // transition back from fullscreen
       $(this.card).removeClass("fullscreen");
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
-      if (this.type == "codeEditor")
-        this.toggleAceFullscreen("250px", "197px");
+      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [250, 200])
     }
   }
 }

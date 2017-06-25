@@ -1,6 +1,8 @@
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
+  top: 30%;
+  left: 40%;
   background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0));
   color: rgba(171, 178, 191, 1.0);
   margin: auto;
@@ -12,7 +14,7 @@ div.card {
 }
 
 div.card.highlight {
-  outline: 1px solid yellow;
+  box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
 }
 
 div.card.fullscreen {
@@ -60,6 +62,13 @@ div.card-header button:focus {
 
 div.card-header button:disabled {
   display: none;
+}
+
+div.hard-metadata {
+  line-height: 29px;
+  font-family: sans-serif;
+  vertical-align: middle;
+  color: rgba(10, 210, 50, 1.0);
 }
 
 button.close {

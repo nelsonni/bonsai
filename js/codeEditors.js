@@ -9,7 +9,6 @@ class CodeEditor extends Card {
     this.buildMetadata("codeEditor");
   }
 
-
   // since the fullscreen class doesn't work on the ace_editor manually resize
   toggleAceFullscreen(h, w) {
     $(this.card).find(".ace_editor").each((idx, ele) => {
@@ -17,10 +16,16 @@ class CodeEditor extends Card {
         height: h,
         width: w
       }); // resizes the code editor so everything scales properly.
+      $(ele).click();
       this.editors.forEach((e, i) => e.resize())
     });
   }
 
+  ipcListeners() {
+    __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
+      this.toggleAceFullscreen(args[0], args[1]);
+    });
+  }
 
   contentBuilder(card) {
     var content = document.createElement('div');
