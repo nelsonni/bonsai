@@ -1,7 +1,7 @@
 let currentCards = {};
 
 function newTextEditor() {
-  let card = new TextEditor("editor");
+  let card = new TextEditor("textEditor");
   currentCards[card.id] = card;
 }
 
@@ -11,7 +11,7 @@ function newSketchpad() {
 }
 
 function newCodeEditor() {
-  let card = new CodeEditor("editor");
+  let card = new CodeEditor("codeEditor");
   currentCards[card.id] = card;
 }
 
@@ -19,7 +19,7 @@ function Testing() {
   document.location.href = "tests/test.html"
 }
 
-function Playground() {
+function playground() {
   document.location.href = "playground/playground.html"
 }
 
@@ -29,5 +29,5 @@ function backPage(){
 
 function loadFile() {
   let test = newCodeEditor();
-  $("#" + test.card.id +"codeEditor_0").load("./main.js");
+  $("#" + test.card.id + "codeEditor_0").load("./main.js");
 }
