@@ -32,7 +32,6 @@ function myFunction() {
 }
 
 function canvasSketch() {
-  // var canvas = document.querySelector('.container');
   var canvasPad = document.createElement('div');
   $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
   document.body.appendChild(canvasPad);
@@ -45,18 +44,39 @@ function canvasSketch() {
 
 // spans new textarea for canvas annotation
 function canvasAnnotation(){
+  document.body.style.cursor = "text";
   var canvas = document.querySelector('.container');
-  var newDiv = document.createElement("div");
-  var newTextArea = document.createElement("textarea");
-  newDiv.setAttribute("id", "newDiv");
-  newTextArea.style.width = "150px";
-  newTextArea.style.height = "25px";
-  newDiv.draggable = "true";
-  newDiv.setAttribute("ondragstart", "drag(event)");
-  window.ondrop = "drop(event)";
-  window.ondragover = "allowDrop(event)";
-  canvas.appendChild(newDiv);
-  newDiv.appendChild(newTextArea);
+  var elem = this;
+  $(canvas).click(function(e){
+    var newTextArea = document.createElement("textarea");
+    newTextArea.style.position = "absolute";
+    newTextArea.style.left = e.pageX + "px";
+    newTextArea.style.top = e.pageY + "px";
+    newTextArea.style.background = "transparent";
+    newTextArea.style.borderColor = "black";
+    newTextArea.style.borderWidth = "2px";
+    if(canvas == document.activeElement){
+      if(newTextArea == document.activeElement){
+        newTextArea.style.borderWidth = "3px";
+        canvas.appendChild(newTextArea);
+      }
+      else{
+        newTextArea.style.borderWidth = "1px";
+        canvas.appendChild(newTextArea);
+      }
+    }
+    $(function(){
+      $(newTextArea).draggable();
+    });
+  });
+  // $("newTextArea").click(function(e){
+
+  // newTextArea.draggable = "true";
+  // newTextArea.setAttribute("ondragstart", "drag(event)");
+  // window.ondrop = "drop(event)";
+  // window.ondragover = "allowDrop(event)";
+  // // canvas.appendChild(newDiv);
+  // });
 }
 
 //enables dragging and dropping of canvas annotations
