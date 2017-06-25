@@ -77,9 +77,18 @@ class Sketchpad extends Card {
 
   ipcListeners() {
     let cleanSketches = "card" + this.id + "_toggle_sketches" + this.parentStackID
+    let channel = "card" + this.id + "_toggle_fullscreen";
     __IPC.remote.ipcMain.on(cleanSketches, (event, args) => {
       this.sketches.forEach((ele, idx) => ele.editing(args));
     }); // toggle editing ability upon stack appendage / removal
+    __IPC.remote.ipcMain.on(channel, (event, args) => this.FullScreen());
+  }
+
+  FullScreen() {
+    $(this.sketches[0].canvas()).css({
+      width: this.card.offsetWidth,
+      height: "1000px"
+    });
   }
 
   toggleSwipe(value) {

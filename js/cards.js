@@ -45,6 +45,7 @@ class Card {
       id: "fullscreen_button_" + this.id,
       class: "expand"
     });
+    console.log(this);
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -90,7 +91,9 @@ class Card {
 
   buildMetadata(cardType) {
     let id = "#card_" + this.id + cardType + "_2"; // TODO: needs to adjust to last card
-    $(id).attr({ class: "card-metadata" });
+    $(id).attr({
+      class: "card-metadata"
+    });
     $(id).html("interaction: " + this.interaction_timestamp +
       "<br/><br/>creator: " + this.creator +
       "<br/><br/>created: " + this.creation_timestamp);
@@ -137,7 +140,9 @@ class Card {
   }
 
   toggleFullScreen() {
+    console.log(this)
     if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
+
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
       let height = $(this)[0].card.clientHeight;
