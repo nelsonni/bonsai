@@ -17,11 +17,11 @@
     <script type="text/javascript" src="libs/slick/slick.min.js"></script>
 
     <!-- Raphael.js library -->
-    <script type="text/javascript" src="./libs/sketching/raphael.min.js"></script>
-    <script type="text/javascript" src="./libs/sketching/raphael.sketchpad.js"></script>
+    <script type="text/javascript" src="libs/sketching/raphael.min.js"></script>
+    <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
 
     <!-- Ace Library -->
-    <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8" src="libs/ace/ace.js"></script>
 
     <!-- Bonsai CSS/JS dynamic dependency manager -->
     <script type="text/javascript" src="dep_manager.js"></script>
@@ -38,6 +38,7 @@
     document.getElementsByTagName('head')[0].appendChild(ref);
   });
 
+  // dynamically load all JS files
   fromDir('js', '.js', function(filename) {
     let ref = document.createElement('script');
     ref.setAttribute('type', 'text/javascript');
@@ -49,21 +50,24 @@
 
 <body class="container">
 
-<div id="create">
-    <input id="openFile" type="file" onchange="loadFile()">Open</button>
-    <button id="saveFile">Save</button>
-    <button onclick="Testing()">Test Suite</button>
-    <button onclick="playground()">Playground</button>
-    <button onClick="versionNotice()">Version</button>
-    <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn">Create Stuff!</button>
-        <div id="myDropdown" class="dropdown-content">
-            <button onclick="newTextEditor()" class="dropdownBtn">Text Editor</button>
-            <button onclick="newSketchpad()" class="dropdownBtn">Sketchpad</button>
-            <button onclick="newCodeEditor()" class="dropdownBtn">Code Editor</button>
-        </div>
+  <div class="dropdown">
+    <button onclick="openMenu()" class="dropdown-button new_card"></button>
+    <div id="new_card_menu" class="dropdown-content top-left">
+      <button onclick="newCodeEditor()" class="first">Code Editor</button>
+      <button onclick="newSketchpad()">Sketchpad</button>
+      <button onclick="newTextEditor()">Text Editor</button>
+      <input id="fileInput" type="file" style="display:none;" />
+      <button onclick="document.getElementById('fileInput').click();" class="last">Open...</button>
     </div>
-</div>
+  </div>
+
+  <form class="expander">
+    <input type="search" placeholder="Search">
+  </form>
+
+  <button onclick="Testing()" class="test"></button>
+  <button onclick="Version()" class="version"></button>
+  <button onclick="Playground()" class="playground"></button>
 
 </body>
 
