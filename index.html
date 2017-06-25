@@ -53,11 +53,13 @@
   <div class="dropdown">
     <button onclick="openMenu()" class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
-      <button onclick="newCodeEditor()" class="first">Code Editor</button>
+      <button onclick="newCodeEditor('.js')" class="first">Code Editor</button>
       <button onclick="newSketchpad()">Sketchpad</button>
       <button onclick="newTextEditor()">Text Editor</button>
-      <input id="fileInput" type="file" style="display:none;" />
-      <button onclick="document.getElementById('fileInput').click();" class="last">Open...</button>
+      <label class="inputHider">
+      <input id="fileInput" type="file"  onchange="loadFile()"  style="display:none;" value= "foo"/>
+        <span id ="foo">Open...</span>
+    </label>
     </div>
   </div>
 
