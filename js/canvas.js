@@ -19,7 +19,13 @@ function Testing() {
   document.location.href = "tests/test.html"
 }
 
-function playground() {
+function Version() {
+  var appVersion = require('electron').remote.app.getVersion();
+  var appName = require('electron').remote.app.getName();
+  alert(appName + " IDE\nVersion: " + appVersion);
+}
+
+function Playground() {
   document.location.href = "playground/playground.html"
 }
 
