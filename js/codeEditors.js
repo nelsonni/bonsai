@@ -39,7 +39,7 @@ class CodeEditor extends Card {
       faces.push(face);
     }
 
-    faces.forEach(function(element, idx) {
+    faces.forEach(function (element, idx) {
       $(element.firstChild).attr({
         class: "editor",
         id: card.id + "codeEditor_" + idx
@@ -58,7 +58,7 @@ class CodeEditor extends Card {
 
   initAce(faces) {
     let cur = this;
-    $(faces).each(function(idx) {
+    $(faces).each(function (idx) {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
       var modelist = ace.require("ace/ext/modelist");

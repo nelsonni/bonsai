@@ -33,36 +33,28 @@ function getLastCard() {
 function loadFile() {
   let file = $('#openFile')[0].files[0];
   var getFileName = (getFileExt(file.name)).toLowerCase();
-  if (getFileName == '.txt') {
+  if (getFileName == '.txt' || getFileName == "") {
     newTextEditor('editor');
     let card = getLastCard();
     $("#card_" + card.id + 'codeEditor_0').load(file.path);
     return;
-  }
-  if (getFileName == '.png' || getFileName == '.jpg' || getFileName == '.gif' || getFileName == '.webp') {
+  } else if (getFileName == '.png' || getFileName == '.jpg' ||
+    getFileName == '.gif' || getFileName == '.webp') {
     newSketchpad('sketch');
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ")";
-    url = url.replace(/\\/g,"/");
-    console.log(url);
+    url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
     $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
     return;
-  } else {
-      newCodeEditor(getFileName);
-      let card = getLastCard();
-      console.log(file.path);
-      $.get(file.path, (r) => card.editors[0].setValue(r));
-      // $.get(file.path, function(data, error){
-      //   if(data != ){
-      //     (data) => card.editors[0].setValue(data);
-      //     console.log('success');
-      //   }
-      //   else{
-      //     alert("The selected file cannot be loaded.")
-      //     console.log('fail')
-      //   }
-      // });
-      return;
+  }
+  let modelist = ace.require("ace/ext/modelist"); //check if in valid ext's
+  let mode = modelist.getModeForPath(getFileName).mode;
+  if (mode == "ace/mode/text") // if it had to resolve to text then ext not found
+    alert("The selected file cannot be loaded.")
+  else { // if not it was found, load the file
+    newCodeEditor(getFileName);
+    let card = getLastCard();
+    $.get(file.path, resp => card.editors[0].setValue(resp));
   }
 }
 
@@ -70,7 +62,7 @@ function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
