@@ -6,7 +6,6 @@ class TextEditor extends Card {
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata("codeEditor");
-    console.log(this);
   }
   contentBuilder(card) {
     var content = document.createElement('div');
