@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Bonsai IDE</title>
+
     <!-- Stylesheets for all libraries -->
     <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
@@ -21,8 +22,9 @@
     <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
 
     <!-- Ace Library -->
-    <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <srcipt src="./libs/ace/ext-modelist.js"></srcipt>
+    <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <srcipt src="libs/ace/ext-modelist.js"></srcipt>
+
     <!-- Bonsai CSS/JS dynamic dependency manager -->
     <script type="text/javascript" src="dep_manager.js"></script>
 
@@ -51,7 +53,7 @@
 <body class="container">
 
   <div class="dropdown">
-    <button onclick="openMenu()" class="dropdown-button new_card"></button>
+    <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
       <button onclick="newCodeEditor('.js')" class="first">Code Editor</button>
       <button onclick="newSketchpad()">Sketchpad</button>

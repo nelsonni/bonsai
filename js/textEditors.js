@@ -39,7 +39,9 @@ class TextEditor extends Card {
     });
     $(content).slick({
       dots: true,
-      focusOnSelect: true
+      focusOnSelect: true,
+      infinite: false,
+      edgeFriction: true
     });
     card.appendChild(content);
   }

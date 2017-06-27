@@ -141,8 +141,7 @@ class Card {
 
   toggleFullScreen() {
     console.log(this)
-    if (!$(this.card).hasClass('fullscreen')) { // transtion to fullscreen
-
+    if (!$(this.card).hasClass('fullscreen')) { // transition to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
       let height = $(this)[0].card.clientHeight;

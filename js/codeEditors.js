@@ -54,7 +54,9 @@ class CodeEditor extends Card {
     $(content).slick({
       dots: true,
       accessiblity: true,
-      focusOnSelect: true
+      focusOnSelect: true,
+      infinite: false,
+      edgeFriction: true
     });
     card.appendChild(content);
     // leave out last card so it can be used for metadata
