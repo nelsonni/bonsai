@@ -2,54 +2,53 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Bonsai IDE</title>
-    <!-- Stylesheets for all libraries -->
-    <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
+  <meta charset="UTF-8">
+  <title>Bonsai IDE</title>
+  <!-- Stylesheets for all libraries -->
+  <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css" />
 
-    <!-- JQuery and JQuery UI libraries -->
-    <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="libs/jquery/jquery-ui.js"></script>
+  <!-- JQuery and JQuery UI libraries -->
+  <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="libs/jquery/jquery-ui.js"></script>
 
-    <!-- Slick.js library -->
-    <script type="text/javascript" src="libs/slick/slick.min.js"></script>
+  <!-- Slick.js library -->
+  <script type="text/javascript" src="libs/slick/slick.min.js"></script>
 
-    <!-- Raphael.js library -->
-    <script type="text/javascript" src="libs/sketching/raphael.min.js"></script>
-    <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
+  <!-- Raphael.js library -->
+  <script type="text/javascript" src="libs/sketching/raphael.min.js"></script>
+  <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
 
-    <!-- Ace Library -->
-    <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <srcipt src="./libs/ace/ext-modelist.js"></srcipt>
-    <!-- Bonsai CSS/JS dynamic dependency manager -->
-    <script type="text/javascript" src="dep_manager.js"></script>
+  <!-- Ace Library -->
+  <script src="./libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+  <srcipt src="./libs/ace/ext-modelist.js"></srcipt>
+  <!-- Bonsai CSS/JS dynamic dependency manager -->
+  <script type="text/javascript" src="dep_manager.js"></script>
 
-<script>
-  let __IPC = require("electron");
+  <script>
+    let __IPC = require("electron");
+    let fs = require("fs");
+    // dynamically load all CSS files
+    fromDir('css', '.css', function(filename) {
+      let ref = document.createElement('link');
+      ref.setAttribute('rel', 'stylesheet');
+      ref.setAttribute('type', 'text/css');
+      ref.setAttribute('href', filename);
+      document.getElementsByTagName('head')[0].appendChild(ref);
+    });
 
-  // dynamically load all CSS files
-  fromDir('css', '.css', function(filename) {
-    let ref = document.createElement('link');
-    ref.setAttribute('rel', 'stylesheet');
-    ref.setAttribute('type', 'text/css');
-    ref.setAttribute('href', filename);
-    document.getElementsByTagName('head')[0].appendChild(ref);
-  });
-
-  // dynamically load all JS files
-  fromDir('js', '.js', function(filename) {
-    let ref = document.createElement('script');
-    ref.setAttribute('type', 'text/javascript');
-    ref.setAttribute('src', filename);
-    document.getElementsByTagName('head')[0].appendChild(ref);
-  });
-</script>
+    // dynamically load all JS files
+    fromDir('js', '.js', function(filename) {
+      let ref = document.createElement('script');
+      ref.setAttribute('type', 'text/javascript');
+      ref.setAttribute('src', filename);
+      document.getElementsByTagName('head')[0].appendChild(ref);
+    });
+  </script>
 </head>
 
 <body class="container">
-
   <div class="dropdown">
     <button onclick="openMenu()" class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
@@ -57,9 +56,15 @@
       <button onclick="newSketchpad()">Sketchpad</button>
       <button onclick="newTextEditor()">Text Editor</button>
       <label class="inputHider">
-      <input id="fileInput" type="file"  onchange="loadFile()"  style="display:none;" value= "foo"/>
-        <span id ="foo">Open...</span>
-    </label>
+        <input id="fileInput" type="file"
+          onchange="stageFile()" style="display:none;" value= "foo"/>
+          <span>Open File</span>
+      </label>
+      <label class="inputHider">
+      <input id="folderInput" type="file" webkitdirectory multiple
+        onchange="loadFolder()" style="display:none;" value= "foo"/>
+        <span>Open Folder</span>
+      </label>
     </div>
   </div>
 
