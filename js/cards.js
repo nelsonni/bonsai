@@ -45,7 +45,6 @@ class Card {
       id: "fullscreen_button_" + this.id,
       class: "expand"
     });
-    console.log(this);
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -140,7 +139,6 @@ class Card {
   }
 
   toggleFullScreen() {
-    console.log(this)
     if (!$(this.card).hasClass('fullscreen')) { // transition to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');

@@ -1,4 +1,4 @@
-let currentCards = {};
+let currentCards = {}; //keep track of cards on canvas
 
 function newTextEditor() {
   let card = new TextEditor("textEditor");
@@ -38,8 +38,50 @@ function getLastCard() {
   return temp[temp.length - 1];
 }
 
-function loadFile() {
-  let file = $('#fileInput')[0].files[0];
+function loadFolder(dir) {
+  let files = getFiles(dir);
+  files.forEach(ele => loadFile(ele));
+}
+
+// todo check by fs.isdirectory
+function launchDialog() {
+  dialog.showOpenDialog({
+    properties: ["openDirectory", "openFile"]
+  }, (fileNames) => {
+    let clean = fileNames[0].split(".")
+    if (clean.length == 1) // if there was a '.' then there is a file in it.
+      loadFolder(fileNames[0])
+    else {
+      let fName = fileNames[0].split("/")
+      loadFile({
+        path: fileNames,
+        name: fName[fName.length - 1]
+      })
+    }
+  });
+}
+
+function getFiles(dir, fileList) {
+  fileList = fileList || [];
+
+  var files = fs.readdirSync(dir);
+  for (var i in files) {
+    if (!files.hasOwnProperty(i)) continue;
+    var path = dir + '/' + files[i];
+    if (fs.statSync(path).isDirectory()) {
+      getFiles(path, fileList);
+    } else {
+      let name = path.split("/")
+      fileList.push({
+        path: path,
+        name: name[name.length - 1]
+      });
+    }
+  }
+  return fileList;
+}
+
+function loadFile(file) {
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == "") {
     newTextEditor('textEditor');
