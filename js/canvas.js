@@ -65,33 +65,7 @@ function canvasAnnotation(){
         canvas.appendChild(newTextArea);
       }
     }
-    $(function(){
-      $(newTextArea).draggable();
-    });
   });
-  // $("newTextArea").click(function(e){
-
-  // newTextArea.draggable = "true";
-  // newTextArea.setAttribute("ondragstart", "drag(event)");
-  // window.ondrop = "drop(event)";
-  // window.ondragover = "allowDrop(event)";
-  // // canvas.appendChild(newDiv);
-  // });
-}
-
-//enables dragging and dropping of canvas annotations
-function allowDrop(ev){
-  ev.preventDefault();
-}
-
-function drag(ev){
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev){
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("data");
-  ev.target.appendChild(document.getElementById(data));
 }
 
 //shows/hides canvas sketches and annotations buttons (not functional yet)
@@ -115,39 +89,69 @@ window.onclick = function (event) {
     }
 }
 
-// function getLastCard() {
-//    let temp = Object.values(currentCards);
-//    return temp[temp.length - 1];
-//  }
-//
-// function getSelectionText() {
-//    var text = "";
-//    var activeEl = document.activeElement;
-//    var activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
-//    if (activeElTagName == "textarea"){
-//      text = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
-//    }
-//      return text;
-//  }
+var editor = document.getElementsByTagName('editor');
+$(window).mouseup(function(e){
+    var text = '';
+    text = getSelectedText();
+    if(text != ''){
+      console.log(text);
+        showContextMenu(text);
+        dynamicCardCreationText(text);
+    }
+});
 
-// function dynamicCardCreationText(text){
-//   // document.getElementById("myDropdown2").classList.toggle("show");
-//   $('.editor').onclick(function() {
-//       var text = getSelectedText();
-//       console.log(text);
-//   });
-//   newTextEditor('editor');
-//   //  var text;
-//   let card = getLastCard();
-//   $("#card_" + card.id + 'codeEditor_0').val($('.editor').val()+text);
-// }
+function showContextMenu(text){
+  var menu = [{
+    name: 'Create new text editor card',
+    title: 'text editor card button',
+    fun: dynamicCardCreationText(text)
+  },{
+    name: 'Create new code editor card',
+    title: 'code editor card button',
+    fun: dynamicCardCreationCode(text)
+  }]
+    $('').contextMenu(menu, {
+      triggerOn: 'dblclick',
+      displayAround: cursor,
+      mouseClick: left,
+      delay: 500,
+      closeOnClick: true,
+      autoHide: true,
+  });
+}
 
-// function dynamicCardCreationText(){
-//   var code;
-//   newCodeEditor(getFileName);
-//     let card = getLastCard();
-//     $.get(code, (r) => card.editors[0].setValue(r));
-// }
+function getLastCard() {
+   let temp = Object.values(currentCards);
+   return temp[temp.length - 1];
+ }
+
+function getSelectedText() {
+   var text = "";
+   if(window.getSelection){
+     return window.getSelection().toString();
+   }
+   else if(document.selection){
+     return document.selection.createRange().text;
+   }
+   return '';
+ }
+
+function dynamicCardCreationText(text){
+    console.log("in dynamicCardCreationText");
+    document.onmouseup = getSelectedText;
+    if(!document.all)
+    document.captureEvents(Event.MOUSEUP);
+    newTextEditor('editor');
+    let card = getLastCard();
+      $("#card_" + card.id + 'codeEditor_0').val($('.editor').val()+text);
+}
+
+function dynamicCardCreationCode(code){
+  console.log("in dynamicCardCreationEditor");
+  newCodeEditor('editor');
+    let card = getLastCard();
+    $.get(code, (r) => card.editors[0].setValue(r));
+}
 
 // function dynamicCardCreationSketch(){
 //   var screenCapturedImage =
@@ -158,13 +162,4 @@ window.onclick = function (event) {
 //  +    url = url.replace(/\\/g,"/");
 //       console.log(url);
 //       $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
-// }
-
-// window.onclick = function(event){
-//   if (event.target.matches('.editor')){
-//     if (event.target.matches('.editor')){
-//       // getSelectionText();
-//       console.log("hi");
-//     }
-//   }
 // }

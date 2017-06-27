@@ -93,9 +93,9 @@ body {
     display: block;
 }
 
-/*.hidden {
+.hidden {
   display: none;
-}*/
+}
 
 div.canvas-sketch {
   position: absolute;
