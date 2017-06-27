@@ -105,13 +105,13 @@ class Stack {
     cur.parentStackID = this.id;
     cur.ipcListeners();
     var ids = jQuery.map(this.cards, function(stackCard) {
-      return parseInt(stackCard.card.id.split("_")[1]); // TODO: Stack shouldn't be aware of things outside of Stack!
+      return parseInt(stackCard.card.id.split("_")[1]);
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
     if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id,false)
+    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id, false)
     this.channels.push("card" + cur.id + "_toggle_sketches" + this.id);
 
     card.droppable('disable');
@@ -130,9 +130,9 @@ class Stack {
   // remove individual card from the stack
   removeCard(card) {
     let cleanID = card[0].id.split("_")[1];
-    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id,true)
+    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id, true)
     // grep returning only cards that do not contain the target id
-    this.cards = $.grep(this.cards, function(n) {
+    this.cards = $.grep(this.cards, function (n) {
       return $(n.card).attr("id") !== card.attr('id');
     });
     $(card).css({
@@ -146,7 +146,7 @@ class Stack {
   }
 
   nextId() {
-    var ids = $.map($('.stack'), function(stack) {
+    var ids = $.map($('.stack'), function (stack) {
       return parseInt($(stack).attr('id').split("_")[1]);
     });
     if (ids.length < 1) return 1; // no stacks on the canvas yet
@@ -162,7 +162,7 @@ class Stack {
       drag: (event, ui) => this.cascadeCards(),
       start: () => this.cards.forEach((e, i) => e.toggleSwipe(false)),
       stop: () => this.cards.forEach((e, i) => e.toggleSwipe(true))
-    });
+    }); // change start / stop to IPC stuff
   }
 
   setDroppable() {

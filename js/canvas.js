@@ -1,34 +1,46 @@
-let currentCards = {};
+let currentCards = {}; //keep track of cards on canvas
 
 function newTextEditor() {
-    let card = new TextEditor("editor");
-    currentCards[card.id] = card;
+  let card = new TextEditor("textEditor");
+  currentCards[card.id] = card;
 }
 
 function newSketchpad() {
-    let card = new Sketchpad("sketch");
-    currentCards[card.id] = card;
+  let card = new Sketchpad("sketch");
+  currentCards[card.id] = card;
 }
 
-function newCodeEditor() {
-    let card = new CodeEditor("editor");
-    currentCards[card.id] = card;
+function newCodeEditor(fileExt) {
+  let card = new CodeEditor("codeEditor", fileExt);
+  currentCards[card.id] = card;
 }
 
 function Testing() {
-    document.location.href = "tests/test.html"
-}
-function playground() {
-    document.location.href = "playground/playground.html"
+  document.location.href = "tests/test.html"
 }
 
-function loadFile() {
-    let test = newCodeEditor();
-    $("#" + test.card.id +"codeEditor_0").load("./main.js");
+function Version() {
+  var appVersion = require('electron').remote.app.getVersion();
+  var appName = require('electron').remote.app.getName();
+  alert(appName + " IDE\nVersion: " + appVersion);
 }
 
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
+function Playground() {
+  document.location.href = "playground/playground.html"
+}
+
+function backPage() {
+  document.location.href = "../index.html";
+}
+
+function getLastCard() {
+  let temp = Object.values(currentCards);
+  return temp[temp.length - 1];
+}
+
+function loadFolder(dir) {
+  let files = getFiles(dir);
+  files.forEach(ele => loadFile(ele));
 }
 
 function canvasSketch() {
@@ -42,51 +54,69 @@ function canvasSketch() {
   });
 }
 
-// spans new textarea for canvas annotation
-function canvasAnnotation(){
-  document.body.style.cursor = "text";
-  var canvas = document.querySelector('.container');
-  var elem = this;
-  $(canvas).click(function(e){
-    var newTextArea = document.createElement("textarea");
-    newTextArea.style.position = "absolute";
-    newTextArea.style.left = e.pageX + "px";
-    newTextArea.style.top = e.pageY + "px";
-    newTextArea.style.background = "transparent";
-    newTextArea.style.borderColor = "black";
-    newTextArea.style.borderWidth = "2px";
-    if(canvas == document.activeElement){
-      if(newTextArea == document.activeElement){
-        newTextArea.style.borderWidth = "3px";
-        canvas.appendChild(newTextArea);
-      }
-      else{
-        newTextArea.style.borderWidth = "1px";
-        canvas.appendChild(newTextArea);
-      }
+// todo check by fs.isdirectory
+function launchDialog() {
+  dialog.showOpenDialog({
+    properties: ["openDirectory", "openFile"]
+  }, (fileNames) => {
+    let clean = fileNames[0].split(".")
+    if (clean.length == 1) // if there was a '.' then there is a file in it.
+      loadFolder(fileNames[0])
+    else {
+      let fName = fileNames[0].split("/")
+      loadFile({
+        path: fileNames,
+        name: fName[fName.length - 1]
+      })
     }
   });
 }
 
-//shows/hides canvas sketches and annotations buttons (not functional yet)
-// function showonoffButtons(){
-//   var show = document.getElementById("onoffButtons");
-//   show.className = (show.className === "hidden") ? "": "hidden";
-// }
-// document.getElementById("onoffswitch").addEventListener("click", showonoffButtons(), false);
+function getFiles(dir, fileList) {
+  fileList = fileList || [];
 
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function (event) {
-    if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
+  var files = fs.readdirSync(dir);
+  for (var i in files) {
+    if (!files.hasOwnProperty(i)) continue;
+    var path = dir + '/' + files[i];
+    if (fs.statSync(path).isDirectory()) {
+      getFiles(path, fileList);
+    } else {
+      let name = path.split("/")
+      fileList.push({
+        path: path,
+        name: name[name.length - 1]
+      });
     }
+  }
+  return fileList;
+}
+
+function loadFile(file) {
+  var getFileName = (getFileExt(file.name)).toLowerCase();
+  if (getFileName == '.txt' || getFileName == "") {
+    newTextEditor('textEditor');
+    let card = getLastCard();
+    $("#card_" + card.id + 'codeEditor_0').load(file.path);
+    return;
+  } else if (getFileName == '.png' || getFileName == '.jpg' ||
+    getFileName == '.gif' || getFileName == '.webp') {
+    newSketchpad('sketch');
+    let card = getLastCard();
+    var url = 'url(file:///' + file.path + ")";
+    url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
+    $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
+    return;
+  }
+  let modelist = ace.require("ace/ext/modelist"); //check if in valid ext's
+  let mode = modelist.getModeForPath(getFileName).mode;
+  if (mode == "ace/mode/text") // if it had to resolve to text then ext not found
+    alert("The selected file cannot be loaded.")
+  else { // if not it was found, load the file
+    newCodeEditor(getFileName);
+    let card = getLastCard();
+    $.get(file.path, resp => card.editors[0].setValue(resp));
+  }
 }
 
 var editor = document.getElementsByTagName('editor');

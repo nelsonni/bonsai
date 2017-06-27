@@ -1,6 +1,8 @@
+require("./libs/ace/ext-modelist.js") // Don't delete me! Needed by ace.req
 class CodeEditor extends Card {
-  constructor(type) {
+  constructor(type, fileExt) {
     super(type);
+    this.fileExt = fileExt;
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
@@ -14,10 +16,16 @@ class CodeEditor extends Card {
         height: h,
         width: w
       }); // resizes the code editor so everything scales properly.
+      $(ele).click();
       this.editors.forEach((e, i) => e.resize())
     });
   }
 
+  ipcListeners() {
+    __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
+      this.toggleAceFullscreen(args[0], args[1]);
+    });
+  }
 
   contentBuilder(card) {
     var content = document.createElement('div');
@@ -36,7 +44,7 @@ class CodeEditor extends Card {
       faces.push(face);
     }
 
-    faces.forEach(function(element, idx) {
+    faces.forEach(function (element, idx) {
       $(element.firstChild).attr({
         class: "editor",
         id: card.id + "codeEditor_" + idx
@@ -46,7 +54,9 @@ class CodeEditor extends Card {
     $(content).slick({
       dots: true,
       accessiblity: true,
-      focusOnSelect: true
+      focusOnSelect: true,
+      infinite: false,
+      edgeFriction: true
     });
     card.appendChild(content);
     // leave out last card so it can be used for metadata
@@ -55,10 +65,14 @@ class CodeEditor extends Card {
 
   initAce(faces) {
     let cur = this;
-    $(faces).each(function(idx) {
+    $(faces).each(function (idx) {
       let editor = ace.edit(this.lastElementChild.id);
       editor.setTheme("ace/theme/twilight");
-      editor.session.setMode("ace/mode/javascript");
+      var modelist = ace.require("ace/ext/modelist");
+      if (cur.fileExt != undefined) {
+        var mode = modelist.getModeForPath(cur.fileExt).mode;
+        editor.session.setMode(mode);
+      }
       editor.on("change", () => cur.updateMetadata("codeEditor"));
       cur.editors.push(editor);
     });

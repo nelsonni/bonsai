@@ -19,7 +19,7 @@ class Sketchpad extends Card {
     let erase = document.createElement("button");
     let colors = ["red", "blue", "green", "black"];
     let cur = this;
-    $([red, blue, green, black]).each(function(idx) {
+    $([red, blue, green, black]).each(function (idx) {
       $(this).addClass("colorBtn").attr({
         id: "pen_" + colors[idx] + cur.id,
         value: colors[idx]
@@ -36,7 +36,7 @@ class Sketchpad extends Card {
 
     $(cur.card).find(".editor").append(erase);
 
-    $(erase).on("click", function() {
+    $(erase).on("click", () => {
       for (let i in cur.sketches) {
         if (cur.sketches[i].getState().editing === true)
           cur.sketches[i].editing("erase");
@@ -51,7 +51,7 @@ class Sketchpad extends Card {
     for (let i = 0; i < 3; i++)
       canvases.push("card_" + this.id + "sketch_" + i);
     let curCard = this;
-    $(canvases).each(function(idx) {
+    $(canvases).each(function (idx) {
       let sketchPad = Raphael.sketchpad(canvases[idx], {
         height: "100%",
         width: "100%",
@@ -65,26 +65,35 @@ class Sketchpad extends Card {
 
   penListeners() {
     let cur = this;
-    $(cur.pens).each(function(idx) {
+    $(cur.pens).each(function (idx) {
       let penColor = $(this)[0].value;
-      $("#" + $(this)[0].id).on("click", function(event) {
-        $(cur.sketches).each(function() { // go through each sketch pad on current card
+      $("#" + $(this)[0].id).on("click", function (event) {
+        $(cur.sketches).each(function () { // go through each sketch pad on current card
           $(this)[0].pen().color(penColor); // switch the pen to that color.
         });
       });
     });
   }
 
-  ipcListeners(){
-    let cleanSketches = "card" + this.id + "_toggle_sketches" +this.parentStackID
+  ipcListeners() {
+    let cleanSketches = "card" + this.id + "_toggle_sketches" + this.parentStackID
+    let channel = "card" + this.id + "_toggle_fullscreen";
     __IPC.remote.ipcMain.on(cleanSketches, (event, args) => {
       this.sketches.forEach((ele, idx) => ele.editing(args));
     }); // toggle editing ability upon stack appendage / removal
+    __IPC.remote.ipcMain.on(channel, (event, args) => this.FullScreen());
+  }
+
+  FullScreen() {
+    $(this.sketches[0].canvas()).css({
+      width: this.card.offsetWidth,
+      height: "1000px"
+    });
   }
 
   toggleSwipe(value) {
     $(this.card.lastElementChild).slick("slickSetOption", "swipe", false, false);
-  }// as swipe method should not be available on sketch cards
+  } // as swipe method should not be available on sketch cards
 
   contentBuilder(card) {
     var content = document.createElement('div');
@@ -100,7 +109,7 @@ class Sketchpad extends Card {
       faces.push(face);
     }
 
-    faces.forEach(function(element, idx) {
+    faces.forEach(function (element, idx) {
       $(element.firstChild).attr({
         class: "sketchEditor",
         id: card.id + "sketch_" + idx
@@ -111,7 +120,9 @@ class Sketchpad extends Card {
     $(content).slick({
       dots: true,
       swipe: false,
-      accessiblity: true
+      accessiblity: true,
+      infinite: false,
+      edgeFriction: true
     });
     card.appendChild(content);
   }

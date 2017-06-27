@@ -1,6 +1,8 @@
 div.card {
   height: 280px;  /* 7:5 aspect ratio */
   width: 200px;   /* 7:5 aspect ratio */
+  top: 30%;
+  left: 40%;
   background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0));
   color: rgba(171, 178, 191, 1.0);
   margin: auto;
