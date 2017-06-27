@@ -29,8 +29,10 @@
     <script type="text/javascript" src="dep_manager.js"></script>
 
   <script>
-    let __IPC = require("electron");
+    const __IPC = require("electron");
+    const {dialog} = require('electron').remote;
     let fs = require("fs");
+
     // dynamically load all CSS files
     fromDir('css', '.css', function(filename) {
       let ref = document.createElement('link');
@@ -47,6 +49,7 @@
       ref.setAttribute('src', filename);
       document.getElementsByTagName('head')[0].appendChild(ref);
     });
+
   </script>
 </head>
 
@@ -58,14 +61,10 @@
       <button onclick="newSketchpad()">Sketchpad</button>
       <button onclick="newTextEditor()">Text Editor</button>
       <label class="inputHider">
-        <input id="fileInput" type="file"
-          onchange="stageFile()" style="display:none;" value= "foo"/>
-          <span>Open File</span>
-      </label>
-      <label class="inputHider">
-      <input id="folderInput" type="file" webkitdirectory multiple
-        onchange="loadFolder()" style="display:none;" value= "foo"/>
-        <span>Open Folder</span>
+        <button id="fileInput"
+          onclick="launchDialog()" style="display:none;" value= "foo">
+        </button>
+          <span>Open...</span>
       </label>
     </div>
   </div>

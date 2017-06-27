@@ -38,10 +38,27 @@ function getLastCard() {
   return temp[temp.length - 1];
 }
 
-function loadFolder() {
-  let dir = $("#folderInput")[0].files[0].path
+function loadFolder(dir) {
   let files = getFiles(dir);
   files.forEach(ele => loadFile(ele));
+}
+
+// todo check by fs.isdirectory
+function launchDialog() {
+  dialog.showOpenDialog({
+    properties: ["openDirectory", "openFile"]
+  }, (fileNames) => {
+    let clean = fileNames[0].split(".")
+    if (clean.length == 1) // if there was a '.' then there is a file in it.
+      loadFolder(fileNames[0])
+    else {
+      let fName = fileNames[0].split("/")
+      loadFile({
+        path: fileNames,
+        name: fName[fName.length - 1]
+      })
+    }
+  });
 }
 
 function getFiles(dir, fileList) {
@@ -62,11 +79,6 @@ function getFiles(dir, fileList) {
     }
   }
   return fileList;
-}
-
-function stageFile() {
-  let file = $('#fileInput')[0].files[0];
-  loadFile(file);
 }
 
 function loadFile(file) {
