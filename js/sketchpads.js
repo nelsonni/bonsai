@@ -18,7 +18,7 @@ class Sketchpad extends Card {
     let black = document.createElement('button');
     let erase = document.createElement('button');
     let colors = ['red', 'blue', 'green', 'black'];
-    let cur = '_this';
+    let cur = this;
     $([red, blue, green, black]).each(function (idx) {
       $(this).addClass('colorBtn').attr({
         id: 'pen_' + colors[idx] + cur.id,
@@ -50,7 +50,7 @@ class Sketchpad extends Card {
     let canvases = [];
     for (let i = 0; i < 3; i++)
       canvases.push('card_' + this.id + 'sketch_' + i);
-    let curCard = '_this';
+    let curCard = this;
     $(canvases).each(function (idx) {
       let sketchPad = Raphael.sketchpad(canvases[idx], {
         height: '100%',
@@ -65,7 +65,7 @@ class Sketchpad extends Card {
   }
 
   penListeners() {
-    let cur = '_this';
+    let cur = this;
     $(cur.pens).each(function (idx) {
       let penColor = $(this)[0].value;
       $('#' + $(this)[0].id).on('click', function (event) {
