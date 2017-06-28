@@ -10,25 +10,25 @@ class Stack {
     this.id = this.nextId();
     this.cards = [];
     this.channels = [];
-    this.state = "collapsed";
+    this.state = 'collapsed';
     var stack = document.createElement('div');
     $(stack).attr({
-        id: "stack_" + this.id,
-        class: "stack"
+        id: 'stack_' + this.id,
+        class: 'stack',
       })
       .css({
         top: $(cards[0]).offset().top - 25,
-        left: $(cards[0]).offset().left - 25
+        left: $(cards[0]).offset().left - 25,
       });
     this.stack = stack;
 
-    var close_button = document.createElement('button');
-    $(close_button).attr({
-      id: "close_button_stack_" + this.id,
-      class: "stack_close"
+    var closeButton = document.createElement('button');
+    $(closeButton).attr({
+      id: 'close_button_stack_' + this.id,
+      class: 'stack_close',
     });
-    $(close_button).click(() => this.destructor());
-    this.stack.appendChild(close_button);
+    $(closeButton).click(() => this.destructor());
+    this.stack.appendChild(closeButton);
 
     document.body.appendChild(stack);
     this.setDraggable();
@@ -40,21 +40,20 @@ class Stack {
 
     var annotation = document.createElement('textarea');
     $(annotation).attr({
-        id: "annotation_stack_" + this.id,
-        class: "annotation"
+        id: 'annotation_stack_' + this.id,
+        class: 'annotation',
       })
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
     this.stack.appendChild(annotation);
 
-    let expansion_button = document.createElement("button");
-    $(expansion_button).attr({
-      id: "expand_button" + this.id,
-      class: "expand_button"
+    let expansionButton = document.createElement('button');
+    $(expansionButton).attr({
+      id: 'expand_button' + this.id,
+      class: 'expand_button',
     }).click(() => this.toggleExpansion());
-    this.stack.append(expansion_button);
+    this.stack.append(expansionButton);
   }
-
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
@@ -71,7 +70,7 @@ class Stack {
     while (cardCount > 0) {
       $(this.cards[last - 1].card).css({
         top: $(lastFit.card).offset().top,
-        left: $(lastFit.card).offset().left + TOTAL_SIZE * (cardCount)
+        left: $(lastFit.card).offset().left + TOTAL_SIZE * (cardCount),
       }); // move last card to last fitting pos. & fill backwards
       cardCount--;
       last--;
@@ -81,19 +80,20 @@ class Stack {
   toggleExpansion() { // add animations at a later date?
     let stackPos = $(this.stack).offset(); // to keep under 80 char
     let windowDiff = window.innerWidth - stackPos.left;
-    if (this.state == "collapsed") {
+    if (this.state == 'collapsed') {
       if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
         alert("Can't expand at all");
         return;
       }
-      $(this.stack).draggable("disable");
+
+      $(this.stack).draggable('disable');
       this.moveCards(stackPos, windowDiff);
       let newWidth = $(this.cards[this.cards.length - 1].card).offset().left;
       $(this.stack).width(newWidth - stackPos.left + CARD_WIDTH + OFFSET_TOP);
-      this.state = "expanded";
+      this.state = 'expanded';
     } else {
-      $(this.stack).draggable("enable")
-      this.state = "collapsed";
+      $(this.stack).draggable('enable');
+      this.state = 'collapsed';
       this.cascadeCards();
       this.resizeStack();
     }
@@ -104,15 +104,16 @@ class Stack {
     let cur = this.getCardObject(card);
     cur.parentStackID = this.id;
     cur.ipcListeners();
-    var ids = jQuery.map(this.cards, function(stackCard) {
-      return parseInt(stackCard.card.id.split("_")[1]);
+    var ids = jQuery.map(this.cards, function (stackCard) {
+      return parseInt(stackCard.card.id.split('_')[1]);
     });
-    var new_id = parseInt($(card).attr('id').split("_")[1]);
-    if (jQuery.inArray(new_id, ids) !== -1) return; // card already in stack
+
+    var newId = parseInt($(card).attr('id').split('_')[1]);
+    if (jQuery.inArray(newId, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    __IPC.ipcRenderer.send("card" + cur.id + "_toggle_sketches" + this.id, false)
-    this.channels.push("card" + cur.id + "_toggle_sketches" + this.id);
+    __IPC.ipcRenderer.send('card' + cur.id + '_toggle_sketches' + this.id, false);
+    this.channels.push('card' + cur.id + '_toggle_sketches' + this.id);
 
     card.droppable('disable');
     $(card).find('.card-header').find('button').each((index, button) => {
@@ -121,23 +122,25 @@ class Stack {
   }
 
   getCardObject(card) {
-    let id = (card[0].id).split("_");
+    let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
-    let obj = currentCards[last]
+    let obj = currentCards[last];
     return obj;
   }
 
   // remove individual card from the stack
   removeCard(card) {
-    let cleanID = card[0].id.split("_")[1];
-    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id, true)
+    let cleanID = card[0].id.split('_')[1];
+    __IPC.ipcRenderer.send('card' + cleanID + '_toggle_sketches' + this.id, true);
+
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function (n) {
-      return $(n.card).attr("id") !== card.attr('id');
+      return $(n.card).attr('id') !== card.attr('id');
     });
+
     $(card).css({
       top: $(card).offset().top,
-      left: $(card).offset().left
+      left: $(card).offset().left,
     }).droppable('enable');
     document.body.appendChild($(card)[0]);
     $(card).find('.card-header').find('button').each((index, button) => {
@@ -147,8 +150,9 @@ class Stack {
 
   nextId() {
     var ids = $.map($('.stack'), function (stack) {
-      return parseInt($(stack).attr('id').split("_")[1]);
+      return parseInt($(stack).attr('id').split('_')[1]);
     });
+
     if (ids.length < 1) return 1; // no stacks on the canvas yet
     var next = 1;
     while (ids.indexOf(next += 1) > -1);
@@ -161,7 +165,7 @@ class Stack {
       stack: '.stack, .card',
       drag: (event, ui) => this.cascadeCards(),
       start: () => this.cards.forEach((e, i) => e.toggleSwipe(false)),
-      stop: () => this.cards.forEach((e, i) => e.toggleSwipe(true))
+      stop: () => this.cards.forEach((e, i) => e.toggleSwipe(true)),
     }); // change start / stop to IPC stuff
   }
 
@@ -169,7 +173,7 @@ class Stack {
     $(this.stack).droppable({
       accept: '.card, .stack',
       classes: {
-        'ui-droppable-hover': 'highlight'
+        'ui-droppable-hover': 'highlight',
       },
       drop: (event, ui) => {
         // handle card-to-stack drop event
@@ -178,6 +182,7 @@ class Stack {
           this.cascadeCards();
           this.resizeStack();
         }
+
         // handle stack-to-stack drop event
         if ($(ui.draggable).hasClass('stack')) {
           $(ui.draggable).children('.card').each((index, card) => {
@@ -188,15 +193,17 @@ class Stack {
           $(ui.draggable).remove();
         }
       },
+
       out: (event, ui) => {
         this.removeCard($(ui.draggable));
         if (this.cards.length < 2) {
           this.destructor();
           return;
         };
+
         this.cascadeCards();
         this.resizeStack();
-      }
+      },
     });
   }
 
@@ -206,23 +213,23 @@ class Stack {
       $(cards.card).css({
         top: $(this.stack).offset().top + ((index + 1) * 25) + 'px',
         left: $(this.stack).offset().left + ((index + 1) * 25) + 'px',
-        'z-index': (index + 1)
+        'z-index': (index + 1),
       });
     });
   }
 
   // resize the size of the containing stack div to contain all stacked cards
   resizeStack() {
-    var top_card = $(this.cards[this.cards.length - 1].card);
-    var bottom_card = $(this.cards[0].card);
-    var boundary_top = bottom_card.offset().top;
-    var boundary_right = top_card.offset().left + top_card.width() + 50;
-    var boundary_bottom = top_card.offset().top + top_card.height() + 70;
-    var boundary_left = bottom_card.offset().left;
+    var $topCard = $(this.cards[this.cards.length - 1].card);
+    var $bottomCard = $(this.cards[0].card);
+    var $boundaryTop = $bottomCard.offset().top;
+    var $boundaryRight = $topCard.offset().left + $topCard.width() + 50;
+    var $boundaryBottom = $topCard.offset().top + $topCard.height() + 70;
+    var $boundaryLeft = $bottomCard.offset().left;
 
     $(this.stack).css({
-      width: boundary_right - boundary_left,
-      height: boundary_bottom - boundary_top
+      width: $boundaryRight - $boundaryLeft,
+      height: $boundaryBottom - $boundaryTop,
     });
   }
 
