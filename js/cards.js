@@ -1,5 +1,6 @@
 class Card {
-  constructor(type) {
+  constructor(type, name) {
+    console.log(name);
     this.id = this.nextId();
     this.parentStackID;
     this.channels = [];
@@ -23,7 +24,13 @@ class Card {
       id: "header_" + this.id,
       class: "card-header"
     });
-    $(header).html("card: " + this.id);
+    let nameBox = document.createElement("span")
+    $(nameBox).addClass("nameBox")
+    if (name != undefined)
+      $(nameBox).html(name);
+    else
+      $(nameBox).html("Card: " + this.id);
+    $(header).append(nameBox)
 
     var close_button = document.createElement('button');
     $(close_button).attr({

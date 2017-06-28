@@ -16,6 +16,11 @@ div.card {
 div.card.highlight {
   box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
 }
+span.nameBox{
+  width: 140px;
+  display: inline-block;
+  overflow: scroll;
+}
 
 div.card.fullscreen {
   top: 0;
