@@ -1,7 +1,7 @@
 const VERTICAL_PADDING = 30;
 class TextEditor extends Card {
-  constructor(type) {
-    super(type);
+  constructor(type, name) {
+    super(type, name);
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);

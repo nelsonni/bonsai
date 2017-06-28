@@ -63,7 +63,14 @@ function launchDialog() {
 
 function getFiles(dir, fileList) {
   fileList = fileList || [];
-
+  if(!fs.statSync(dir).isDirectory()){
+      let name = dir.split("/")
+      return [{
+          path: dir,
+          name: name[name.length -1]
+      }]
+  } // if the file has no suffix e.g "LISCENCE"
+      
   var files = fs.readdirSync(dir);
   for (var i in files) {
     if (!files.hasOwnProperty(i)) continue;
@@ -82,16 +89,15 @@ function getFiles(dir, fileList) {
 }
 
 function loadFile(file) {
-  console.log("asldkjf", file);
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == "") {
-    newTextEditor('textEditor', file.name);
+    newTextEditor(file.name);
     let card = getLastCard();
     $("#card_" + card.id + 'codeEditor_0').load(file.path);
     return;
   } else if (getFileName == '.png' || getFileName == '.jpg' ||
     getFileName == '.gif' || getFileName == '.webp') {
-    newSketchpad('sketch', file.name);
+    newSketchpad(file.name);
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ")";
     url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
