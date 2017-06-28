@@ -29,10 +29,10 @@
     <script type="text/javascript" src="dep_manager.js"></script>
 
 <script>
-  let __IPC = require("electron");
+  let __IPC = require('electron');
 
   // dynamically load all CSS files
-  fromDir('css', '.css', function(filename) {
+  fromDir('css', '.css', function (filename) {
     let ref = document.createElement('link');
     ref.setAttribute('rel', 'stylesheet');
     ref.setAttribute('type', 'text/css');
@@ -41,7 +41,7 @@
   });
 
   // dynamically load all JS files
-  fromDir('js', '.js', function(filename) {
+  fromDir('js', '.js', function (filename) {
     let ref = document.createElement('script');
     ref.setAttribute('type', 'text/javascript');
     ref.setAttribute('src', filename);
@@ -59,9 +59,9 @@
       <button onclick="newSketchpad()">Sketchpad</button>
       <button onclick="newTextEditor()">Text Editor</button>
       <label class="inputHider">
-      <input id="fileInput" type="file"  onchange="loadFile()"  style="display:none;" value= "foo"/>
+        <input id="fileInput" type="file" onchange="loadFile()" style="display:none;" value= "foo"/>
         <span id ="foo">Open...</span>
-    </label>
+      </label>
     </div>
   </div>
 
