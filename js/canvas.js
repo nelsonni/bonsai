@@ -1,17 +1,17 @@
 let currentCards = {}; //keep track of cards on canvas
 
-function newTextEditor() {
-  let card = new TextEditor("textEditor");
+function newTextEditor(name) {
+  let card = new TextEditor("textEditor", name);
   currentCards[card.id] = card;
 }
 
-function newSketchpad() {
-  let card = new Sketchpad("sketch");
+function newSketchpad(name) {
+  let card = new Sketchpad("sketch", name);
   currentCards[card.id] = card;
 }
 
-function newCodeEditor(fileExt) {
-  let card = new CodeEditor("codeEditor", fileExt);
+function newCodeEditor(fileExt, name) {
+  let card = new CodeEditor("codeEditor", fileExt, name);
   currentCards[card.id] = card;
 }
 
@@ -63,7 +63,14 @@ function launchDialog() {
 
 function getFiles(dir, fileList) {
   fileList = fileList || [];
-
+  if(!fs.statSync(dir).isDirectory()){
+      let name = dir.split("/")
+      return [{
+          path: dir,
+          name: name[name.length -1]
+      }]
+  } // if the file has no suffix e.g "LISCENCE"
+      
   var files = fs.readdirSync(dir);
   for (var i in files) {
     if (!files.hasOwnProperty(i)) continue;
@@ -84,13 +91,13 @@ function getFiles(dir, fileList) {
 function loadFile(file) {
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == "") {
-    newTextEditor('textEditor');
+    newTextEditor(file.name);
     let card = getLastCard();
     $("#card_" + card.id + 'codeEditor_0').load(file.path);
     return;
   } else if (getFileName == '.png' || getFileName == '.jpg' ||
     getFileName == '.gif' || getFileName == '.webp') {
-    newSketchpad('sketch');
+    newSketchpad(file.name);
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ")";
     url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
@@ -102,7 +109,7 @@ function loadFile(file) {
   if (mode == "ace/mode/text") // if it had to resolve to text then ext not found
     alert("The selected file cannot be loaded.")
   else { // if not it was found, load the file
-    newCodeEditor(getFileName);
+    newCodeEditor(getFileName, file.name);
     let card = getLastCard();
     $.get(file.path, resp => card.editors[0].setValue(resp));
   }
