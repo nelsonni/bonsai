@@ -1,6 +1,6 @@
 class Sketchpad extends Card {
-  constructor(type) {
-    super(type);
+  constructor(type, name) {
+    super(type, name);
     this.type = type;
     this.sketches = [];
     this.pens = [];

@@ -1,17 +1,17 @@
-let currentCards = {};
+let currentCards = {}; //keep track of cards on canvas
 
-function newTextEditor() {
-  let card = new TextEditor('textEditor');
+function newTextEditor(name) {
+  let card = new TextEditor('textEditor', name);
   currentCards[card.id] = card;
 }
 
-function newSketchpad() {
-  let card = new Sketchpad('sketch');
+function newSketchpad(name) {
+  let card = new Sketchpad('sketch', name);
   currentCards[card.id] = card;
 }
 
-function newCodeEditor(fileExt) {
-  let card = new CodeEditor('codeEditor', fileExt);
+function newCodeEditor(fileExt, name) {
+  let card = new CodeEditor('codeEditor', fileExt, name);
   currentCards[card.id] = card;
 }
 
@@ -38,17 +38,68 @@ function getLastCard() {
   return temp[temp.length - 1];
 }
 
-function loadFile() {
-  let file = $('#fileInput')[0].files[0];
+function loadFolder(dir) {
+  let files = getFiles(dir);
+  files.forEach(ele => loadFile(ele));
+}
+
+// todo check by fs.isdirectory
+function launchDialog() {
+  dialog.showOpenDialog({
+    properties: ['openDirectory', 'openFile'],
+  }, (fileNames) => {
+    let clean = fileNames[0].split('.');
+    if (clean.length == 1) // if there was a '.' then there is a file in it.
+      loadFolder(fileNames[0]);
+    else {
+      let fName = fileNames[0].split('/');
+      loadFile({
+        path: fileNames,
+        name: fName[fName.length - 1],
+      });
+    }
+  });
+}
+
+function getFiles(dir, fileList) {
+  fileList = fileList || [];
+  if (!fs.statSync(dir).isDirectory()) {
+    let name = dir.split('/');
+    return [{
+      path: dir,
+      name: name[name.length - 1],
+    },
+    ];
+  } // if the file has no suffix e.g "LISCENCE"
+
+  var files = fs.readdirSync(dir);
+  for (var i in files) {
+    if (!files.hasOwnProperty(i)) continue;
+    var path = dir + '/' + files[i];
+    if (fs.statSync(path).isDirectory()) {
+      getFiles(path, fileList);
+    } else {
+      let name = path.split('/');
+      fileList.push({
+        path: path,
+        name: name[name.length - 1],
+      });
+    }
+  }
+
+  return fileList;
+}
+
+function loadFile(file) {
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == '') {
-    newTextEditor('textEditor');
+    newTextEditor(file.name);
     let card = getLastCard();
     $('#card_' + card.id + 'codeEditor_0').load(file.path);
     return;
   } else if (getFileName == '.png' || getFileName == '.jpg' ||
     getFileName == '.gif' || getFileName == '.webp') {
-    newSketchpad('sketch');
+    newSketchpad(file.name);
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ')';
     url = url.replace(/\\/g, '/'); // clean URL for windows '\' separator
@@ -65,7 +116,7 @@ function loadFile() {
   if (mode == 'ace/mode/text') // if it had to resolve to text then ext not found
     alert('The selected file cannot be loaded.');
   else { // if not it was found, load the file
-    newCodeEditor(getFileName);
+    newCodeEditor(getFileName, file.name);
     let card = getLastCard();
     $.get(file.path, resp => card.editors[0].setValue(resp));
   }

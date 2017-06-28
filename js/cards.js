@@ -1,5 +1,5 @@
 class Card {
-  constructor(type) {
+  constructor(type, name) {
     this.id = this.nextId();
     this.parentStackID;
     this.channels = [];
@@ -23,7 +23,14 @@ class Card {
       id: "header_" + this.id,
       class: "card-header"
     });
-    $(header).html("card: " + this.id);
+      
+    let nameBox = document.createElement("span")
+    $(nameBox).addClass("nameBox")
+    if (name != undefined)
+      $(nameBox).html(name);
+    else
+      $(nameBox).html("Card: " + this.id);
+    $(header).append(nameBox)
 
     var close_button = document.createElement('button');
     $(close_button).attr({
@@ -45,7 +52,6 @@ class Card {
       id: "fullscreen_button_" + this.id,
       class: "expand"
     });
-    console.log(this);
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
 
@@ -140,7 +146,6 @@ class Card {
   }
 
   toggleFullScreen() {
-    console.log(this)
     if (!$(this.card).hasClass('fullscreen')) { // transition to fullscreen
       $(this.card).attr('prevStyle', $(this.card)[0].style.cssText);
       $(this.card).addClass('fullscreen').removeAttr('style');
