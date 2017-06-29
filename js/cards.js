@@ -9,6 +9,14 @@ class Card {
     const username = require('username');
     this.creator = username.sync();
 
+    this.cardBuilder(type,name)
+    this.setDraggable();
+    this.setDroppable();
+    this.ipcListeners();
+    this.arrowListeners();
+  }
+  
+  cardBuilder(type,name){
     var card = document.createElement('div');
     $(card).attr({
       id: "card_" + this.id,
@@ -57,11 +65,8 @@ class Card {
 
     card.appendChild(header);
     document.body.appendChild(card);
-    this.setDraggable();
-    this.setDroppable();
-    this.ipcListeners();
   }
-
+  
   destructor() {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
@@ -143,6 +148,20 @@ class Card {
         }
       }
     });
+  }
+  
+  arrowListeners(){
+    $(this.card).mouseenter(() => {
+      $(this.card.lastElementChild).find(".slick-arrow").show()
+      $(this.card.lastElementChild).find(".slick-dots").show()
+    })
+    $(this.card).mouseout(() => setTimeout(() => {
+      console.log($(this.card).focus())
+      if(!$(this.card.lastElementChild).is(":hover")){//if not hovering on arrow
+        $(this.card.lastElementChild).find(".slick-arrow").fadeOut()       
+        $(this.card.lastElementChild).find(".slick-dots").fadeOut()
+      }
+    },600))
   }
 
   toggleFullScreen() {

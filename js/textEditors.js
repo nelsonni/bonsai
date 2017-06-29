@@ -42,6 +42,8 @@ class TextEditor extends Card {
       infinite: false,
       edgeFriction: true
     });
+    $(content).find(".slick-arrow").hide()
+    $(content).find(".slick-dots").hide()
     card.appendChild(content);
   }
   toggleFullscreen() {
