@@ -102,9 +102,10 @@ class Stack {
   // add individual card to the top of the stack
   addCard(card) {
     let cur = this.getCardObject(card);
+    cur.inStack = true;
     cur.parentStackID = this.id;
     cur.ipcListeners();
-    var ids = jQuery.map(this.cards, function(stackCard) {
+    var ids = jQuery.map(this.cards, function (stackCard) {
       return parseInt(stackCard.card.id.split("_")[1]);
     });
     var new_id = parseInt($(card).attr('id').split("_")[1]);
@@ -130,6 +131,7 @@ class Stack {
   // remove individual card from the stack
   removeCard(card) {
     let cleanID = card[0].id.split("_")[1];
+    currentCards[cleanID].inStack = false;
     __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id, true)
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function (n) {
@@ -174,6 +176,7 @@ class Stack {
       drop: (event, ui) => {
         // handle card-to-stack drop event
         if ($(ui.draggable).hasClass('card')) {
+          console.log(this)
           this.addCard($(ui.draggable));
           this.cascadeCards();
           this.resizeStack();

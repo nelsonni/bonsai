@@ -2,6 +2,7 @@ class Card {
   constructor(type, name) {
     this.id = this.nextId();
     this.parentStackID;
+    this.inStack = false;
     this.channels = [];
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
@@ -9,14 +10,14 @@ class Card {
     const username = require('username');
     this.creator = username.sync();
 
-    this.cardBuilder(type,name)
+    this.cardBuilder(type, name)
     this.setDraggable();
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
   }
-  
-  cardBuilder(type,name){
+
+  cardBuilder(type, name) {
     var card = document.createElement('div');
     $(card).attr({
       id: "card_" + this.id,
@@ -31,7 +32,7 @@ class Card {
       id: "header_" + this.id,
       class: "card-header"
     });
-      
+
     let nameBox = document.createElement("span")
     $(nameBox).addClass("nameBox")
     if (name != undefined)
@@ -62,16 +63,15 @@ class Card {
     });
     $(fullscreen_button).click(() => this.toggleFullScreen());
     header.appendChild(fullscreen_button);
-
     card.appendChild(header);
     document.body.appendChild(card);
   }
-  
+
   destructor() {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
-  ipcListeners() {}
+  ipcListeners() {} // to be rewritten by child classes
 
   getCardObject(card) {
     let id = (card[0].id).split("_");
@@ -149,19 +149,22 @@ class Card {
       }
     });
   }
-  
-  arrowListeners(){
+
+  arrowListeners() {
     $(this.card).mouseenter(() => {
-      $(this.card.lastElementChild).find(".slick-arrow").show()
-      $(this.card.lastElementChild).find(".slick-dots").show()
-    })
-    $(this.card).mouseout(() => setTimeout(() => {
-      console.log($(this.card).focus())
-      if(!$(this.card.lastElementChild).is(":hover")){//if not hovering on arrow
-        $(this.card.lastElementChild).find(".slick-arrow").fadeOut()       
-        $(this.card.lastElementChild).find(".slick-dots").fadeOut()
+      if (this.inStack == false) {
+        $(this.card.lastElementChild).find(".slick-arrow").show()
+        $(this.card.lastElementChild).find(".slick-dots").show()
       }
-    },600))
+    });
+    $(this.card).mouseout(() => setTimeout(() => {
+      if (!$(this.card.lastElementChild).is(":hover") &&
+        !$(document.activeElement).hasClass("ace_text-input") ||
+        this.inStack == true) { //if not hovering on arrow
+        $(this.card.lastElementChild).find(".slick-arrow").hide()
+        $(this.card.lastElementChild).find(".slick-dots").hide()
+      }
+    }, 600))
   }
 
   toggleFullScreen() {
