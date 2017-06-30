@@ -58,6 +58,8 @@ class CodeEditor extends Card {
       infinite: false,
       edgeFriction: true
     });
+    $(content).find(".slick-arrow").hide()
+    $(content).find(".slick-dots").hide()
     card.appendChild(content);
     // leave out last card so it can be used for metadata
     this.initAce(faces.slice(0, faces.length - 1));
