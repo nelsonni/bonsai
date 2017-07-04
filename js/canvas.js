@@ -10,8 +10,8 @@ function newSketchpad(name) {
   currentCards[card.id] = card;
 }
 
-function newCodeEditor(fileExt, name) {
-  let card = new CodeEditor('codeEditor', fileExt, name);
+function newCodeEditor(fileExt, name, path) {
+  let card = new CodeEditor('codeEditor', fileExt, name, path[0]);
   currentCards[card.id] = card;
 }
 
@@ -47,7 +47,7 @@ function loadFolder(dir) {
 function launchDialog() {
   dialog.showOpenDialog({
     properties: ['openDirectory', 'openFile'],
-  }, (fileNames) => {
+  }, (fileNames) => { // TODO: handle no file case
     let clean = fileNames[0].split('.');
     if (clean.length == 1) // if there was a '.' then there is a file in it.
       loadFolder(fileNames[0]);
@@ -66,10 +66,9 @@ function getFiles(dir, fileList) {
   if (!fs.statSync(dir).isDirectory()) {
     let name = dir.split('/');
     return [{
-        path: dir,
-        name: name[name.length - 1],
-    },
-    ];
+      path: dir,
+      name: name[name.length - 1],
+        }, ];
   } // if the file has no suffix e.g "LISCENCE"
 
   var files = fs.readdirSync(dir);
@@ -115,7 +114,7 @@ function loadFile(file) {
   if (mode == 'ace/mode/text') // if it had to resolve to text then ext not found
     alert('The selected file cannot be loaded.');
   else { // if not it was found, load the file
-    newCodeEditor(getFileName, file.name);
+    newCodeEditor(getFileName, file.name, file.path);
     let card = getLastCard();
     $.get(file.path, resp => card.editors[0].setValue(resp));
   }

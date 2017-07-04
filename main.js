@@ -1,10 +1,30 @@
 const cluster = require('cluster');
+const fs = require("fs");
 const numCPUs = require('os').cpus().length;
 if (cluster.isMaster) {
   const {
     app,
     BrowserWindow
   } = require('electron');
+  const {
+    ipcMain
+  } = require('electron')
+
+  ipcMain.on('asynchronous-message', (event, arg) => {
+    console.log(arg) // prints "ping"
+    event.sender.send('asynchronous-reply', 'pong')
+    fs.writeFile((arg.fileName).toString(), arg.data, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("The file was saved!");
+    });
+  })
+
+  ipcMain.on('synchronous-message', (event, arg) => {
+    console.log(arg) // prints "ping"
+    event.returnValue = 'pong'
+  })
 
   const path = require('path');
   const url = require('url');
@@ -57,8 +77,10 @@ if (cluster.isMaster) {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (win === null) {
+      console.log(app)
       createWindow();
     }
+
   })
 
 
@@ -76,6 +98,5 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 } else {
-  console.log("Alive and well")
   console.log(`Worker ${process.pid} started`);
 }

@@ -1,7 +1,7 @@
 require('./libs/ace/ext-modelist.js'); // Don't delete me! Needed by ace.req
 class CodeEditor extends Card {
-  constructor(type, fileExt, name) {
-    super(type, name);
+  constructor(type, fileExt, name, path) {
+    super(type, name, path);
     this.fileExt = fileExt;
     this.type = type;
     this.editors = [];
@@ -63,6 +63,15 @@ class CodeEditor extends Card {
     card.appendChild(content);
     // leave out last card so it can be used for metadata
     this.initAce(faces.slice(0, faces.length - 1));
+  }
+
+  saveTest() {
+    console.log("It worked!", this.editors[0].getValue())
+    console.log(this)
+    ipcRenderer.send('asynchronous-message', {
+      data: this.editors[0].getValue(),
+      fileName: this.name
+    });
   }
 
   initAce(faces) {

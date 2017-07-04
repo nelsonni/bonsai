@@ -1,9 +1,11 @@
 class Card {
-  constructor(type, name) {
+  constructor(type, name, path) {
     this.id = this.nextId();
     this.parentStackID;
     this.inStack = false;
     this.channels = [];
+    this.name = "";
+    this.location = path
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
@@ -35,10 +37,14 @@ class Card {
 
     let nameBox = document.createElement("span")
     $(nameBox).addClass("nameBox")
-    if (name != undefined)
+    if (name != undefined) {
       $(nameBox).html(name);
-    else
+      this.name = name
+    } else {
       $(nameBox).html("Card: " + this.id);
+      this.name = "Card: " + this.id;
+    }
+
     $(header).append(nameBox)
 
     var close_button = document.createElement('button');
@@ -54,7 +60,12 @@ class Card {
       cur.destructor();
       this.closest('.card').remove();
     });
+    let save = document.createElement("button")
+    $(save).html("save!")
+    $(save).click(() => this.saveTest())
+
     header.appendChild(close_button);
+    header.appendChild(save);
 
     var fullscreen_button = document.createElement('button');
     $(fullscreen_button).attr({
@@ -65,6 +76,10 @@ class Card {
     header.appendChild(fullscreen_button);
     card.appendChild(header);
     document.body.appendChild(card);
+  }
+  saveTest() {
+    // console.log()
+    // ipcRenderer.send('asynchronous-message', 'ping')
   }
 
   destructor() {
