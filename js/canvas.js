@@ -43,17 +43,6 @@ function loadFolder(dir) {
   files.forEach(ele => loadFile(ele));
 }
 
-function canvasSketch() {
-  var canvasPad = document.createElement('div');
-  $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
-  document.body.appendChild(canvasPad);
-  let canvasSketchpad = Raphael.sketchpad("canvasPad", {
-    height: '100%',
-    width: '100%',
-    editing: true
-  });
-}
-
 // todo check by fs.isdirectory
 function launchDialog() {
   dialog.showOpenDialog({
@@ -119,77 +108,123 @@ function loadFile(file) {
   }
 }
 
-var editor = document.getElementsByTagName('editor');
 $(window).mouseup(function(e){
     var text = '';
     text = getSelectedText();
+    // code = getSelectedCode();
     if(text != ''){
       console.log(text);
-        showContextMenu(text);
+      showContextMenu(text);
+      document.getElementById('dynamic').onclick = function(){
         dynamicCardCreationText(text);
+      }
     }
+  // if (code != ''){
+  //   showContextMenu(code);
+  //   document.getElementById('dynamic').onclick = function(){
+  //   dynamicCardCreationCode(code);
+  //   }
+  // }
 });
 
 function showContextMenu(text){
-  var menu = [{
-    name: 'Create new text editor card',
-    title: 'text editor card button',
-    fun: dynamicCardCreationText(text)
-  },{
-    name: 'Create new code editor card',
-    title: 'code editor card button',
-    fun: dynamicCardCreationCode(text)
-  }]
-    $('').contextMenu(menu, {
-      triggerOn: 'dblclick',
-      displayAround: cursor,
-      mouseClick: left,
-      delay: 500,
-      closeOnClick: true,
-      autoHide: true,
+  $(window).contextmenu(function(e){
+    var button = document.querySelector('.dropdown.hidden');
+    x = e.clientX;
+    y = e.clientY;
+    if (document.getElementById('hidden')){
+      button.removeAttribute('id');
+    }
+    button.style.top = x + 'px';
+    button.style.left = y + 'px';
+    window.addEventListener("click", function(){
+      button.setAttribute('id', 'hidden');
+    });
   });
 }
 
-function getLastCard() {
-   let temp = Object.values(currentCards);
-   return temp[temp.length - 1];
- }
-
 function getSelectedText() {
-   var text = "";
-   if(window.getSelection){
-     return window.getSelection().toString();
-   }
-   else if(document.selection){
-     return document.selection.createRange().text;
-   }
-   return '';
- }
+  var text = "";
+  if(window.getSelection){
+   return window.getSelection().toString();
+  }
+  else if(document.selection){
+   return document.selection.createRange().text;
+  }
+  return '';
+}
+
+// function getSelectedCode() {
+//   let card = getLastCard();
+//   editor.getSelectedText();
+//   return '';
+//
+// }
 
 function dynamicCardCreationText(text){
     console.log("in dynamicCardCreationText");
-    document.onmouseup = getSelectedText;
-    if(!document.all)
-    document.captureEvents(Event.MOUSEUP);
     newTextEditor('editor');
     let card = getLastCard();
-      $("#card_" + card.id + 'codeEditor_0').val($('.editor').val()+text);
+      $("#card_" + card.id + 'codeEditor_0').val($('.editor').val() + text);
 }
 
 function dynamicCardCreationCode(code){
   console.log("in dynamicCardCreationEditor");
+  console.log("code:", code);
+  var code2 = String(code);
   newCodeEditor('editor');
     let card = getLastCard();
-    $.get(code, (r) => card.editors[0].setValue(r));
+    // $.get(code, (r) => card.editors[0].setValue(r));
+    card.editors[0].setValue(code2);
 }
 
-// function dynamicCardCreationSketch(){
-//   var screenCapturedImage =
-//   newSketchpad('sketch');
-//   let card = getLastCard();
-//   var url = 'url(file:///' + file.path + ")";
-//  -    // url.replace(/\\/g,"/"); //need to replace forward slash with backslash so files load on Windows
-//  +    url = url.replace(/\\/g,"/");
-//       console.log(url);
-//       $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
-// }
+var canvasPad = document.createElement('div');
+$(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+  document.body.appendChild(canvasPad);
+let canvasSketchpad = Raphael.sketchpad("canvasPad", {
+  height: '100%',
+  width: '100%',
+  editing: false
+});
+
+function canvasSnapshot(){
+  newSketchpad("sketch");
+  let card = getLastCard();
+  // $("#card_" + card.id + 'sketch_0');
+    card.sketches.push(canvasSketchpad);
+}
+
+function toggleDynamicButtons(){
+  var x = document.getElementById('onoffButtons');
+  var editing;
+  if(x.style.display === 'block'){
+    x.style.display = 'none';
+    canvasSketchpad = Raphael.sketchpad("canvasPad", {
+      height: '100%',
+      width: '100%',
+      editing: false
+    });
+    return canvasSketchpad;
+  }
+  else{
+    x.style.display = 'block';
+    canvasSketchpad = Raphael.sketchpad("canvasPad", {
+      height: '100%',
+      width: '100%',
+      editing: true
+    });
+    return canvasSketchpad;
+  }
+};
+
+function clearCanvas(){
+  document.body.removeChild(canvasPad);
+  canvasPad = document.createElement('div');
+  $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+  document.body.appendChild(canvasPad);
+  let canvasSketchpad = Raphael.sketchpad("canvasPad", {
+    height: '100%',
+    width: '100%',
+    editing: true
+  });
+}

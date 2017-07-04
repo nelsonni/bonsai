@@ -379,20 +379,10 @@ div.canvas-sketch {
     background-color: rgb(0, 150, 136);
 }
 
-.showBorders{
-  position = "absolute";
-  left = e.pageX + "px";
-  top = e.pageY + "px";
-  background = "transparent";
-  borderColor = "black";
-  borderWidth = "2px";
+#hidden{
+  display: none;
 }
 
-.hideBorders{
-  position = "absolute";
-  left = e.pageX + "px";
-  top = e.pageY + "px";
-  background = "transparent";
-  borderColor = "black";
-  borderWidth = "2px";
+#onoffButtons{
+  display: none;
 }

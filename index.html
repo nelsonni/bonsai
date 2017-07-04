@@ -82,14 +82,20 @@
       <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
       <label class="onoffswitch-label" for="myonoffswitch">
         <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-      </label>
+        <span onclick="toggleDynamicButtons()" id="switch" class="onoffswitch-switch"></span>
     </div>
-    <div id="onoffButtons" class="onoff-content">
-      <!-- <button onclick="canvasSketch()" >Sketch</button> -->
-      <!-- <button onclick="canvasAnnotation()">Annotate</button> -->
+    <div id="onoffButtons" class="onoff-content" class= "hidden">
       <button onclick="canvasSnapshot()">Snapshot</button>
-      <button onclick="clearCanvas()">Clear</button>
+      <button id="clearButton" onclick="clearCanvas()">Clear</button>
+    </div>
+  </div>
+
+  <div id="hidden" class="dropdown hidden">
+    <button class="dropdown-button new_card"></button>
+    <div id="new_card_menu" class="dropdown-content top-left">
+      <button id="dynamic" class="first">Export to new card</button>
+      <!-- <button onclick="newSketchpad()">Sketchpad</button>
+      <button onclick="newTextEditor()">Text Editor</button> -->
     </div>
   </div>
 
