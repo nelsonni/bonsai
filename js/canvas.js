@@ -92,13 +92,13 @@ function getFiles(dir, fileList) {
 function loadFile(file) {
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == '') {
-    newTextEditor(file.name);
+    newTextEditor(file);
     let card = getLastCard();
     $('#card_' + card.id + 'codeEditor_0').load(file.path);
     return;
   } else if (getFileName == '.png' || getFileName == '.jpg' ||
     getFileName == '.gif' || getFileName == '.webp') {
-    newSketchpad(file.name);
+    newSketchpad(file);
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ')';
     url = url.replace(/\\/g, '/'); // clean URL for windows '\' separator
