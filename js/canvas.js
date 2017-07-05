@@ -10,8 +10,9 @@ function newSketchpad(name) {
   currentCards[card.id] = card;
 }
 
-function newCodeEditor(fileExt, name, path) {
-  let card = new CodeEditor('codeEditor', fileExt, name, path[0]);
+function newCodeEditor(fileData) {
+  console.log(fileData)
+  let card = new CodeEditor('codeEditor', fileData);
   currentCards[card.id] = card;
 }
 
@@ -68,7 +69,7 @@ function getFiles(dir, fileList) {
     return [{
       path: dir,
       name: name[name.length - 1],
-        }, ];
+    }, ];
   } // if the file has no suffix e.g "LISCENCE"
 
   var files = fs.readdirSync(dir);
@@ -113,8 +114,12 @@ function loadFile(file) {
   let mode = modelist.getModeForPath(getFileName).mode;
   if (mode == 'ace/mode/text') // if it had to resolve to text then ext not found
     alert('The selected file cannot be loaded.');
-  else { // if not it was found, load the file
-    newCodeEditor(getFileName, file.name, file.path);
+  else { // if not it was found, load the file as txt
+    newCodeEditor({
+      ext: getFileName,
+      name: file.name,
+      path: file.path[0]
+    });
     let card = getLastCard();
     $.get(file.path, resp => card.editors[0].setValue(resp));
   }

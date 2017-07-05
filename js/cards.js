@@ -1,25 +1,40 @@
 class Card {
-  constructor(type, name, path) {
+  constructor(type, fileData) {
     this.id = this.nextId();
     this.parentStackID;
     this.inStack = false;
     this.channels = [];
+    fileData = this.objectCleaner(fileData)
+
+    // For book keeping saving files
     this.name = "";
-    this.location = path
+    this.fileExt = fileData.ext;
+    this.location = fileData.path
+
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
     // npm module: username, url: https://www.npmjs.com/package/username
     const username = require('username');
     this.creator = username.sync();
 
-    this.cardBuilder(type, name)
+    this.cardBuilder(type, fileData)
     this.setDraggable();
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
   }
 
-  cardBuilder(type, name) {
+  objectCleaner(fileData) {
+    console.log(fileData)
+    for (var key in fileData) {
+      if (fileData[key] == undefined)
+        fileData[key] = ""
+    }
+    console.log(fileData)
+    return fileData
+  }
+
+  cardBuilder(type, fileData) {
     var card = document.createElement('div');
     $(card).attr({
       id: "card_" + this.id,
@@ -28,6 +43,7 @@ class Card {
     });
     this.card = card;
     let cur = this;
+    console.log(fileData)
 
     var header = document.createElement('div');
     $(header).attr({
@@ -37,9 +53,9 @@ class Card {
 
     let nameBox = document.createElement("span")
     $(nameBox).addClass("nameBox")
-    if (name != undefined) {
-      $(nameBox).html(name);
-      this.name = name
+    if (fileData.name != undefined) {
+      $(nameBox).html(fileData.name);
+      this.name = fileData.name
     } else {
       $(nameBox).html("Card: " + this.id);
       this.name = "Card: " + this.id;
@@ -52,7 +68,7 @@ class Card {
       id: "close_button_" + this.id,
       class: "close"
     });
-    $(close_button).click(function () {
+    $(close_button).click(function() {
       let card = this.closest('.card');
       let id = (card.id).split("_");
       let cleanID = parseInt(id[id.length - 1]);
@@ -147,7 +163,7 @@ class Card {
       classes: {
         'ui-droppable-hover': 'highlight'
       },
-      drop: function (event, ui) {
+      drop: function(event, ui) {
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));
