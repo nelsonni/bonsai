@@ -131,9 +131,10 @@ class Stack {
 
   // remove individual card from the stack
   removeCard(card) {
-    let cleanID = card[0].id.split("_")[1];
+    let cleanID = card[0].id.split('_')[1];
     currentCards[cleanID].inStack = false;
-    __IPC.ipcRenderer.send("card" + cleanID + "_toggle_sketches" + this.id, true)
+    __IPC.ipcRenderer.send('card' + cleanID + '_toggle_sketches' + this.id, true);
+
     // grep returning only cards that do not contain the target id
     this.cards = $.grep(this.cards, function (n) {
       return $(n.card).attr('id') !== card.attr('id');
@@ -179,7 +180,7 @@ class Stack {
       drop: (event, ui) => {
         // handle card-to-stack drop event
         if ($(ui.draggable).hasClass('card')) {
-          console.log(this)
+          console.log(this);
           this.addCard($(ui.draggable));
           this.cascadeCards();
           this.resizeStack();
