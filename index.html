@@ -37,13 +37,10 @@
     const {
       ipcRenderer
     } = require('electron')
-    console.log(__IPC, ipcRenderer)
-    console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+    console.log({__IPC})
+    console.log(ipcRenderer.send('message', 'ping')) // prints "pong"
 
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
-      console.log(arg) // prints "pong"
-    })
-    // ipcRenderer.send('asynchronous-message', 'ping')
+  
 
     // dynamically load all CSS files
     fromDir('css', '.css', function(filename) {

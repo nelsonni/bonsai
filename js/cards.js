@@ -43,7 +43,6 @@ class Card {
     });
     this.card = card;
     let cur = this;
-    console.log(fileData)
 
     var header = document.createElement('div');
     $(header).attr({

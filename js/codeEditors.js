@@ -69,7 +69,7 @@ class CodeEditor extends Card {
   saveTest() {
     console.log("It worked!", this.editors[0].getValue())
     console.log(this)
-    ipcRenderer.send('asynchronous-message', {
+    ipcRenderer.send('saveSignal', {
       data: this.editors[0].getValue(),
       fileName: this.name
     });
