@@ -117,6 +117,7 @@ class Sketchpad extends Card {
       });
       content.appendChild(element);
     });
+
     $(content).slick({
       dots: true,
       swipe: false,
@@ -124,8 +125,8 @@ class Sketchpad extends Card {
       infinite: false,
       edgeFriction: true,
     });
-    $(content).find(".slick-arrow").hide()
-    $(content).find(".slick-dots").hide()
+    $(content).find('.slick-arrow').hide();
+    $(content).find('.slick-dots').hide();
     card.appendChild(content);
   }
 }
