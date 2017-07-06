@@ -7,6 +7,18 @@ class TextEditor extends Card {
     this.contentBuilder(this.card);
     this.buildMetadata("codeEditor");
   }
+  saveCard() {
+    if (this.name.split(" ")[0] == "Card:")
+      dialog.showSaveDialog((filePath) => {
+        this.location = filePath
+        this.name = filePath.split("/")[filePath.split("/").length - 1]
+        ipcRenderer.send('saveSignal', {
+          data: this.editors[0].value,
+          fileName: this.name,
+          location: this.location
+        });
+      })
+  }
   contentBuilder(card) {
     var content = document.createElement('div');
     $(content).attr({

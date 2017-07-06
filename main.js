@@ -7,6 +7,7 @@ const {
   BrowserWindow,
   ipcMain
 } = require('electron');
+
 ipcMain.on('saveSignal', (event, arg) => daemons.send(arg))
 
 const path = require('path');

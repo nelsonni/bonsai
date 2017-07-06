@@ -77,7 +77,7 @@ class Card {
     });
     let save = document.createElement("button")
     $(save).html("save!")
-    $(save).click(() => this.saveTest())
+    $(save).click(() => this.saveCard())
 
     header.appendChild(close_button);
     header.appendChild(save);

@@ -66,13 +66,17 @@ class CodeEditor extends Card {
     this.initAce(faces.slice(0, faces.length - 1));
   }
 
-  saveTest() {
-    console.log("It worked!", this.editors[0].getValue())
-    console.log(this)
-    ipcRenderer.send('saveSignal', {
-      data: this.editors[0].getValue(),
-      fileName: this.name
-    });
+  saveCard() {
+    if (this.name.split(" ")[0] == "Card:")
+      dialog.showSaveDialog((filePath) => {
+        this.location = filePath
+        this.name = filePath.split("/")[filePath.split("/").length - 1]
+        ipcRenderer.send('saveSignal', {
+          data: this.editors[0].getValue(),
+          fileName: this.name,
+          location: this.location
+        });
+      })
   }
 
   initAce(faces) {
