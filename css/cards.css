@@ -63,7 +63,8 @@ div.card-header button {
   border: none;
 }
 
-div.card-header button:hover, div.card-header button:focus {
+div.card-header button:hover,
+div.card-header button:focus {
   outline: none;
 }
 
@@ -86,7 +87,8 @@ button.close {
   border-radius: 50%;
 }
 
-button.close:hover, button.close:active {
+button.close:hover,
+button.close:active {
   background-image: url("../assets/close_active.svg");
 }
 
@@ -98,7 +100,8 @@ button.expand {
   border-radius: 0;
 }
 
-button.expand:hover, button.expand:active {
+button.expand:hover,
+button.expand:active {
   background-image: url("../assets/expand_active.svg");
 }
 
@@ -106,6 +109,7 @@ button.expand.fullscreen {
   background-image: url("../assets/collapse_dark.svg");
 }
 
-button.expand.fullscreen:hover, button.expand.fullscreen:active {
+button.expand.fullscreen:hover,
+button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
 }

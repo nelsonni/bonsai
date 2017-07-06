@@ -76,6 +76,7 @@ class CodeEditor extends Card {
           fileName: this.name,
           location: this.location
         });
+        $(this.card).addClass("saving")
       })
   }
 

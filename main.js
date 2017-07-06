@@ -1,5 +1,5 @@
 const fs = require("fs");
-var startDaemon = require("./daemon-init")
+var startDaemon = require("./multi-threading/daemon-init")
 var daemons = startDaemon("save-daemon")
 
 const {
@@ -8,14 +8,17 @@ const {
   ipcMain
 } = require('electron');
 
-ipcMain.on('saveSignal', (event, arg) => daemons.send(arg))
-
 const path = require('path');
 const url = require('url');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+
+// communication between child processes and the ipcRenderer (UI window)
+daemons.on("message", (m) => win.webContents.send('saveComplete', "saveComplete"))
+ipcMain.on('saveSignal', (event, arg) => daemons.send(arg))
+
 
 function createWindow() {
   // Create the browser window.
