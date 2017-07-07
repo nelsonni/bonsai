@@ -76,14 +76,12 @@ class Card {
 
     $(header).append(nameBox)
 
-    $(header).append(nameBox);
-
     var closeButton = document.createElement('button');
     $(closeButton).attr({
       id: 'close_button_' + this.id,
       class: 'close',
     });
-    $(close_button).click(function() {
+    $(closeButton).click(function() {
       let card = this.closest('.card');
       let id = (card.id).split('_');
       let cleanID = parseInt(id[id.length - 1]);
@@ -94,11 +92,10 @@ class Card {
     let save = document.createElement("button")
     $(save).html("save!")
     $(save).click(() => this.saveCard())
-
-    header.appendChild(close_button);
+    header.appendChild(closeButton);
     header.appendChild(save);
 
-    header.appendChild(closeButton);
+    
 
     var fullscreenButton = document.createElement('button');
     $(fullscreenButton).attr({
