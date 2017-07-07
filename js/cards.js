@@ -4,6 +4,7 @@ class Card {
     this.parentStackID;
     this.inStack = false;
     this.channels = [];
+    this.carousel;
     fileData = this.objectCleaner(fileData)
 
     // For book keeping saving files
@@ -22,15 +23,27 @@ class Card {
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
+    ipcRenderer.on("saveComplete", () => $('body').removeClass('waiting'));
   }
 
+  saveCard() {
+    let curIdx = $(this.carousel).slick("slickCurrentSlide")    
+    if (this.name.split(" ")[0] == "Card:")
+      dialog.showSaveDialog((filePath) => {
+        this.location = filePath
+        this.name = filePath.split("/")[filePath.split("/").length - 1]
+        this.sendSave(curIdx)
+        $(this.card).find(".nameBox").html(this.name)
+      })
+    else
+      this.sendSave(curIdx)
+  } // sendSave is written by children
+
   objectCleaner(fileData) {
-    console.log(fileData)
     for (var key in fileData) {
       if (fileData[key] == undefined)
         fileData[key] = ""
     }
-    console.log(fileData)
     return fileData
   }
 
@@ -92,16 +105,13 @@ class Card {
     card.appendChild(header);
     document.body.appendChild(card);
   }
-  saveTest() {
-    // console.log()
-    // ipcRenderer.send('asynchronous-message', 'ping')
-  }
 
   destructor() {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
   ipcListeners() {} // to be rewritten by child classes
+  sendSave(){}
 
   getCardObject(card) {
     let id = (card[0].id).split("_");

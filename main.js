@@ -15,7 +15,7 @@ const url = require('url');
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-// communication between child processes and the ipcRenderer (UI window)
+// Communication between child processes and the ipcRenderer (UI window)
 daemons.on("message", (m) => win.webContents.send('saveComplete', "saveComplete"))
 ipcMain.on('saveSignal', (event, arg) => daemons.send(arg))
 

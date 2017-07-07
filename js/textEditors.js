@@ -8,25 +8,16 @@ class TextEditor extends Card {
     this.buildMetadata("codeEditor");
   }
 
-  saveCard() {
-    if (this.name.split(" ")[0] == "Card:")
-      dialog.showSaveDialog((filePath) => {
-        this.location = filePath
-        this.name = filePath.split("/")[filePath.split("/").length - 1]
-        this.sendSave()
-      })
-    else
-      this.sendSave()
-  }
 
-  sendSave() {
+  sendSave(idx) {
     ipcRenderer.send('saveSignal', {
-      data: this.editors[0].value,
+      data: this.editors[idx].value,
       fileName: this.name,
       location: this.location
     });
-    this.editors.forEach(ele => $(ele).css("cursor", "progress"))
+    $('body').addClass('waiting');
   }
+
   contentBuilder(card) {
     var content = document.createElement('div');
     $(content).attr({
@@ -62,10 +53,13 @@ class TextEditor extends Card {
       infinite: false,
       edgeFriction: true
     });
+    this.carousel = content;
     $(content).find(".slick-arrow").hide()
     $(content).find(".slick-dots").hide()
     card.appendChild(content);
   }
+
+
   toggleFullscreen() {
     __IPC.remote.ipcMain.on("card" + this.id + "_toggle_fullscreen", (event, args) => {
       this.editors.forEach((ele, idx) => {
@@ -79,9 +73,5 @@ class TextEditor extends Card {
 
   ipcListeners() {
     this.toggleFullscreen();
-    ipcRenderer.on("saveComplete", () => this.editors.forEach(ele => {
-      $(ele).css("cursor", "text")
-    }));
-
   }
 }

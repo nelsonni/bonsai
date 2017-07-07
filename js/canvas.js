@@ -11,7 +11,6 @@ function newSketchpad(name) {
 }
 
 function newCodeEditor(fileData) {
-  console.log(fileData)
   let card = new CodeEditor('codeEditor', fileData);
   currentCards[card.id] = card;
 }
@@ -48,7 +47,9 @@ function loadFolder(dir) {
 function launchDialog() {
   dialog.showOpenDialog({
     properties: ['openDirectory', 'openFile'],
-  }, (fileNames) => { // TODO: handle no file case
+  }, (fileNames) => {
+    if(fileNames== undefined)
+      return
     let clean = fileNames[0].split('.');
     if (clean.length == 1) // if there was a '.' then there is a file in it.
       loadFolder(fileNames[0]);
