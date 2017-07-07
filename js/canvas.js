@@ -5,6 +5,16 @@ function newTextEditor(name) {
   currentCards[card.id] = card;
 }
 
+$(function(){
+      $("*").selectable({
+        filter: ".card",
+        classes: {
+         "ui-selecting": "highlight",
+         "ui-selected": "highlight"
+        }
+      })
+    });
+
 function newSketchpad(name) {
   let card = new Sketchpad('sketch', name);
   currentCards[card.id] = card;
