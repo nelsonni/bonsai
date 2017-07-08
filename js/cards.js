@@ -1,9 +1,17 @@
 class Card {
-  constructor(type, name) {
+  constructor(type, fileData) {
     this.id = this.nextId();
     this.parentStackID;
     this.inStack = false;
     this.channels = [];
+    this.carousel;
+    fileData = this.objectCleaner(fileData)
+
+    // For book keeping saving files
+    this.name = "";
+    this.fileExt = fileData.ext;
+    this.location = fileData.path
+
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
 
@@ -11,14 +19,36 @@ class Card {
     const username = require('username');
     this.creator = username.sync();
 
-    this.cardBuilder(type, name);
+    this.cardBuilder(type, fileData)
     this.setDraggable();
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
+    ipcRenderer.on("saveComplete", () => $('body').removeClass('waiting'));
   }
 
-  cardBuilder(type, name) {
+  saveCard() {
+    let curIdx = $(this.carousel).slick("slickCurrentSlide")    
+    if (this.name.split(" ")[0] == "Card:")
+      dialog.showSaveDialog((filePath) => {
+        this.location = filePath
+        this.name = filePath.split("/")[filePath.split("/").length - 1]
+        this.sendSave(curIdx)
+        $(this.card).find(".nameBox").html(this.name)
+      })
+    else
+      this.sendSave(curIdx)
+  } // sendSave is written by children
+
+  objectCleaner(fileData) {
+    for (var key in fileData) {
+      if (fileData[key] == undefined)
+        fileData[key] = ""
+    }
+    return fileData
+  }
+
+  cardBuilder(type, fileData) {
     var card = document.createElement('div');
     $(card).attr({
       id: 'card_' + this.id,
@@ -34,22 +64,24 @@ class Card {
       class: 'card-header',
     });
 
-    let nameBox = document.createElement('span');
-    $(nameBox).addClass('nameBox');
-    if (name != undefined) {
-      $(nameBox).html(name);
+    let nameBox = document.createElement("span")
+    $(nameBox).addClass("nameBox")
+    if (fileData.name != undefined) {
+      $(nameBox).html(fileData.name);
+      this.name = fileData.name
     } else {
-      $(nameBox).html('Card: ' + this.id);
+      $(nameBox).html("Card: " + this.id);
+      this.name = "Card: " + this.id;
     }
 
-    $(header).append(nameBox);
+    $(header).append(nameBox)
 
     var closeButton = document.createElement('button');
     $(closeButton).attr({
       id: 'close_button_' + this.id,
       class: 'close',
     });
-    $(closeButton).click(function () {
+    $(closeButton).click(function() {
       let card = this.closest('.card');
       let id = (card.id).split('_');
       let cleanID = parseInt(id[id.length - 1]);
@@ -57,8 +89,13 @@ class Card {
       cur.destructor();
       this.closest('.card').remove();
     });
-
+    let save = document.createElement("button")
+    $(save).html("save!")
+    $(save).click(() => this.saveCard())
     header.appendChild(closeButton);
+    header.appendChild(save);
+
+    
 
     var fullscreenButton = document.createElement('button');
     $(fullscreenButton).attr({
@@ -76,6 +113,7 @@ class Card {
   }
 
   ipcListeners() {} // to be rewritten by child classes
+  sendSave(){}
 
   getCardObject(card) {
     let id = (card[0].id).split('_');
@@ -137,7 +175,7 @@ class Card {
       classes: {
         'ui-droppable-hover': 'highlight',
       },
-      drop: function (event, ui) {
+      drop: function(event, ui) {
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));

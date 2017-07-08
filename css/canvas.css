@@ -15,6 +15,9 @@ html {
 body {
   padding:10px;
 }
+body.waiting *{
+  cursor: progress;
+}
 label.inputHider {
     border: 1px solid #ccc;
     display: inline-block;

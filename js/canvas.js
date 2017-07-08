@@ -5,13 +5,23 @@ function newTextEditor(name) {
   currentCards[card.id] = card;
 }
 
+$(function(){
+      $("*").selectable({
+        filter: ".card",
+        classes: {
+         "ui-selecting": "highlight",
+         "ui-selected": "highlight"
+        }
+      })
+    });
+
 function newSketchpad(name) {
   let card = new Sketchpad('sketch', name);
   currentCards[card.id] = card;
 }
 
-function newCodeEditor(fileExt, name) {
-  let card = new CodeEditor('codeEditor', fileExt, name);
+function newCodeEditor(fileData) {
+  let card = new CodeEditor('codeEditor', fileData);
   currentCards[card.id] = card;
 }
 
@@ -48,6 +58,8 @@ function launchDialog() {
   dialog.showOpenDialog({
     properties: ['openDirectory', 'openFile'],
   }, (fileNames) => {
+    if(fileNames== undefined)
+      return
     let clean = fileNames[0].split('.');
     if (clean.length == 1) // if there was a '.' then there is a file in it.
       loadFolder(fileNames[0]);
@@ -68,8 +80,7 @@ function getFiles(dir, fileList) {
     return [{
       path: dir,
       name: name[name.length - 1],
-    },
-    ];
+    }, ];
   } // if the file has no suffix e.g "LISCENCE"
 
   var files = fs.readdirSync(dir);
@@ -86,20 +97,19 @@ function getFiles(dir, fileList) {
       });
     }
   }
-
   return fileList;
 }
 
 function loadFile(file) {
   var getFileName = (getFileExt(file.name)).toLowerCase();
   if (getFileName == '.txt' || getFileName == '') {
-    newTextEditor(file.name);
+    newTextEditor(file);
     let card = getLastCard();
     $('#card_' + card.id + 'codeEditor_0').load(file.path);
     return;
   } else if (getFileName == '.png' || getFileName == '.jpg' ||
     getFileName == '.gif' || getFileName == '.webp') {
-    newSketchpad(file.name);
+    newSketchpad(file);
     let card = getLastCard();
     var url = 'url(file:///' + file.path + ')';
     url = url.replace(/\\/g, '/'); // clean URL for windows '\' separator
@@ -115,8 +125,12 @@ function loadFile(file) {
   let mode = modelist.getModeForPath(getFileName).mode;
   if (mode == 'ace/mode/text') // if it had to resolve to text then ext not found
     alert('The selected file cannot be loaded.');
-  else { // if not it was found, load the file
-    newCodeEditor(getFileName, file.name);
+  else { // if not it was found, load the file as txt
+    newCodeEditor({
+      ext: getFileName,
+      name: file.name,
+      path: file.path[0]
+    });
     let card = getLastCard();
     $.get(file.path, resp => card.editors[0].setValue(resp));
   }
