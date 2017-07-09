@@ -22,7 +22,16 @@ function Testing() {
 function Version() {
   var appVersion = require('electron').remote.app.getVersion();
   var appName = require('electron').remote.app.getName();
-  alert(appName + ' IDE\nVersion: ' + appVersion);
+  var versionLogo = document.createElement('img');
+  $(versionLogo).attr('class', 'logo');
+  var versionDialog = document.createElement('div');
+  $(versionDialog).attr('class', 'dialog');
+  versionDialog.appendChild(versionLogo);
+
+  // $(versionDialog).text(appName + ' IDE\nVersion: ' + appVersion);
+  document.body.appendChild(versionDialog);
+
+  $('div.dialog').dialog({ width: 491, height: 436, modal: true });
 }
 
 function Playground() {
@@ -70,7 +79,7 @@ function getFiles(dir, fileList) {
       name: name[name.length - 1],
     },
     ];
-  } // if the file has no suffix e.g "LISCENCE"
+  } // if the file has no suffix e.g "LICENSE"
 
   var files = fs.readdirSync(dir);
   for (var i in files) {
