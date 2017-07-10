@@ -20,6 +20,7 @@
   <!-- Raphael.js library -->
   <script type="text/javascript" src="libs/sketching/raphael.min.js"></script>
   <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
+  <script type="text/javascript" src="libs/sketching/raphael.export.js"></script>
 
     <!-- Ace Library -->
     <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -49,6 +50,8 @@
       ref.setAttribute('src', filename);
       document.getElementsByTagName('head')[0].appendChild(ref);
     });
+
+    // let canvas = new Canvas();
 
   </script>
 </head>
@@ -94,6 +97,7 @@
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
       <button id="dynamic" class="first">Export to new card</button>
+      <button id="dynamic2" class="first">Export to new sketch card</button>
       <!-- <button onclick="newSketchpad()">Sketchpad</button>
       <button onclick="newTextEditor()">Text Editor</button> -->
     </div>

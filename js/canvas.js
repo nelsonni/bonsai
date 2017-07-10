@@ -1,3 +1,119 @@
+// class Canvas{
+//   constructor(){
+//     var canvasPad = document.createElement('div');
+//     $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+//       document.body.appendChild(canvasPad);
+//     this.canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       height: '100%',
+//       width: '100%',
+//       editing: false
+//     });
+//   }
+//
+//   canvasSnapshot(){
+//     newSketchpad("sketch");
+//     let card = getLastCard();
+//     // var url = 'url(file:///' + file.path + ")";
+//     // url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
+//     // $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
+//     var svg = canvasSketchpad.toSVG();
+//     canvg('card', svg);
+//   }
+//
+//   toggleDynamicButtons(){
+//     var x = document.getElementById('onoffButtons');
+//     var editing;
+//     if(x.style.display === 'block'){
+//       x.style.display = 'none';
+//       // canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       //   height: '100%',
+//       //   width: '100%',
+//       //   editing: false
+//       // });
+//       this.canvasSketchpad.attr("editing", false);
+//       return canvasSketchpad;
+//     }
+//     else{
+//       x.style.display = 'block';
+//       // canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       //   height: '100%',
+//       //   width: '100%',
+//       //   editing: true
+//       // });
+//       this.canvasSketchpad.attr("editing", true);
+//       return canvasSketchpad;
+//     }
+//   };
+//
+//   clearCanvas(){
+//     document.body.removeChild(canvasPad);
+//     canvasPad = document.createElement('div');
+//     $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+//     document.body.appendChild(canvasPad);
+//     let canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       height: '100%',
+//       width: '100%',
+//       editing: true
+//     });
+//   }
+// }
+
+    var canvasPad = document.createElement('div');
+    $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+      document.body.appendChild(canvasPad);
+    // this.canvasSketchpad = Raphael.sketchpad("canvasPad", {
+    //   height: '100%',
+    //   width: '100%',
+    //   editing: false
+    // });
+
+  function canvasSnapshot(){
+    newSketchpad("sketch");
+    let sketchCard = getLastCard();
+    // var url = 'url(file:///' + file.path + ")";
+    // url = url.replace(/\\/g, "/"); // clean URL for windows '\' separator
+    // $("#card_" + card.id + 'sketch_0').css("backgroundImage", url);
+    var svg = toggleDynamicButtons().toSVG();
+    canvg('sketchCard', svg);
+  }
+
+  function toggleDynamicButtons(){
+    var x = document.getElementById('onoffButtons');
+    var editing;
+    if(x.style.display === 'block'){
+      x.style.display = 'none';
+      canvasSketchpad = Raphael.sketchpad("canvasPad", {
+        height: '80%',
+        width: '100%',
+        editing: false
+      });
+      // canvasSketchpad.attr("editing", false);
+      return canvasSketchpad;
+    }
+    else{
+      x.style.display = 'block';
+      canvasSketchpad = Raphael.sketchpad("canvasPad", {
+        height: '80%',
+        width: '100%',
+        editing: true
+      });
+      // canvasSketchpad.attr("editing", true);
+      return canvasSketchpad;
+    }
+  };
+
+  function clearCanvas(){
+    document.body.removeChild(canvasPad);
+    canvasPad = document.createElement('div');
+    $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
+    document.body.appendChild(canvasPad);
+    let canvasSketchpad = Raphael.sketchpad("canvasPad", {
+      height: '100%',
+      width: '100%',
+      editing: true
+    });
+  }
+
 let currentCards = {}; //keep track of cards on canvas
 
 function newTextEditor() {
@@ -119,6 +235,9 @@ $(window).mouseup(function(e){
         dynamicCardCreationText(text);
       }
     }
+    document.getElementById('dynamic2').onclick = function(){
+      dynamicCardCreationSketch();
+    }
   // if (code != ''){
   //   showContextMenu(code);
   //   document.getElementById('dynamic').onclick = function(){
@@ -130,13 +249,11 @@ $(window).mouseup(function(e){
 function showContextMenu(text){
   $(window).contextmenu(function(e){
     var button = document.querySelector('.dropdown.hidden');
-    x = e.clientX;
-    y = e.clientY;
     if (document.getElementById('hidden')){
       button.removeAttribute('id');
     }
-    button.style.top = x + 'px';
-    button.style.left = y + 'px';
+    button.style.top = e.pageX + 'px';
+    button.style.left = e.pageY + 'px';
     window.addEventListener("click", function(){
       button.setAttribute('id', 'hidden');
     });
@@ -156,9 +273,7 @@ function getSelectedText() {
 
 // function getSelectedCode() {
 //   let card = getLastCard();
-//   editor.getSelectedText();
-//   return '';
-//
+//   ace_editor.setValue(text);
 // }
 
 function dynamicCardCreationText(text){
@@ -178,53 +293,30 @@ function dynamicCardCreationCode(code){
     card.editors[0].setValue(code2);
 }
 
-var canvasPad = document.createElement('div');
-$(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
-  document.body.appendChild(canvasPad);
-let canvasSketchpad = Raphael.sketchpad("canvasPad", {
-  height: '100%',
-  width: '100%',
-  editing: false
-});
+function dynamicCardCreationSketch(R){
+  var cloneSet;
 
-function canvasSnapshot(){
-  newSketchpad("sketch");
-  let card = getLastCard();
-  // $("#card_" + card.id + 'sketch_0');
-    card.sketches.push(canvasSketchpad);
+  R.el.cloneToPaper = function (targetPaper){
+    return (!this.removed &&
+      targetPaper[this.type]().attr(this.attr()));
+    };
+  R.st.cloneToPaper = function (targetPaper) {
+        targetPaper.setStart();
+        this.forEach(cloneSet || (cloneSet = function (el) {
+            el.cloneToPaper(targetPaper);
+        }));
+        return targetPaper.setFinish();
+    };
 }
 
-function toggleDynamicButtons(){
-  var x = document.getElementById('onoffButtons');
-  var editing;
-  if(x.style.display === 'block'){
-    x.style.display = 'none';
-    canvasSketchpad = Raphael.sketchpad("canvasPad", {
-      height: '100%',
-      width: '100%',
-      editing: false
-    });
-    return canvasSketchpad;
+$(window).contextmenu(function(e){
+  var button = document.querySelector('.dropdown.hidden');
+  if (document.getElementById('hidden')){
+    button.removeAttribute('id');
   }
-  else{
-    x.style.display = 'block';
-    canvasSketchpad = Raphael.sketchpad("canvasPad", {
-      height: '100%',
-      width: '100%',
-      editing: true
-    });
-    return canvasSketchpad;
-  }
-};
-
-function clearCanvas(){
-  document.body.removeChild(canvasPad);
-  canvasPad = document.createElement('div');
-  $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
-  document.body.appendChild(canvasPad);
-  let canvasSketchpad = Raphael.sketchpad("canvasPad", {
-    height: '100%',
-    width: '100%',
-    editing: true
+  button.style.top = e.pageX + 'px';
+  button.style.left = e.pageY + 'px';
+  window.addEventListener("click", function(){
+    button.setAttribute('id', 'hidden');
   });
-}
+});

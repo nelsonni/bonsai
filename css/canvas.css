@@ -297,12 +297,7 @@ input::-webkit-input-placeholder {
   display: none;
 }
 
-div.canvas-sketch {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background-color : transparent;
-}
+
 
 /*styling for onoff-switch to show/hide sketch and annotation buttons*/
 .onoff-content {
@@ -386,3 +381,10 @@ div.canvas-sketch {
 #onoffButtons{
   display: none;
 }
+
+/*div.canvas-sketch {
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  background-color : transparent;
+}*/
