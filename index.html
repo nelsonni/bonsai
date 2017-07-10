@@ -2,13 +2,13 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Bonsai IDE</title>
+  <meta charset="UTF-8">
+  <title>Bonsai IDE</title>
 
-    <!-- Stylesheets for all libraries -->
-    <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
+  <!-- Stylesheets for all libraries -->
+  <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
 
   <!-- JQuery and JQuery UI libraries -->
   <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
@@ -22,12 +22,12 @@
   <script type="text/javascript" src="libs/sketching/raphael.sketchpad.js"></script>
   <script type="text/javascript" src="libs/sketching/raphael.export.js"></script>
 
-    <!-- Ace Library -->
-    <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <srcipt src="libs/ace/ext-modelist.js"></srcipt>
+  <!-- Ace Library -->
+  <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+  <srcipt src="libs/ace/ext-modelist.js"></srcipt>
 
-    <!-- Bonsai CSS/JS dynamic dependency manager -->
-    <script type="text/javascript" src="dep_manager.js"></script>
+  <!-- Bonsai CSS/JS dynamic dependency manager -->
+  <script type="text/javascript" src="dep_manager.js"></script>
 
   <script>
     const __IPC = require("electron");
@@ -56,7 +56,7 @@
   </script>
 </head>
 
-<body class="container">
+<body class="container" onload="let canvas = new Canvas()">
   <div class="dropdown">
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
@@ -82,10 +82,10 @@
 
   <div id="sketched-and-annotations">
     <div id = "onoffswitch" class="onoffswitch">
-      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
       <label class="onoffswitch-label" for="myonoffswitch">
         <span class="onoffswitch-inner"></span>
-        <span onclick="toggleDynamicButtons()" id="switch" class="onoffswitch-switch"></span>
+        <span onclick="new Canvas()" id="switch" class="onoffswitch-switch"></span>
     </div>
     <div id="onoffButtons" class="onoff-content" class= "hidden">
       <button onclick="canvasSnapshot()">Snapshot</button>
