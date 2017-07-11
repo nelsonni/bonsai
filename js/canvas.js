@@ -5,15 +5,17 @@ function newTextEditor(name) {
   currentCards[card.id] = card;
 }
 
-$(function(){
-      $("*").selectable({
-        filter: ".card",
-        classes: {
-         "ui-selecting": "highlight",
-         "ui-selected": "highlight"
-        }
-      })
-    });
+$("*").selectable({
+  filter: ".card",
+  classes: {
+    "ui-selecting": "highlight",
+    "ui-selected": "highlight"
+  },
+  delay: 150
+})
+
+// to remove highlight field when clicking on the document 
+$(document).click(() => $(".card").removeClass("highlight"))
 
 function newSketchpad(name) {
   let card = new Sketchpad('sketch', name);
@@ -55,10 +57,11 @@ function loadFolder(dir) {
 
 // todo check by fs.isdirectory
 function launchDialog() {
+  console.log("FOOOOOO")
   dialog.showOpenDialog({
     properties: ['openDirectory', 'openFile'],
   }, (fileNames) => {
-    if(fileNames== undefined)
+    if (fileNames == undefined)
       return
     let clean = fileNames[0].split('.');
     if (clean.length == 1) // if there was a '.' then there is a file in it.

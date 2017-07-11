@@ -58,19 +58,14 @@
   </script>
 </head>
 
-<body class="container">
+<body class="container" height="500px" width="100%">
   <div class="dropdown">
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
       <button onclick="newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
       <button onclick="newSketchpad({ext: '.png'})">Sketchpad</button>
       <button onclick="newTextEditor({ext: '.txt'})">Text Editor</button>
-      <label class="inputHider">
-        <button id="fileInput"
-          onclick="launchDialog()" style="display:none;" value= "foo">
-        </button>
-          <span>Open...</span>
-      </label>
+      <button onclick="launchDialog()">Open..</button>
     </div>
   </div>
 
