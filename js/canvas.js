@@ -57,7 +57,6 @@ function loadFolder(dir) {
 
 // todo check by fs.isdirectory
 function launchDialog() {
-  console.log("FOOOOOO")
   dialog.showOpenDialog({
     properties: ['openDirectory', 'openFile'],
   }, (fileNames) => {
