@@ -8,6 +8,16 @@ class TextEditor extends Card {
     this.buildMetadata('codeEditor');
   }
 
+
+  sendSave(idx) {
+    ipcRenderer.send('saveSignal', {
+      data: this.editors[idx].value,
+      fileName: this.name,
+      location: this.location
+    });
+    $('body').addClass('waiting');
+  }
+
   contentBuilder(card) {
     var content = document.createElement('div');
     $(content).attr({
@@ -45,8 +55,9 @@ class TextEditor extends Card {
       infinite: false,
       edgeFriction: true,
     });
-    $(content).find('.slick-arrow').hide();
-    $(content).find('.slick-dots').hide();
+    this.carousel = content;
+    $(content).find(".slick-arrow").hide()
+    $(content).find(".slick-dots").hide()
     card.appendChild(content);
   }
 
