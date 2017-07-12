@@ -178,53 +178,26 @@ function dynamicCardCreationCode(code){
     card.editors[0].setValue(code2);
 }
 
-// var canvasPad = document.createElement('div');
-// $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
-//   document.body.appendChild(canvasPad);
-// let canvasSketchpad = Raphael.sketchpad("canvasPad", {
-//   height: '100%',
-//   width: '100%',
-//   editing: false
-// });
 
-function canvasSnapshot(){
-  newSketchpad("sketch");
-  let card = getLastCard();
-  // $("#card_" + card.id + 'sketch_0');
-    card.sketches.push(canvasSketchpad);
-}
-
-function toggleDynamicButtons(){
-  var x = document.getElementById('onoffButtons');
-  var editing;
-    if(x.style.display === 'block'){
-    x.style.display = 'none';
-    canvasSketchpad = Raphael.sketchpad("canvasPad", {
-      height: '100%',
-      width: '100%',
-      editing: false
-    });
-    return canvasSketchpad;
-  }
-  else{
-    x.style.display = 'block';
-    canvasSketchpad = Raphael.sketchpad("canvasPad", {
-      height: '100%',
-      width: '100%',
-      editing: true
-    });
-    return canvasSketchpad;
-  }
-};
-
-function clearCanvas(){
-  document.body.removeChild(canvasPad);
-  canvasPad = document.createElement('div');
-  $(canvasPad).attr({id: 'canvasPad', class: 'canvas-sketch'});
-  document.body.appendChild(canvasPad);
-  let canvasSketchpad = Raphael.sketchpad("canvasPad", {
-    height: '100%',
-    width: '100%',
-    editing: true
-  });
-}
+// function toggleDynamicButtons(){
+//   var x = document.getElementById('onoffButtons');
+//   var editing;
+//     if(x.style.display === 'block'){
+//     x.style.display = 'none';
+//     canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       height: '100%',
+//       width: '100%',
+//       editing: false
+//     });
+//     return canvasSketchpad;
+//   }
+//   else{
+//     x.style.display = 'block';
+//     canvasSketchpad = Raphael.sketchpad("canvasPad", {
+//       height: '100%',
+//       width: '100%',
+//       editing: true
+//     });
+//     return canvasSketchpad;
+//   }
+// };
