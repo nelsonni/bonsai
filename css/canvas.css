@@ -379,7 +379,8 @@ input::-webkit-input-placeholder {
 }
 
 #onoffButtons{
-  display: none;
+  /*display: none;*/
+  display: block;
 }
 
 /*div.canvas-sketch {
