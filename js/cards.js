@@ -28,7 +28,7 @@ class Card {
   }
 
   saveCard() {
-    let curIdx = $(this.carousel).slick("slickCurrentSlide")    
+    let curIdx = $(this.carousel).slick("slickCurrentSlide")
     if (this.name.split(" ")[0] == "Card:")
       dialog.showSaveDialog((filePath) => {
         this.location = filePath
@@ -95,7 +95,7 @@ class Card {
     header.appendChild(closeButton);
     header.appendChild(save);
 
-    
+
 
     var fullscreenButton = document.createElement('button');
     $(fullscreenButton).attr({
@@ -113,7 +113,7 @@ class Card {
   }
 
   ipcListeners() {} // to be rewritten by child classes
-  sendSave(){}
+  sendSave() {}
 
   getCardObject(card) {
     let id = (card[0].id).split('_');
@@ -160,7 +160,7 @@ class Card {
       containment: 'window',
       stack: '.card, .stack',
       start: (event, ui) => {
-        $(this.card).removeClass('atSpawn');
+        $(this.card).removeClass('atSpawn, highlight');
       },
       drag: (event, ui) => {
         this.interaction_timestamp = new Date().toString();
