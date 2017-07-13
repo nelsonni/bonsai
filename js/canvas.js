@@ -32,12 +32,9 @@ class Canvas {
     button.addEventListener('click', () => {
       console.log("listener version: " + this.canvas);
       var paper = this.canvas;
-      var svg = paper.toSVG();
       newSketchpad("sketch");
       let card = getLastCard();
-      canvg(document.getElementById('IDofCardCanvas'), svg);
       paper.clear();
-      // $("#card_" + card.id + 'sketch_0').
     });
   }
 

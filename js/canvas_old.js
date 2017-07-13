@@ -108,25 +108,6 @@ function loadFile(file) {
   }
 }
 
-$(window).mouseup(function(e){
-    var text = '';
-    text = getSelectedText();
-    // code = getSelectedCode();
-    if(text != ''){
-      console.log(text);
-      showContextMenu(text);
-      document.getElementById('dynamic').onclick = function(){
-        dynamicCardCreationText(text);
-      }
-    }
-  // if (code != ''){
-  //   showContextMenu(code);
-  //   document.getElementById('dynamic').onclick = function(){
-  //   dynamicCardCreationCode(code);
-  //   }
-  // }
-});
-
 function showContextMenu(text){
   $(window).contextmenu(function(e){
     var button = document.querySelector('.dropdown.hidden');
@@ -143,7 +124,29 @@ function showContextMenu(text){
   });
 }
 
+$(window).mouseup(function(e){
+    var text = '';
+    var code = '';
+    text = getSelectedText();
+    console.log(code);
+//     if(text != ''){
+//       console.log(text);
+//       showContextMenu(text);
+//       document.getElementById('dynamic').onclick = function(){
+//         dynamicCardCreationText(text);
+//       }
+//     }
+//   if (code != ''){
+//     console.log(code)
+    showContextMenu(code);
+    document.getElementById('dynamic').onclick = function(){
+      dynamicCardCreationCode(code);
+    }
+//   }
+});
+
 function getSelectedText() {
+  console.log("in get selected text");
   var text = "";
   if(window.getSelection){
    return window.getSelection().toString();
@@ -154,29 +157,22 @@ function getSelectedText() {
   return '';
 }
 
-// function getSelectedCode() {
-//   let card = getLastCard();
-//   editor.getSelectedText();
-//   return '';
-//
-// }
-
 function dynamicCardCreationText(text){
     console.log("in dynamicCardCreationText");
     newTextEditor('editor');
     let card = getLastCard();
-      $("#card_" + card.id + 'codeEditor_0').val($('.editor').val() + text);
+    $("#card_" + card.id + 'codeEditor_0').val($('.editor').val() + text);
 }
 
 function dynamicCardCreationCode(code){
-  console.log("in dynamicCardCreationEditor");
-  console.log("code:", code);
-  var code2 = String(code);
-  newCodeEditor('editor');
-    let card = getLastCard();
-    // $.get(code, (r) => card.editors[0].setValue(r));
-    card.editors[0].setValue(code2);
+  newEditor = new CodeEditor("editor");
+  currentCards[card.id] = card;
+  code = card.getSelectedCode();
+  let card = getLastCard();
+  var targetEditor = ace.edit("card_" + card.id + "_editor_" + card.id);
+  targetEditor.setValue(code);
 }
+
 
 
 // function toggleDynamicButtons(){
