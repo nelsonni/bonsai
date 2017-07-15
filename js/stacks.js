@@ -115,7 +115,7 @@ class Stack {
     if (jQuery.inArray(newId, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    __IPC.ipcRenderer.send('card' + cur.id + '_toggle_sketches' + this.id, false);
+    __IPC.ipcRenderer.send('card' + cur.id + '_toggle_sketches' + this.id, "erase");
     this.channels.push('card' + cur.id + '_toggle_sketches' + this.id);
 
     card.droppable('disable');
