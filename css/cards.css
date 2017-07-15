@@ -1,6 +1,8 @@
 div.card {
-  height: 280px;  /* 7:5 aspect ratio */
-  width: 200px;   /* 7:5 aspect ratio */
+  height: 280px;
+  /* 7:5 aspect ratio */
+  width: 200px;
+  /* 7:5 aspect ratio */
   top: 30%;
   left: 40%;
   background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0));
@@ -15,6 +17,12 @@ div.card {
 
 div.card.highlight {
   box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
+}
+
+span.nameBox {
+  width: 100px;
+  display: inline-block;
+  overflow: auto;
 }
 
 div.card.fullscreen {
@@ -75,12 +83,12 @@ button.close {
   height: 20px;
   width: 20px;
   margin: 3px;
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("../assets/close_dark.svg");
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/close_dark.svg");
   border-radius: 50%;
 }
 
-button.close:hover, button.close:active {
+button.close:hover,
+button.close:active {
   background-image: url("../assets/close_active.svg");
 }
 
@@ -88,18 +96,20 @@ button.expand {
   height: 18px;
   width: 18px;
   margin: 4px;
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("../assets/expand_dark.svg");
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/expand_dark.svg");
   border-radius: 0;
 }
 
-button.expand:hover, button.expand:active {
+button.expand:hover,
+button.expand:active {
   background-image: url("../assets/expand_active.svg");
 }
 
 button.expand.fullscreen {
   background-image: url("../assets/collapse_dark.svg");
 }
-button.expand.fullscreen:hover, button.expand.fullscreen:active {
+
+button.expand.fullscreen:hover,
+button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
 }

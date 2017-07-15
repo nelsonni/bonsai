@@ -1,79 +1,134 @@
 class Card {
-  constructor(type) {
+  constructor(type, fileData) {
     this.id = this.nextId();
     this.parentStackID;
+    this.inStack = false;
     this.channels = [];
+    this.carousel;
+    fileData = this.objectCleaner(fileData)
+
+    // For book keeping saving files
+    this.name = "";
+    this.fileExt = fileData.ext;
+    this.location = fileData.path
+
     this.creation_timestamp = new Date().toString();
     this.interaction_timestamp = this.creation_timestamp;
+
     // npm module: username, url: https://www.npmjs.com/package/username
     const username = require('username');
     this.creator = username.sync();
 
+    this.cardBuilder(type, fileData)
+    this.setDraggable();
+    this.setDroppable();
+    this.ipcListeners();
+    this.arrowListeners();
+    ipcRenderer.on("saveComplete", () => $('body').removeClass('waiting'));
+  }
+
+  saveCard() {
+    let curIdx = $(this.carousel).slick("slickCurrentSlide")
+    if (this.name.split(" ")[0] == "Card:")
+      dialog.showSaveDialog((filePath) => {
+        this.location = filePath
+        this.name = filePath.split("/")[filePath.split("/").length - 1]
+        this.sendSave(curIdx)
+        $(this.card).find(".nameBox").html(this.name)
+      })
+    else
+      this.sendSave(curIdx)
+  } // sendSave is written by children
+
+  objectCleaner(fileData) {
+    for (var key in fileData) {
+      if (fileData[key] == undefined)
+        fileData[key] = ""
+    }
+    return fileData
+  }
+
+  cardBuilder(type, fileData) {
     var card = document.createElement('div');
     $(card).attr({
-      id: "card_" + this.id,
+      id: 'card_' + this.id,
       type: type,
-      class: "card"
+      class: 'card',
     });
     this.card = card;
     let cur = this;
 
     var header = document.createElement('div');
     $(header).attr({
-      id: "header_" + this.id,
-      class: "card-header"
+      id: 'header_' + this.id,
+      class: 'card-header',
     });
-    $(header).html("card: " + this.id);
 
-    var close_button = document.createElement('button');
-    $(close_button).attr({
-      id: "close_button_" + this.id,
-      class: "close"
+    let nameBox = document.createElement("span")
+    $(nameBox).addClass("nameBox")
+    if (fileData.name != undefined) {
+      $(nameBox).html(fileData.name);
+      this.name = fileData.name
+    } else {
+      $(nameBox).html("Card: " + this.id);
+      this.name = "Card: " + this.id;
+    }
+
+    $(header).append(nameBox)
+
+    var closeButton = document.createElement('button');
+    $(closeButton).attr({
+      id: 'close_button_' + this.id,
+      class: 'close',
     });
-    $(close_button).click(function () {
+    $(closeButton).click(function() {
       let card = this.closest('.card');
-      let id = (card.id).split("_");
+      let id = (card.id).split('_');
       let cleanID = parseInt(id[id.length - 1]);
       delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
       cur.destructor();
       this.closest('.card').remove();
     });
-    header.appendChild(close_button);
+    let save = document.createElement("button")
+    $(save).html("save!")
+    $(save).click(() => this.saveCard())
+    header.appendChild(closeButton);
+    header.appendChild(save);
 
-    var fullscreen_button = document.createElement('button');
-    $(fullscreen_button).attr({
-      id: "fullscreen_button_" + this.id,
-      class: "expand"
+
+
+    var fullscreenButton = document.createElement('button');
+    $(fullscreenButton).attr({
+      id: 'fullscreen_button_' + this.id,
+      class: 'expand',
     });
-    $(fullscreen_button).click(() => this.toggleFullScreen());
-    header.appendChild(fullscreen_button);
-
+    $(fullscreenButton).click(() => this.toggleFullScreen());
+    header.appendChild(fullscreenButton);
     card.appendChild(header);
     document.body.appendChild(card);
-    this.setDraggable();
-    this.setDroppable();
-    this.ipcListeners();
   }
 
   destructor() {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
-  ipcListeners() {}
+  ipcListeners() {} // to be rewritten by child classes
+  sendSave() {}
 
   getCardObject(card) {
-    let id = (card[0].id).split("_");
+    let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
-    let obj = currentCards[last]
+    let obj = currentCards[last];
     return obj;
   }
+
   toggleSwipe(value) {
-    $(this.card.lastElementChild).slick("slickSetOption", "swipe", value, false);
+    $(this.card.lastElementChild).slick('slickSetOption', 'swipe', value, false);
   }
 
   nextId() {
     var ids = $.map($('.card'), (card) => {
-      return parseInt($(card).attr('id').split("_")[1]);
+      return parseInt($(card).attr('id').split('_')[1]);
     });
     if (ids.length < 1) return 1; // no cards on the canvas yet
 
@@ -83,20 +138,20 @@ class Card {
   }
 
   updateMetadata(cardType) {
-    let id = "#card_" + this.id + cardType + "_2";
-    $(id).html("interaction: " + new Date().toString() + "<br><br>" + this.creator);
-    $(id).append("<br><br>created: " + this.creation_timestamp);
+    let id = '#card_' + this.id + cardType + '_2';
+    $(id).html('interaction: ' + new Date().toString() + '<br><br>' + this.creator);
+    $(id).append('<br><br>created: ' + this.creation_timestamp);
   }
 
   buildMetadata(cardType) {
-    let id = "#card_" + this.id + cardType + "_2"; // TODO: needs to adjust to last card
+    let id = '#card_' + this.id + cardType + '_2'; // TODO: needs to adjust to last card
     $(id).attr({
-      class: "card-metadata"
+      class: 'card-metadata',
     });
-    $(id).html("interaction: " + this.interaction_timestamp +
-      "<br/><br/>creator: " + this.creator +
-      "<br/><br/>created: " + this.creation_timestamp);
-    $(this.card.lastElementChild).slick("slickGoTo", 0, true);
+    $(id).html('interaction: ' + this.interaction_timestamp +
+      '<br/><br/>creator: ' + this.creator +
+      '<br/><br/>created: ' + this.creation_timestamp);
+    $(this.card.lastElementChild).slick('slickGoTo', 0, true);
   }
 
   setDraggable() {
@@ -105,7 +160,7 @@ class Card {
       containment: 'window',
       stack: '.card, .stack',
       start: (event, ui) => {
-        $(this.card).removeClass('atSpawn');
+        $(this.card).removeClass('highlight');
       },
       drag: (event, ui) => {
         this.interaction_timestamp = new Date().toString();
@@ -118,24 +173,42 @@ class Card {
     $(this.card).droppable({
       accept: '.card, .stack',
       classes: {
-        'ui-droppable-hover': 'highlight'
+        'ui-droppable-hover': 'highlight',
       },
-      drop: function (event, ui) {
+      drop: function(event, ui) {
+        let curParent = $(ui.draggable).parent()
+        if ($(curParent).hasClass("stack") || $(ui.draggable).hasClass('stack')) {
+          let curID = curParent[0].id || ui.draggable[0].id
+          currentStacks[curID].addCard($($(this)));
+          currentStacks[curID].addToBack();
+          currentStacks[curID].cascadeCards();
+          currentStacks[curID].resizeStack();
+          return
+        } // handle stacked cards 
+
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));
         }
-        // handle stack-to-card drop event
-        if ($(ui.draggable).hasClass('stack')) {
-          var stack = new Stack($(this));
-          ui.draggable.children('.card')
-            .each((index, card) => stack.addCard($(card)));
-          stack.cascadeCards();
-          stack.resizeStack();
-          $(ui.draggable).remove();
-        }
+      },
+    });
+  }
+
+  arrowListeners() {
+    $(this.card).mouseenter(() => {
+      if (this.inStack == false) {
+        $(this.card.lastElementChild).find('.slick-arrow').show();
+        $(this.card.lastElementChild).find('.slick-dots').show();
       }
     });
+    $(this.card).mouseout(() => setTimeout(() => {
+      if (!$(this.card.lastElementChild).is(':hover') &&
+        !$(document.activeElement).hasClass('ace_text-input') ||
+        this.inStack == true) { //if not hovering on arrow
+        $(this.card.lastElementChild).find('.slick-arrow').hide();
+        $(this.card.lastElementChild).find('.slick-dots').hide();
+      }
+    }, 600));
   }
 
   toggleFullScreen() {
@@ -144,15 +217,15 @@ class Card {
       $(this.card).addClass('fullscreen').removeAttr('style');
       let height = $(this)[0].card.clientHeight;
       let width = $(this)[0].card.clientWidth;
-      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [height, width])
-      this.channels.push("card" + this.id + "_toggle_fullscreen")
+      __IPC.ipcRenderer.send('card' + this.id + '_toggle_fullscreen', [height, width]);
+      this.channels.push('card' + this.id + '_toggle_fullscreen');
     } else { // transition back from fullscreen
-      $(this.card).removeClass("fullscreen");
+      $(this.card).removeClass('fullscreen');
       $(this.card)[0].style.cssText = $(this.card).attr('prevStyle');
       $(this.card).removeAttr('prevStyle');
       $(this.card.children).each((index, child) => $(child).removeAttr('style'));
       $(this.card).find('*').each((index, child) => $(child).removeClass('fullscreen'));
-      __IPC.ipcRenderer.send("card" + this.id + "_toggle_fullscreen", [250, 200])
+      __IPC.ipcRenderer.send('card' + this.id + '_toggle_fullscreen', [250, 200]);
     }
   }
 }

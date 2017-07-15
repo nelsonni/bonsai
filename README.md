@@ -1,5 +1,18 @@
 # Bonsai IDE
+
 Bonsai is a cross platform IDE aimed at research into Programming as Problem-Solving, and cards-based user interfaces. Bonsai is a Japanese art form that uses trees grown in containers as aesthetic expressions of wabi-sabi; the acceptance of transience and imperfection. Wabi-sabi encompasses the concept of beauty as "imperfect, impermanent, and incomplete". Bonsai IDE allows users to gather transient knowledge across multiple sources, build and rebuild software, and engender knowledge and awareness in a workspace that is constantly changing.
+
+# Quick start
+
+The only development dependency of this project is [Node.js](https://nodejs.org), so just make sure you have it installed.
+Then type few commands known to every Node developer...
+```
+git clone https://github.com/nelsonni/bonsai.git
+cd bonsai
+npm install
+npm start
+```
+... and boom! You have a running desktop application on your screen.
 
 # Build Instructions
 Packaging Electron apps for release is platform-specific and requires the use of additional scripts.

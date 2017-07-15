@@ -7,8 +7,8 @@
 
   <!-- Stylesheets for all libraries -->
   <link rel="stylesheet" type="text/css" href="libs/jquery/jquery-ui.css">
-  <link rel="stylesheet" type="text/css" href="libs/slick/slick.css"/>
-  <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css"/>
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="libs/slick/slick-theme.css" />
 
   <!-- JQuery and JQuery UI libraries -->
   <script type="text/javascript" src="libs/jquery/jquery.min.js"></script>
@@ -29,9 +29,15 @@
   <script type="text/javascript" src="dep_manager.js"></script>
 
   <script>
-    const __IPC = require("electron");
-    const {dialog} = require('electron').remote;
-    let fs = require("fs");
+    const __IPC = require('electron');
+    const {
+      dialog
+    } = require('electron').remote;
+    let fs = require('fs');
+    const {
+      ipcRenderer
+    } = require('electron')
+  
 
     // dynamically load all CSS files
     fromDir('css', '.css', function(filename) {
@@ -49,7 +55,6 @@
       ref.setAttribute('src', filename);
       document.getElementsByTagName('head')[0].appendChild(ref);
     });
-
   </script>
 </head>
 
@@ -57,15 +62,10 @@
   <div class="dropdown">
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
-      <button onclick="newCodeEditor('.js')" class="first">Code Editor</button>
-      <button onclick="newSketchpad()">Sketchpad</button>
-      <button onclick="newTextEditor()">Text Editor</button>
-      <label class="inputHider">
-        <button id="fileInput"
-          onclick="launchDialog()" style="display:none;" value= "foo">
-        </button>
-          <span>Open...</span>
-      </label>
+      <button onclick="newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
+      <button onclick="newSketchpad({ext: '.png'})">Sketchpad</button>
+      <button onclick="newTextEditor({ext: '.txt'})">Text Editor</button>
+      <button onclick="launchDialog()">Open..</button>
     </div>
   </div>
 
