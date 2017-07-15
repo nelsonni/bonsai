@@ -22,7 +22,7 @@ div.card.highlight {
 span.nameBox {
   width: 100px;
   display: inline-block;
-  overflow: scroll;
+  overflow: auto;
 }
 
 div.card.fullscreen {
