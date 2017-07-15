@@ -1,7 +1,7 @@
 div.stack {
   height: calc((280px * 1.25) + 100px);
   width: calc((200px * 1.25) + 28px);
-  background-color: rgba(10, 210, 50, 0.2);
+  background-color: rgba(63, 69, 71, 0.3);
   color: rgba(33, 37, 43, 1.0);
   position: fixed;
   cursor: move;

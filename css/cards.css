@@ -5,24 +5,27 @@ div.card {
   /* 7:5 aspect ratio */
   top: 30%;
   left: 40%;
-  background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0));
+  background: linear-gradient(rgb(89, 87, 90), rgb(255, 255, 255));
   color: rgba(171, 178, 191, 1.0);
   margin: auto;
   position: fixed;
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
-  border-radius: 5px;
+  border: 1px solid rgb(89, 87, 90);
+  border-radius: 10px;
   transform-style: preserve-3d;
   user-select: none;
+
 }
 
 div.card.highlight {
-  box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
+  box-shadow: 0 0 3pt 2pt rgb(89, 87, 90);
 }
 
 span.nameBox {
   width: 100px;
   display: inline-block;
-  overflow: scroll;
+  color: white;
+  font-family: sans-serif;
+  left: 10px;
 }
 
 div.card.fullscreen {
@@ -36,8 +39,10 @@ div.card.fullscreen {
 div.card-header {
   height: 29px;
   width: 100%;
-  background-color: rgba(33, 37, 43, 1.0);
+  /*background-color: rgba(33, 37, 43, 1.0);*/
+  background-color: rgb(89, 87, 90);
   color: rgba(171, 178, 191, 1.0);
+  font-family: sans-serif;
   box-sizing: border-box;
   padding: 0 0 0 3px;
   line-height: 29px;
@@ -112,4 +117,29 @@ button.expand.fullscreen {
 button.expand.fullscreen:hover,
 button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
+}
+#save_button{
+  background-color: rgb(89, 87, 90);
+  top: 7px;
+  color: white;
+}
+
+#save_button:hover,
+#save_button:active{
+  color: #ec3030;
+}
+
+textarea.editor {
+  box-sizing: border-box;
+  /*background-color: rgba(40, 44, 52, 1.0);*/
+  background-color: white;
+  font-family: sans-serif;
+  color: black;
+  padding: 0;
+  height: 245px;
+  resize: none;
+  cursor: text;
+  margin: 0;
+  border: 0;
+  border-radius: 0 0 5px 5px;
 }
