@@ -53,7 +53,7 @@ class Card {
     $(card).attr({
       id: 'card_' + this.id,
       type: type,
-      class: 'card atSpawn',
+      class: 'card',
     });
     this.card = card;
     let cur = this;
@@ -164,9 +164,6 @@ class Card {
       },
       drag: (event, ui) => {
         this.interaction_timestamp = new Date().toString();
-      },
-      stop: (event, ui) => {
-        $(this.card).removeClass('atSpawn');
       }
     });
   }
