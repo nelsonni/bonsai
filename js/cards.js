@@ -179,32 +179,19 @@ class Card {
         'ui-droppable-hover': 'highlight',
       },
       drop: function(event, ui) {
-        let stackedCards = $(".atSpawn")
-        if ($(ui.draggable).hasClass("atSpawn") && stackedCards.length != 0) {
-          var stack = new Stack($(this));
-          $(stackedCards).each((idx, card) => {
-            stack.addCard($(card))
-            $(card).removeClass("atSpawn")
-          });
-          stack.addCard($(ui.draggable))
-          stack.cascadeCards();
-          stack.resizeStack();
+        let curParent = $(ui.draggable).parent()
+        if ($(curParent).hasClass("stack") || $(ui.draggable).hasClass('stack')) {
+          let curID = curParent[0].id || ui.draggable[0].id
+          currentStacks[curID].addCard($($(this)));
+          currentStacks[curID].addToBack();
+          currentStacks[curID].cascadeCards();
+          currentStacks[curID].resizeStack();
           return
-        } // handle stacked cards at spawn
+        } // handle stacked cards 
 
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {
           new Stack($(this), $(ui.draggable));
-        }
-
-        // handle stack-to-card drop event
-        if ($(ui.draggable).hasClass('stack')) {
-          var stack = new Stack($(this));
-          ui.draggable.children('.card')
-            .each((index, card) => stack.addCard($(card)));
-          stack.cascadeCards();
-          stack.resizeStack();
-          $(ui.draggable).remove();
         }
       },
     });

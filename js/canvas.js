@@ -1,4 +1,5 @@
 let currentCards = {}; //keep track of cards on canvas
+let currentStacks = {};
 
 function newTextEditor(name) {
   let card = new TextEditor('textEditor', name);
