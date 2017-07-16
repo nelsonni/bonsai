@@ -274,6 +274,8 @@ input::-webkit-input-placeholder {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  margin-top: 10px;
+  margin-right: 20px;
 }
 
 .onoffswitch-checkbox {

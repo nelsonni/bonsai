@@ -1,8 +1,10 @@
 const BTM_ROW_BUFFER = 90;
 class Canvas {
+  // myonoffswitch values are reversed! On = off, off = on
   constructor() {
     this.currentCards = {}; //keep track of cards on canvas
     this.currentStacks = {};
+    this.draw = false;
     let canvasPad = document.createElement('div');
     $(canvasPad).attr({
       id: 'canvasPad',
@@ -12,8 +14,36 @@ class Canvas {
     this.canvas = Raphael.sketchpad('canvasPad', {
       height: window.innerHeight - BTM_ROW_BUFFER,
       width: window.innerWidth,
-      editing: true
+      editing: false
     });
+    this.canvasButtonListeners();
+    $(".container").selectable({
+      filter: ".card",
+      classes: {
+        "ui-selecting": "highlight",
+        "ui-selected": "highlight"
+      },
+      delay: 150
+    })
+  }
+
+  canvasButtonListeners() {
+    $("#clearButton").click(() => this.canvas.clear())
+    $(".container").click(() => $(".card").removeClass("highlight"))
+    $("#myonoffswitch").click(() => {
+      this.draw == true ? this.draw = false : this.draw = true
+      this.sketchOrLasso()
+    });
+  }
+
+  sketchOrLasso() {
+    if (this.draw == true) {
+      this.canvas.editing(true)
+      $(".container").selectable("disable")
+    } else {
+      this.canvas.editing(false)
+      $(".container").selectable("enable")
+    }
   }
 
   newTextEditor(name) {
@@ -105,16 +135,6 @@ class Canvas {
     return fileList;
   }
 
-  canvasSnapshot() {
-    var button = document.getElementById("canvasSnapshot");
-    button.addEventListener('click', () => {
-      console.log("listener version: " + this.canvas);
-      var paper = this.canvas;
-      this.newSketchpad("sketch");
-      let card = this.getLastCard();
-      paper.clear();
-    });
-  }
 
   loadFile(file) {
     var getFileName = (getFileExt(file.name)).toLowerCase();
@@ -149,12 +169,5 @@ class Canvas {
       let card = this.getLastCard();
       $.get(file.path, resp => card.editors[0].setValue(resp));
     }
-  }
-
-  clearCanvas() {
-    var button = document.getElementById("clearButton");
-    button.addEventListener('click', () => {
-      this.canvas.clear();
-    });
   }
 }

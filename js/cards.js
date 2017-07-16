@@ -24,6 +24,7 @@ class Card {
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
+    this.disableSelectable();
     ipcRenderer.on("saveComplete", () => $('body').removeClass('waiting'));
   }
 
@@ -112,9 +113,6 @@ class Card {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
-  ipcListeners() {} // to be rewritten by child classes
-  sendSave() {}
-
   getCardObject(card) {
     let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
@@ -124,6 +122,15 @@ class Card {
 
   toggleSwipe(value) {
     $(this.card.lastElementChild).slick('slickSetOption', 'swipe', value, false);
+  }
+  disableSelectable() {
+    $(".card").hover(() => { // mouse in
+      if (canvas.draw == false)
+        $(".container").selectable("disable")
+    }, () => { // mouse out
+      if (canvas.draw == false)
+        $(".container").selectable("enable")
+    });
   }
 
   nextId() {
@@ -228,4 +235,6 @@ class Card {
       __IPC.ipcRenderer.send('card' + this.id + '_toggle_fullscreen', [250, 200]);
     }
   }
+  ipcListeners() {} // to be rewritten by child classes
+  sendSave() {}
 }

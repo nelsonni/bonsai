@@ -92,13 +92,4 @@ class CodeEditor extends Card {
       cur.editors.push(editor);
     });
   }
-
-  // getSelectedCode(){
-  //   console.log("in get selected code");
-  //   var editor = ace.edit("card_" + this.id + "_editor_" + this.id);
-  //   editor.setValue("hi");
-  //   var code = editor.getValue();
-  //   return code;
-  // }
-
 }
