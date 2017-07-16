@@ -11,7 +11,9 @@ html {
 }
 
 body {
-  padding: 10px;
+  padding: 0px;
+  margin: 0px;
+  padding-top: 10px;
 }
 
 body.waiting * {
@@ -256,185 +258,93 @@ input::-webkit-input-placeholder {
 }
 
 
-/* Unfinished rules */
-
-
-/* -------------------------------------------------------------------------- */
-
-
-/*.dropdownBtn {
-    width: 100%;
-    padding: 5px;
-}*/
-
-
-/*
- ----------------------------------- Stuff taken kindly from W3 for dropdown menu-------------------------------------
-*/
-
-
-/* Dropdown Button */
-
-
-/*.dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}*/
-
-
-/* Dropdown button on hover & focus */
-
-
-/*.dropbtn:hover, .dropbtn:focus {
-    background-color: #3e8e41;
-}*/
-
-
-/* The container <div> - needed to position the dropdown content */
-
-
-/*.dropdown {
-    position: relative;
-    display: inline-block;
-}*/
-
-
-/* Dropdown Content (Hidden by Default) */
-
-
-/*.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}*/
-
-
-/* Links inside the dropdown */
-
-
-/*.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}*/
-
-
-/* Change color of dropdown links on hover */
-
-
-/*.dropdown-content a:hover {
-    background-color: #f1f1f1
-}*/
-
-
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-
-
-/*.show {
-    display: block;
-}
-
-.hidden {
-  display: none;
-}
-
-
-
 /*styling for onoff-switch to show/hide sketch and annotation buttons*/
+
 .onoff-content {
   position: fixed;
   display: inline-block;
   left: 10px;
   bottom: 10px;
-
 }
 
 .onoffswitch {
-    position: relative;
-    display: inline-block;
-    width: 67px;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select: none;
+  position: relative;
+  display: inline-block;
+  width: 67px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
+
 .onoffswitch-checkbox {
-    display: none;
-}
-
-.onoffswitch-label {
-    display: block;
-    overflow: hidden;
-    cursor: pointer;
-    border-radius: 27px;
-}
-
-.onoffswitch-inner {
-    display: block;
-    width: 200%;
-    margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: inline-block;
-    float: left;
-    width: 50%;
-    height: 24px;
-    padding: 0;
-    line-height: 24px;
-    box-sizing: border-box;
-}
-.onoffswitch-inner:before {
-    content: "";
-    padding-left: 10px;
-    background-color: rgb(119, 194, 187);
-}
-.onoffswitch-inner:after {
-    content: "";
-    padding-right: 10px;
-    background-color: rgb(176, 175, 175);
-    text-align: right;
-}
-.onoffswitch-switch {
-    display: block;
-    width: 37px;
-    margin: -6.5px;
-    background: white;
-    position: absolute; top: 0; bottom: 0;
-    right: 39px;
-     border-radius: 27px;
-    transition: all 0.3s ease-in 0s;
-}
-
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
-}
-
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px;
-    background-color: rgb(0, 150, 136);
-}
-
-#hidden{
   display: none;
 }
 
-#onoffButtons{
+.onoffswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 27px;
+}
+
+.onoffswitch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch-inner:before,
+.onoffswitch-inner:after {
+  display: inline-block;
+  float: left;
+  width: 50%;
+  height: 24px;
+  padding: 0;
+  line-height: 24px;
+  box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+  content: "";
+  padding-left: 10px;
+  background-color: rgb(119, 194, 187);
+}
+
+.onoffswitch-inner:after {
+  content: "";
+  padding-right: 10px;
+  background-color: rgb(176, 175, 175);
+  text-align: right;
+}
+
+.onoffswitch-switch {
+  display: block;
+  width: 37px;
+  margin: -6.5px;
+  background: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 39px;
+  border-radius: 27px;
+  transition: all 0.3s ease-in 0s;
+}
+
+.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
+  margin-left: 0;
+}
+
+.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
+  right: 0px;
+  background-color: rgb(0, 150, 136);
+}
+
+#hidden {
+  display: none;
+}
+
+#onoffButtons {
   /*display: none;*/
   display: block;
 }
-
-/*div.canvas-sketch {
-  position: absolute;
-  height: 80%;
-  width: 100%;
-  background-color : transparent;
-}*/

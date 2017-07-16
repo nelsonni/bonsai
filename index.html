@@ -37,6 +37,7 @@
     const {
       ipcRenderer
     } = require('electron')
+    var canvas;
   
 
     // dynamically load all CSS files
@@ -55,17 +56,21 @@
       ref.setAttribute('src', filename);
       document.getElementsByTagName('head')[0].appendChild(ref);
     });
+    
+    function initCanvas(){
+      canvas = new Canvas();
+    }
   </script>
 </head>
 
-<body class="container" onload="let canvas = new Canvas()">
+<body class="container" onload="initCanvas()">
   <div class="dropdown">
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
-      <button onclick="newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
-      <button onclick="newSketchpad({ext: '.png'})">Sketchpad</button>
-      <button onclick="newTextEditor({ext: '.txt'})">Text Editor</button>
-      <button onclick="launchDialog()">Open..</button>
+      <button onclick="canvas.newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
+      <button onclick="canvas.newSketchpad({ext: '.png'})">Sketchpad</button>
+      <button onclick="canvas.newTextEditor({ext: '.txt'})">Text Editor</button>
+      <button onclick="canvas.launchDialog()">Open..</button>
     </div>
   </div>
 
@@ -73,9 +78,9 @@
     <input type="search" placeholder="Search">
   </form>
 
-  <button onclick="Testing()" class="test"></button>
-  <button onclick="Version()" class="version"></button>
-  <button onclick="Playground()" class="playground"></button>
+  <button onclick="canvas.Testing()" class="test"></button>
+  <button onclick="canvas.Version()" class="version"></button>
+  <button onclick="canvas.Playground()" class="playground"></button>
 
   <div id="sketched-and-annotations">
     <div id = "onoffswitch" class="onoffswitch">
@@ -84,7 +89,7 @@
         <span class="onoffswitch-inner"></span>
         <span onclick="new Canvas()" id="switch" class="onoffswitch-switch"></span>
     </div>
-    <!-- <div id="onoffButtons" class="onoff-content" class= "hidden"> -->
+
     <div id="onoffButtons" class="onoff-content">
       <button id= "canvasSnapshot">Snapshot</button>
       <button id="clearButton">Clear</button>
@@ -96,14 +101,7 @@
     <div id="new_card_menu" class="dropdown-content top-left">
       <button id="dynamic" class="first">Export to new card</button>
       <button id="dynamic2" class="first">Export to new sketch card</button>
-      <!-- <button onclick="newSketchpad()">Sketchpad</button>
-      <button onclick="newTextEditor()">Text Editor</button> -->
     </div>
   </div>
-
-  <div class="container">
-    <div id="editor"></div>
-  </div>
-
 </body>
 </html>

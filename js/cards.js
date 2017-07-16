@@ -85,7 +85,7 @@ class Card {
       let card = this.closest('.card');
       let id = (card.id).split('_');
       let cleanID = parseInt(id[id.length - 1]);
-      delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
+      delete canvas.currentCards[cleanID];
       cur.destructor();
       this.closest('.card').remove();
     });
@@ -118,7 +118,7 @@ class Card {
   getCardObject(card) {
     let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
-    let obj = currentCards[last];
+    let obj = cavnas.currentCards[last];
     return obj;
   }
 
@@ -179,10 +179,10 @@ class Card {
         let curParent = $(ui.draggable).parent()
         if ($(curParent).hasClass("stack") || $(ui.draggable).hasClass('stack')) {
           let curID = curParent[0].id || ui.draggable[0].id
-          currentStacks[curID].addCard($($(this)));
-          currentStacks[curID].addToBack();
-          currentStacks[curID].cascadeCards();
-          currentStacks[curID].resizeStack();
+          canvas.currentStacks[curID].addCard($($(this)));
+          canvas.currentStacks[curID].addToBack();
+          canvas.currentStacks[curID].cascadeCards();
+          canvas.currentStacks[curID].resizeStack();
           return
         } // handle stacked cards 
 
