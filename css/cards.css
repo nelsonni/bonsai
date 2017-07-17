@@ -13,7 +13,6 @@ div.card {
   border-radius: 10px;
   transform-style: preserve-3d;
   user-select: none;
-
 }
 
 div.card.highlight {
@@ -24,7 +23,7 @@ span.nameBox {
   width: 100px;
   display: inline-block;
   color: white;
-  font-family: sans-serif;
+  font-size: 18px;
   left: 10px;
 }
 
@@ -42,29 +41,26 @@ div.card-header {
   /*background-color: rgba(33, 37, 43, 1.0);*/
   background-color: rgb(89, 87, 90);
   color: rgba(171, 178, 191, 1.0);
-  font-family: sans-serif;
   box-sizing: border-box;
   padding: 0 0 0 3px;
   line-height: 29px;
-  font-family: sans-serif;
   vertical-align: middle;
   position: static;
   cursor: move;
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
   border-radius: 5px 5px 0 0;
   transform-style: preserve-3d;
 }
 
 div.card-header button {
   background-size: contain;
-  background-repeat: no-repeat;
+  /*background-repeat: no-repeat;*/
   display: block;
   float: right;
-  padding: 0;
-  text-align: center;
+  /*padding: 0;*/
+  /*text-align: center;
   line-height: 10px;
   vertical-align: middle;
-  box-sizing: border-box;
+  box-sizing: border-box;*/
   border: none;
 }
 
@@ -79,14 +75,18 @@ div.card-header button:disabled {
 
 div.hard-metadata {
   line-height: 29px;
-  font-family: sans-serif;
   vertical-align: middle;
   color: rgba(10, 210, 50, 1.0);
 }
 
+div.slick-list.draggable{
+  border-radius: 0 0 10px 10px;
+  margin-left: 2px;
+}
+
 button.close {
-  height: 20px;
-  width: 20px;
+  height: 19px;
+  width: 19px;
   margin: 3px;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/close_dark.svg");
   border-radius: 50%;
@@ -102,7 +102,6 @@ button.expand {
   width: 18px;
   margin: 4px;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/expand_dark.svg");
-  border-radius: 0;
 }
 
 button.expand:hover,
@@ -118,20 +117,24 @@ button.expand.fullscreen:hover,
 button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
 }
-#save_button{
-  background-color: rgb(89, 87, 90);
-  top: 7px;
-  color: white;
+
+button.save{
+  height: 18px;
+  width: 18px;
+  margin: 3px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/save_file_white.svg");
+  /*Icon made by Dave Gandy from www.flaticon.com */
+  border-radius: 20%;
 }
 
-#save_button:hover,
-#save_button:active{
-  color: #ec3030;
+button.save:hover,
+button.expand:active {
+  background-image: url("../assets/save_file_red.svg");
+  /*Icon made by Dave Gandy from www.flaticon.com*/
 }
 
 textarea.editor {
   box-sizing: border-box;
-  /*background-color: rgba(40, 44, 52, 1.0);*/
   background-color: white;
   font-family: sans-serif;
   color: black;
@@ -142,4 +145,8 @@ textarea.editor {
   margin: 0;
   border: 0;
   border-radius: 0 0 5px 5px;
+}
+
+textarea.editor:focus{
+  outline: none;
 }

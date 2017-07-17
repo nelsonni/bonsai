@@ -2,7 +2,6 @@ div.editor {
   height: calc(100% - (29px + 2px));
   width: 100%;
   box-sizing: border-box;
-  /*background-color: rgba(40, 44, 52, 1.0);*/
   background-color: white;
   color: black;
   font-family: sans-serif;
@@ -65,15 +64,3 @@ div.sketchEditor {
     width: 197px;
     overflow: hidden;
 }
-
-/*div.editor:hover .slick-next,
-div.editor:hover .slick-prev,
-div.editor:hover .slick-dots {
-  display: block;
-}
-
-textarea.editor:focus .slick-next,
-textarea.editor:focus .slick-prev,
-textarea.editor:focus .slick-dots {
-  display: block;
-}*/

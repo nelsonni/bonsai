@@ -42,6 +42,7 @@ class Stack {
     $(annotation).attr({
         id: 'annotation_stack_' + this.id,
         class: 'annotation',
+        placeholder: "Write note...",
       })
       .on('change keyup paste', () => this.checkScroll());
     this.annotation = annotation;
@@ -82,7 +83,7 @@ class Stack {
     let windowDiff = window.innerWidth - stackPos.left;
     if (this.state == 'collapsed') {
       if (stackPos.left + $(this.stack).width() + TOTAL_SIZE >= window.innerWidth) {
-        alert("Can't expand at all");
+        alert("The selected stack cannot be expanded.");
         return;
       }
 

@@ -16,6 +16,11 @@ div.stack button.stack_close {
   width: 18px;
   border: none;
   margin: 4px;
+  border-radius: 100%;
+}
+
+div.stack button.stack_close:hover{
+  box-shadow: 3px 2px 3pt 3pt rgb(89, 87, 90);
 }
 
 textarea.annotation {
@@ -28,6 +33,13 @@ textarea.annotation {
   border-radius: 5px;
   overflow: hidden;
   resize: none;
+  font-family: sans-serif;
+}
+
+textarea.annotation:focus {
+    outline-color: black;
+    background-color: white;
+    font-family: sans-serif;
 }
 
 div.stack button.expand_button {
@@ -40,4 +52,9 @@ div.stack button.expand_button {
   top: calc(100% - 30px);
   left: calc(100% - 30px);
   position: absolute;
+  border-radius: 100%;
+}
+
+div.stack button.expand_button:hover{
+  box-shadow: 3px 2px 3pt 3pt rgb(89, 87, 90);
 }

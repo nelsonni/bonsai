@@ -90,9 +90,11 @@ class Card {
       cur.destructor();
       this.closest('.card').remove();
     });
-    let save = document.createElement("button")
-    $(save).html("save")
-    $(save).attr('id', "save_button")
+    var save = document.createElement('button');
+    $(save).attr({
+      id: 'save_button' + this.id,
+      class: 'save',
+    });
     $(save).click(() => this.saveCard())
     header.appendChild(closeButton);
     header.appendChild(save);
