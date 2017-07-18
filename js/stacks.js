@@ -54,11 +54,13 @@ class Stack {
       class: 'expand_button',
     }).click(() => this.toggleExpansion());
     this.stack.append(expansionButton);
+    currentStacks["stack_" + this.id] = this
   }
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
     this.channels.forEach(channel => __IPC.ipcRenderer.removeAllListeners(channel));
+    delete currentStacks[this.id]
     $(this.stack).remove();
   }
 
@@ -106,7 +108,7 @@ class Stack {
     cur.inStack = true;
     cur.parentStackID = this.id;
     cur.ipcListeners();
-    var ids = jQuery.map(this.cards, function (stackCard) {
+    var ids = jQuery.map(this.cards, function(stackCard) {
       return parseInt(stackCard.card.id.split('_')[1]);
     });
 
@@ -114,7 +116,7 @@ class Stack {
     if (jQuery.inArray(newId, ids) !== -1) return; // card already in stack
     this.cards.push(cur);
     this.stack.appendChild(cur.card);
-    __IPC.ipcRenderer.send('card' + cur.id + '_toggle_sketches' + this.id, false);
+    __IPC.ipcRenderer.send('card' + cur.id + '_toggle_sketches' + this.id, "erase");
     this.channels.push('card' + cur.id + '_toggle_sketches' + this.id);
 
     card.droppable('disable');
@@ -137,7 +139,7 @@ class Stack {
     __IPC.ipcRenderer.send('card' + cleanID + '_toggle_sketches' + this.id, true);
 
     // grep returning only cards that do not contain the target id
-    this.cards = $.grep(this.cards, function (n) {
+    this.cards = $.grep(this.cards, function(n) {
       return $(n.card).attr('id') !== card.attr('id');
     });
 
@@ -152,7 +154,7 @@ class Stack {
   }
 
   nextId() {
-    var ids = $.map($('.stack'), function (stack) {
+    var ids = $.map($('.stack'), function(stack) {
       return parseInt($(stack).attr('id').split('_')[1]);
     });
 
@@ -210,6 +212,11 @@ class Stack {
       },
     });
   }
+
+  addToBack(cur) {
+    let last = this.cards.pop()
+    this.cards.unshift(last)
+  } // takes last card added and moves it to the back of the stack
 
   // position all stacked cards according to their index within the stack
   cascadeCards() {

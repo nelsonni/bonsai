@@ -25,6 +25,7 @@ span.nameBox {
   color: white;
   font-size: 18px;
   left: 10px;
+  overflow: auto;
 }
 
 div.card.fullscreen {
