@@ -129,7 +129,9 @@ button.new_card {
   height: 38px;
   width: 38px;
   padding: 9px 10px 9px 10px;
-  background: #ededed url("../assets/new-card.png") no-repeat center;
+  /*background: #ededed url("../assets/new-card.png") no-repeat center;*/
+  background: #66CC75 url("../assets/new-card.png") no-repeat center;
+  border-color: rgba(6, 150, 14, 0.25);
   background-size: 24px;
   transition: all .5s;
 }

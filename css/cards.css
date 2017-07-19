@@ -38,15 +38,12 @@ div.card.fullscreen {
 
 div.card-header {
   height: 29px;
-  width: 100%;
-  /*background-color: rgba(33, 37, 43, 1.0);*/
   background-color: rgb(89, 87, 90);
-  color: rgba(171, 178, 191, 1.0);
   box-sizing: border-box;
-  padding: 0 0 0 3px;
+  padding: 0 0 0 5px;
   line-height: 29px;
-  vertical-align: middle;
-  position: static;
+  /*vertical-align: middle;*/
+  /*position: static;*/
   cursor: move;
   border-radius: 5px 5px 0 0;
   transform-style: preserve-3d;
@@ -65,24 +62,22 @@ div.card-header button {
   border: none;
 }
 
-div.card-header button:hover,
+/*div.card-header button:hover,
 div.card-header button:focus {
   outline: none;
-}
+}*/
 
 div.card-header button:disabled {
   display: none;
 }
 
-div.hard-metadata {
-  line-height: 29px;
-  vertical-align: middle;
-  color: rgba(10, 210, 50, 1.0);
+div.card-metadata {
+  line-height: 25px;
+  /*vertical-align: middle;*/
 }
 
 div.slick-list.draggable{
   border-radius: 0 0 10px 10px;
-  margin-left: 2px;
 }
 
 button.close {
@@ -96,6 +91,7 @@ button.close {
 button.close:hover,
 button.close:active {
   background-image: url("../assets/close_active.svg");
+  cursor: pointer;
 }
 
 button.expand {
@@ -108,6 +104,7 @@ button.expand {
 button.expand:hover,
 button.expand:active {
   background-image: url("../assets/expand_active.svg");
+  cursor: pointer;
 }
 
 button.expand.fullscreen {
@@ -117,6 +114,7 @@ button.expand.fullscreen {
 button.expand.fullscreen:hover,
 button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
+  cursor: pointer;
 }
 
 button.save{
@@ -132,6 +130,8 @@ button.save:hover,
 button.expand:active {
   background-image: url("../assets/save_file_red.svg");
   /*Icon made by Dave Gandy from www.flaticon.com*/
+  cursor: pointer;
+
 }
 
 textarea.editor {
@@ -139,15 +139,19 @@ textarea.editor {
   background-color: white;
   font-family: sans-serif;
   color: black;
-  padding: 0;
+  /*padding: 0;*/
   height: 245px;
   resize: none;
   cursor: text;
-  margin: 0;
+  /*margin: 0;*/
   border: 0;
   border-radius: 0 0 5px 5px;
 }
 
 textarea.editor:focus{
   outline: none;
+}
+
+textarea.stackedEditor {
+    cursor: move;
 }
