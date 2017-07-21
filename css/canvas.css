@@ -54,6 +54,8 @@ div.dropdown {
 
 div.dropdown:hover div.dropdown-content {
   display: block;
+  transition: all 0.8s ease-in-out;
+
 }
 
 /* button to trigger the drop-down menu */
@@ -85,6 +87,8 @@ div.dropdown-content {
   text-shadow: 0 0 1px #000;
   background-color: #fff;
   z-index: 1;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+
 }
 
 div.dropdown-content::before {
@@ -121,16 +125,17 @@ div.dropdown-content button {
 }
 
 div.dropdown-content button:hover {
-  border: 1px solid #66CC75;
+  border: 1px solid rgb(102, 204, 117);
   color: white;
+  background: rgba(55, 55, 55, 1);
 }
 
 button.new_card {
   height: 38px;
   width: 38px;
   padding: 9px 10px 9px 10px;
-  /*background: #ededed url("../assets/new-card.png") no-repeat center;*/
   background: #66CC75 url("../assets/new-card.png") no-repeat center;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   border-color: rgba(6, 150, 14, 0.25);
   background-size: 24px;
   transition: all .5s;
@@ -142,6 +147,7 @@ button.test {
   padding: 9px 10px 9px 10px;
   background: #ededed url("../assets/test-icon.png") no-repeat center;
   background-size: 24px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   transition: all .5s;
   border-radius: 10em;
   cursor: pointer;
@@ -154,6 +160,7 @@ button.back {
   padding: 9px 10px 9px 10px;
   background: #ededed url("../assets/back-icon.png") no-repeat center;
   background-size: 24px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   transition: all .5s;
   border-radius: 10em;
   cursor: pointer;
@@ -166,6 +173,7 @@ button.version {
   padding: 9px 10px 9px 10px;
   background: #ededed url("../assets/version-icon.png") no-repeat center;
   background-size: 24px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   transition: all .5s;
   border-radius: 10em;
   cursor: pointer;
@@ -178,6 +186,7 @@ button.playground {
   padding: 9px 10px 9px 10px;
   background: #ededed url("../assets/playground-icon.png") no-repeat center;
   background-size: 24px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   transition: all .5s;
   border-radius: 10em;
   cursor: pointer;
@@ -213,6 +222,7 @@ input::-webkit-search-cancel-button {
 
 input[type=search] {
   background: #ededed url("../assets/search-icon.png") no-repeat 9px center;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
   border: solid 1px #ccc;
   padding: 9px 10px 9px 32px;
   width: 55px;
