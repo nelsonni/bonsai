@@ -49,16 +49,19 @@ class Canvas {
   newTextEditor(name) {
     let card = new TextEditor("textEditor", name);
     this.currentCards[card.id] = card;
+    return card;
   }
 
   newSketchpad(name) {
     let card = new Sketchpad("sketch", name);
     this.currentCards[card.id] = card;
+    return card;
   }
 
   newCodeEditor(fileData) {
     let card = new CodeEditor('codeEditor', fileData);
     this.currentCards[card.id] = card;
+    return card;
   }
 
   Testing() {
