@@ -5,7 +5,7 @@ div.stack {
   color: rgba(33, 37, 43, 1.0);
   position: fixed;
   cursor: move;
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
+  border: 0.5px solid rgb(125, 125, 125);
   border-radius: 5px;
 }
 

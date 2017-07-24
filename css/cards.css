@@ -9,7 +9,7 @@ div.card {
   color: rgba(171, 178, 191, 1.0);
   margin: auto;
   position: fixed;
-  border: 1px solid rgb(89, 87, 90);
+  border: 2px solid rgb(89, 87, 90);
   border-radius: 10px;
   transform-style: preserve-3d;
   user-select: none;
@@ -43,8 +43,6 @@ div.card-header {
   box-sizing: border-box;
   padding: 0 0 0 5px;
   line-height: 29px;
-  /*vertical-align: middle;*/
-  /*position: static;*/
   cursor: move;
   border-radius: 5px 5px 0 0;
   transform-style: preserve-3d;
@@ -52,21 +50,10 @@ div.card-header {
 
 div.card-header button {
   background-size: contain;
-  /*background-repeat: no-repeat;*/
   display: block;
   float: right;
-  /*padding: 0;*/
-  /*text-align: center;
-  line-height: 10px;
-  vertical-align: middle;
-  box-sizing: border-box;*/
   border: none;
 }
-
-/*div.card-header button:hover,
-div.card-header button:focus {
-  outline: none;
-}*/
 
 div.card-header button:disabled {
   display: none;
@@ -74,7 +61,7 @@ div.card-header button:disabled {
 
 div.card-metadata {
   line-height: 25px;
-  /*vertical-align: middle;*/
+  padding: 5px;
 }
 
 div.slick-list.draggable{
@@ -132,7 +119,6 @@ button.expand:active {
   background-image: url("../assets/save_file_red.svg");
   /*Icon made by Dave Gandy from www.flaticon.com*/
   cursor: pointer;
-
 }
 
 textarea.editor {
@@ -140,16 +126,13 @@ textarea.editor {
   background-color: white;
   font-family: sans-serif;
   color: black;
-  /*padding: 0;*/
   height: 245px;
+  width: 200px;
   resize: none;
   cursor: text;
-  /*margin: 0;*/
+  margin: 0;
   border: 0;
   border-radius: 0 0 5px 5px;
-}
-
-textarea.editor:focus{
   outline: none;
 }
 
