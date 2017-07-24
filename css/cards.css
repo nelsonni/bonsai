@@ -17,7 +17,7 @@ div.card {
 }
 
 div.card.highlight {
-  box-shadow: 0 0 3pt 2pt rgb(89, 87, 90);
+  box-shadow: 0 0 3pt 2pt rgba(102, 204, 117, 0.75);
 }
 
 span.nameBox {

@@ -47,6 +47,9 @@ div.sketchEditor {
     height: 250px;
     width: 200px;
     border-radius: 0 0 5px 5px;
+    border: 1px solid rgb(89, 87, 90);
+    border-top: 0px;
+
 }
 
 .ace_editor {
