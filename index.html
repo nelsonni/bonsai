@@ -41,6 +41,7 @@
     const {
       ipcRenderer
     } = require('electron')
+    var canvas;
 
 
     // dynamically load all CSS files
@@ -59,30 +60,51 @@
       ref.setAttribute('src', filename);
       document.getElementsByTagName('head')[0].appendChild(ref);
     });
+
+    function initCanvas(){
+      canvas = new Canvas();
+    }
   </script>
 </head>
 
-<body class="container" height="500px" width="100%">
+<body class="container" onload="initCanvas()">
   <div class="dropdown">
     <button class="dropdown-button new_card"></button>
     <div id="new_card_menu" class="dropdown-content top-left">
-      <button onclick="newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
-      <button onclick="newSketchpad({ext: '.png'})">Sketchpad</button>
-      <button onclick="newTextEditor({ext: '.txt'})">Text Editor</button>
-      <button onclick="launchDialog()">Import</button>
+      <button onclick="canvas.newCodeEditor({ext:'.js'})" class="first">Code Editor</button>
+      <button onclick="canvas.newSketchpad({ext: '.png'})">Sketchpad</button>
+      <button onclick="canvas.newTextEditor({ext: '.txt'})">Text Editor</button>
+      <button onclick="canvas.launchDialog()">Open..</button>
     </div>
   </div>
 
   <form class="expander">
     <input type="search" placeholder="Search">
   </form>
+  <button onclick="canvas.Testing()" class="test"></button>
+  <button onclick="canvas.Version()" class="version"></button>
+  <button onclick="canvas.Playground()" class="playground"></button>
 
-  <button onclick="Testing()" class="test"></button>
-  <button onclick="Version()" class="version"></button>
-  <button onclick="Playground()" class="playground"></button>
+  <div id="sketched-and-annotations">
+    <div id = "onoffswitch" class="onoffswitch">
+      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+      <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span id="switch" class="onoffswitch-switch"></span>
+    </div>
+  </div>
 
+  <div id="hidden" class="dropdown hidden">
+    <button class="dropdown-button new_card"></button>
+    <div id="new_card_menu" class="dropdown-content top-left">
+      <button id="dynamic" class="first">Export to new card</button>
+      <button id="dynamic2" class="first">Export to new sketch card</button>
+    </div>
+  </div>
 </body>
 
-
-
+<div id="onoffButtons" class="onoff-content">
+      <!-- <button id="canvasSnapshot">Snapshot</button> -->
+      <button id="clearButton">Clear</button>
+    </div>
 </html>

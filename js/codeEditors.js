@@ -1,7 +1,6 @@
 require('./libs/ace/ext-modelist.js'); // Don't delete me! Needed by ace.req
 class CodeEditor extends Card {
   constructor(type, fileData) {
-    console.log(fileData)
     super(type, fileData);
 
     this.type = type;

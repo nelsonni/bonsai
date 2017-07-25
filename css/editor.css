@@ -20,27 +20,27 @@ div.editor {
 }
 
 div.editor:hover .eraser {
-    height: 10px;
-    width: 10px;
-    display: inline-block;
-    border-radius: 50%;
-    border: 0px;
-    top: 5px;
-    position: relative;
-    cursor: pointer;
-    float: left;
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0px;
+  top: 5px;
+  position: relative;
+  cursor: pointer;
+  float: left;
 }
 
 div.editor:hover .colorBtn {
-    height: 10px;
-    width: 10px;
-    display: inline-block;
-    border-radius: 50%;
-    border: 0px;
-    top: 5px;
-    position: relative;
-    cursor: pointer;
-    float: right;
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0px;
+  top: 5px;
+  position: relative;
+  cursor: pointer;
+  float: right;
 }
 
 div.sketchEditor {
@@ -53,6 +53,7 @@ div.sketchEditor {
 }
 
 .ace_editor {
+    border: 1px solid lightgray;
     margin: auto;
     left: 0px;
     height: 250px;
