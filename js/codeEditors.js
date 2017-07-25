@@ -81,7 +81,8 @@ class CodeEditor extends Card {
     let cur = this;
     $(faces).each(function(idx) {
       let editor = ace.edit(this.lastElementChild.id);
-      editor.setTheme('ace/theme/twilight');
+      // editor.setTheme('ace/theme/twilight');
+      editor.setTheme('ace/theme/chrimson-editor');
       var modelist = ace.require('ace/ext/modelist');
       if (cur.fileExt != undefined) {
         var mode = modelist.getModeForPath(cur.fileExt).mode;

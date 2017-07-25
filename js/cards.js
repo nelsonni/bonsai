@@ -72,6 +72,7 @@ class Card {
       this.name = fileData.name
     } else {
       $(nameBox).html("Card: " + this.id);
+
       this.name = "Card: " + this.id;
     }
 
@@ -90,8 +91,11 @@ class Card {
       cur.destructor();
       this.closest('.card').remove();
     });
-    let save = document.createElement("button")
-    $(save).html("save!")
+    var save = document.createElement('button');
+    $(save).attr({
+      id: 'save_button' + this.id,
+      class: 'save',
+    });
     $(save).click(() => this.saveCard())
     header.appendChild(closeButton);
     header.appendChild(save);
@@ -146,8 +150,8 @@ class Card {
 
   updateMetadata(cardType) {
     let id = '#card_' + this.id + cardType + '_2';
-    $(id).html('interaction: ' + new Date().toString() + '<br><br>' + this.creator);
-    $(id).append('<br><br>created: ' + this.creation_timestamp);
+    $(id).html('Interaction: ' + new Date().toString() + '<br><br>' + this.creator);
+    $(id).append('<br><br>Created: ' + this.creation_timestamp);
   }
 
   buildMetadata(cardType) {
@@ -155,9 +159,9 @@ class Card {
     $(id).attr({
       class: 'card-metadata',
     });
-    $(id).html('interaction: ' + this.interaction_timestamp +
-      '<br/><br/>creator: ' + this.creator +
-      '<br/><br/>created: ' + this.creation_timestamp);
+    $(id).html('Interaction: ' + this.interaction_timestamp +
+      '<br/><br/>Creator: ' + this.creator +
+      '<br/><br/>Created: ' + this.creation_timestamp);
     $(this.card.lastElementChild).slick('slickGoTo', 0, true);
   }
 
@@ -191,7 +195,7 @@ class Card {
           canvas.currentStacks[curID].cascadeCards();
           canvas.currentStacks[curID].resizeStack();
           return
-        } // handle stacked cards 
+        } // handle stacked cards
 
         // handle card-to-card drop event
         if ($(ui.draggable).hasClass('card')) {

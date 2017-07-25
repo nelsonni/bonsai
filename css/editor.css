@@ -2,40 +2,21 @@ div.editor {
   height: calc(100% - (29px + 2px));
   width: 100%;
   box-sizing: border-box;
-  background-color: rgba(40, 44, 52, 1.0);
-  color: rgba(171, 178, 191, 1.0);
-  padding: 0;
+  background-color: white;
+  color: black;
   resize: none;
-  border: 0px;
   border-radius: 0 0 5px 5px;
 }
 
-textarea.editor {
-  box-sizing: border-box;
-  background-color: rgba(40, 44, 52, 1.0);
-  color: rgba(171, 178, 191, 1.0);
-  padding: 0;
-  resize: none;
-  cursor: text;
-  margin: 0;
-  border: 0;
-  border-radius: 0 0 5px 5px;
-}
-
-textarea.stackedEditor {
-  cursor: move;
-}
-
-.colorBtn,
-.eraser {
-  display: none;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  border: 0px;
-  top: 5px;
-  position: relative;
-  cursor: pointer;
+.colorBtn, .eraser {
+    display: none;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    border: 0px;
+    top: 5px;
+    position: relative;
+    cursor: pointer;
 }
 
 div.editor:hover .eraser {
@@ -63,16 +44,19 @@ div.editor:hover .colorBtn {
 }
 
 div.sketchEditor {
-  height: 250px;
-  width: 200px;
-  border-radius: 0 0 5px 5px;
+    height: 250px;
+    width: 200px;
+    border-radius: 0 0 5px 5px;
+    border: 1px solid rgb(89, 87, 90);
+    border-top: 0px;
+
 }
 
 .ace_editor {
-  border: 1px solid lightgray;
-  margin: auto;
-  left: 0px;
-  height: 250px;
-  width: 197px;
-  overflow: hidden;
+    border: 1px solid lightgray;
+    margin: auto;
+    left: 0px;
+    height: 250px;
+    width: 200px;
+    overflow: hidden;
 }

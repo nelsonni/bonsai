@@ -5,23 +5,27 @@ div.card {
   /* 7:5 aspect ratio */
   top: 30%;
   left: 40%;
-  background: linear-gradient(rgba(44, 50, 59, 1.0), rgba(33, 37, 43, 1.0));
+  background: linear-gradient(rgb(89, 87, 90), rgb(255, 255, 255));
   color: rgba(171, 178, 191, 1.0);
   margin: auto;
   position: fixed;
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
-  border-radius: 5px;
+  border: 2px solid rgb(89, 87, 90);
+  border-radius: 10px;
   transform-style: preserve-3d;
   user-select: none;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 div.card.highlight {
-  box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
+  box-shadow: 0 0 3pt 2pt rgba(102, 204, 117, 0.75);
 }
 
 span.nameBox {
   width: 100px;
   display: inline-block;
+  color: white;
+  font-size: 18px;
+  left: 10px;
   overflow: auto;
 }
 
@@ -35,53 +39,38 @@ div.card.fullscreen {
 
 div.card-header {
   height: 29px;
-  width: 100%;
-  background-color: rgba(33, 37, 43, 1.0);
-  color: rgba(171, 178, 191, 1.0);
+  background-color: rgb(89, 87, 90);
   box-sizing: border-box;
-  padding: 0 0 0 3px;
+  padding: 0 0 0 5px;
   line-height: 29px;
-  font-family: sans-serif;
-  vertical-align: middle;
-  position: static;
   cursor: move;
-  border: 0.5px solid rgba(24, 26, 31, 1.0);
   border-radius: 5px 5px 0 0;
   transform-style: preserve-3d;
 }
 
 div.card-header button {
   background-size: contain;
-  background-repeat: no-repeat;
   display: block;
   float: right;
-  padding: 0;
-  text-align: center;
-  line-height: 10px;
-  vertical-align: middle;
-  box-sizing: border-box;
   border: none;
-}
-
-div.card-header button:hover,
-div.card-header button:focus {
-  outline: none;
 }
 
 div.card-header button:disabled {
   display: none;
 }
 
-div.hard-metadata {
-  line-height: 29px;
-  font-family: sans-serif;
-  vertical-align: middle;
-  color: rgba(10, 210, 50, 1.0);
+div.card-metadata {
+  line-height: 25px;
+  padding: 5px;
+}
+
+div.slick-list.draggable{
+  border-radius: 0 0 10px 10px;
 }
 
 button.close {
-  height: 20px;
-  width: 20px;
+  height: 19px;
+  width: 19px;
   margin: 3px;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/close_dark.svg");
   border-radius: 50%;
@@ -90,6 +79,7 @@ button.close {
 button.close:hover,
 button.close:active {
   background-image: url("../assets/close_active.svg");
+  cursor: pointer;
 }
 
 button.expand {
@@ -97,12 +87,12 @@ button.expand {
   width: 18px;
   margin: 4px;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/expand_dark.svg");
-  border-radius: 0;
 }
 
 button.expand:hover,
 button.expand:active {
   background-image: url("../assets/expand_active.svg");
+  cursor: pointer;
 }
 
 button.expand.fullscreen {
@@ -112,4 +102,40 @@ button.expand.fullscreen {
 button.expand.fullscreen:hover,
 button.expand.fullscreen:active {
   background-image: url("../assets/collapse_active.svg");
+  cursor: pointer;
+}
+
+button.save{
+  height: 18px;
+  width: 18px;
+  margin: 3px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../assets/save_file_white.svg");
+  /*Icon made by Dave Gandy from www.flaticon.com */
+  border-radius: 20%;
+}
+
+button.save:hover,
+button.expand:active {
+  background-image: url("../assets/save_file_red.svg");
+  /*Icon made by Dave Gandy from www.flaticon.com*/
+  cursor: pointer;
+}
+
+textarea.editor {
+  box-sizing: border-box;
+  background-color: white;
+  font-family: sans-serif;
+  color: black;
+  height: 245px;
+  width: 200px;
+  resize: none;
+  cursor: text;
+  margin: 0;
+  border: 0;
+  border-radius: 0 0 5px 5px;
+  outline: none;
+}
+
+textarea.stackedEditor {
+    cursor: move;
 }
