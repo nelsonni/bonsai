@@ -8,6 +8,7 @@ class CodeEditor extends Card {
     this.buildMetadata('codeEditor');
     let foo = document.createElement("button")
     $(foo).attr("id", "CardExpansion" + this.id)
+      .addClass("exportBtn")
       .html("Export")
       .hide()
     $(this.card).append(foo)
@@ -83,15 +84,13 @@ class CodeEditor extends Card {
   }
 
   copyText(editor) {
-    console.log(editor.getCopyText(), this, canvas)
     $("#CardExpansion" + this.id).show()
       .on('click', () => {
         let newCard = canvas.newCodeEditor({
           ext: this.fileExt
-        })
+        });
         newCard.editors[0].setValue(editor.getCopyText())
-      })
-
+      });
   }
 
   initAce(faces) {
@@ -104,9 +103,11 @@ class CodeEditor extends Card {
         var mode = modelist.getModeForPath(cur.fileExt).mode;
         editor.session.setMode(mode);
       }
-
-      editor.on('change', () => cur.updateMetadata('codeEditor'));
-      $(editor).click(() => editor.getCopyText() == "" ? console.log("foo") : cur.copyText(editor))
+      $(editor).on('change', () => cur.updateMetadata('codeEditor'))
+        .click(() => editor.getCopyText() == "" ? $(".exportBtn").hide() :
+          cur.copyText(editor));
+      $(".ace_text-input").on("keydown", () => editor.getCopyText() == "" ?
+        null : cur.copyText(editor))
       cur.editors.push(editor);
     });
   }
