@@ -23,67 +23,56 @@ textarea.editor {
 }
 
 textarea.stackedEditor {
-    cursor: move;
+  cursor: move;
 }
 
-.colorBtn, .eraser {
-    display: none;
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    border: 0px;
-    top: 5px;
-    position: relative;
-    cursor: pointer;
+.colorBtn,
+.eraser {
+  display: none;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  border: 0px;
+  top: 5px;
+  position: relative;
+  cursor: pointer;
 }
 
 div.editor:hover .eraser {
-    height: 10px;
-    width: 10px;
-    display: inline-block;
-    border-radius: 50%;
-    border: 0px;
-    top: 5px;
-    position: relative;
-    cursor: pointer;
-    float: left;
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0px;
+  top: 5px;
+  position: relative;
+  cursor: pointer;
+  float: left;
 }
 
 div.editor:hover .colorBtn {
-    height: 10px;
-    width: 10px;
-    display: inline-block;
-    border-radius: 50%;
-    border: 0px;
-    top: 5px;
-    position: relative;
-    cursor: pointer;
-    float: right;
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0px;
+  top: 5px;
+  position: relative;
+  cursor: pointer;
+  float: right;
 }
 
 div.sketchEditor {
-    height: 250px;
-    width: 200px;
-    border-radius: 0 0 5px 5px;
+  height: 250px;
+  width: 200px;
+  border-radius: 0 0 5px 5px;
 }
 
 .ace_editor {
-    border: 1px solid lightgray;
-    margin: auto;
-    left: 0px;
-    height: 250px;
-    width: 197px;
-    overflow: hidden;
+  border: 1px solid lightgray;
+  margin: auto;
+  left: 0px;
+  height: 250px;
+  width: 197px;
+  overflow: hidden;
 }
-
-/*div.editor:hover .slick-next,
-div.editor:hover .slick-prev,
-div.editor:hover .slick-dots {
-  display: block;
-}
-
-textarea.editor:focus .slick-next,
-textarea.editor:focus .slick-prev,
-textarea.editor:focus .slick-dots {
-  display: block;
-}*/

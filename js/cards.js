@@ -24,6 +24,7 @@ class Card {
     this.setDroppable();
     this.ipcListeners();
     this.arrowListeners();
+    this.disableSelectable();
     ipcRenderer.on("saveComplete", () => $('body').removeClass('waiting'));
   }
 
@@ -85,7 +86,7 @@ class Card {
       let card = this.closest('.card');
       let id = (card.id).split('_');
       let cleanID = parseInt(id[id.length - 1]);
-      delete currentCards[cleanID]; // TODO: Card shouldn't be aware of things outside of Card!
+      delete canvas.currentCards[cleanID];
       cur.destructor();
       this.closest('.card').remove();
     });
@@ -112,18 +113,24 @@ class Card {
     this.channels.forEach(ele => __IPC.ipcRenderer.removeAllListeners(ele));
   }
 
-  ipcListeners() {} // to be rewritten by child classes
-  sendSave() {}
-
   getCardObject(card) {
     let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
-    let obj = currentCards[last];
+    let obj = cavnas.currentCards[last];
     return obj;
   }
 
   toggleSwipe(value) {
     $(this.card.lastElementChild).slick('slickSetOption', 'swipe', value, false);
+  }
+  disableSelectable() {
+    $(".card").hover(() => { // mouse in
+      if (canvas.draw == false)
+        $(".container").selectable("disable")
+    }, () => { // mouse out
+      if (canvas.draw == false)
+        $(".container").selectable("enable")
+    });
   }
 
   nextId() {
@@ -179,10 +186,10 @@ class Card {
         let curParent = $(ui.draggable).parent()
         if ($(curParent).hasClass("stack") || $(ui.draggable).hasClass('stack')) {
           let curID = curParent[0].id || ui.draggable[0].id
-          currentStacks[curID].addCard($($(this)));
-          currentStacks[curID].addToBack();
-          currentStacks[curID].cascadeCards();
-          currentStacks[curID].resizeStack();
+          canvas.currentStacks[curID].addCard($($(this)));
+          canvas.currentStacks[curID].addToBack();
+          canvas.currentStacks[curID].cascadeCards();
+          canvas.currentStacks[curID].resizeStack();
           return
         } // handle stacked cards 
 
@@ -228,4 +235,6 @@ class Card {
       __IPC.ipcRenderer.send('card' + this.id + '_toggle_fullscreen', [250, 200]);
     }
   }
+  ipcListeners() {} // to be rewritten by child classes
+  sendSave() {}
 }

@@ -53,13 +53,13 @@ class Stack {
       class: 'expand_button',
     }).click(() => this.toggleExpansion());
     this.stack.append(expansionButton);
-    currentStacks["stack_" + this.id] = this
+    canvas.currentStacks["stack_" + this.id] = this
   }
 
   destructor() {
     this.cards.forEach(card => this.removeCard($(card.card)));
     this.channels.forEach(channel => __IPC.ipcRenderer.removeAllListeners(channel));
-    delete currentStacks[this.id]
+    delete canvas.currentStacks[this.id]
     $(this.stack).remove();
   }
 
@@ -127,14 +127,14 @@ class Stack {
   getCardObject(card) {
     let id = (card[0].id).split('_');
     let last = parseInt(id[id.length - 1]);
-    let obj = currentCards[last];
+    let obj = canvas.currentCards[last];
     return obj;
   }
 
   // remove individual card from the stack
   removeCard(card) {
     let cleanID = card[0].id.split('_')[1];
-    currentCards[cleanID].inStack = false;
+    canvas.currentCards[cleanID].inStack = false;
     __IPC.ipcRenderer.send('card' + cleanID + '_toggle_sketches' + this.id, true);
 
     // grep returning only cards that do not contain the target id
