@@ -53,7 +53,7 @@ class TextEditor extends Card {
           cols: 200,
         })
         .on('change', () => cur.updateMetadata('codeEditor'))
-        .on("keydown", () => window.getSelection())
+        .on("keydown", () => console.log(window.getSelection().toString()))
         .click(() => console.log(element.firstChild.value));
       content.appendChild(element);
     });
