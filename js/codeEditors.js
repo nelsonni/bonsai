@@ -83,13 +83,16 @@ class CodeEditor extends Card {
     $('body').addClass('waiting');
   }
 
-  copyText(editor) {
+  exportCard(editor) {
     $("#CardExpansion" + this.id).show()
       .on('click', () => {
         let newCard = canvas.newCodeEditor({
           ext: this.fileExt
         });
-        newCard.editors[0].setValue(editor.getCopyText())
+        newCard.editors[0].setValue(editor.getCopyText());
+        newCard.editors[0].clearSelection();
+        editor.clearSelection();
+        $(".exportBtn").hide();
       });
   }
 
@@ -105,9 +108,9 @@ class CodeEditor extends Card {
       }
       $(editor).on('change', () => cur.updateMetadata('codeEditor'))
         .click(() => editor.getCopyText() == "" ? $(".exportBtn").hide() :
-          cur.copyText(editor));
+          cur.exportCard(editor));
       $(".ace_text-input").on("keydown", () => editor.getCopyText() == "" ?
-        null : cur.copyText(editor))
+        null : cur.exportCard(editor))
       cur.editors.push(editor);
     });
   }

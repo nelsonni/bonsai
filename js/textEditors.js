@@ -53,7 +53,7 @@ class TextEditor extends Card {
           cols: 200,
         })
         .on('change', () => cur.updateMetadata('codeEditor'))
-        .on("keydown", () => console.log(window.getSelection().toString()))
+        .select(() => this.copyText(window.getSelection().toString()))
         .click(() => console.log(element.firstChild.value));
       content.appendChild(element);
     });
@@ -64,14 +64,13 @@ class TextEditor extends Card {
       edgeFriction: true,
     });
     this.carousel = content;
-    $(content).find(".slick-arrow").hide()
-    $(content).find(".slick-dots").hide()
-    card.appendChild(content);
+    $(content).find(".slick-arrow").hide();
+    $(content).find(".slick-dots").hide();
+    card.appendChild(content);;
   }
 
   exportCard(cur) {
-    $("#CardExpansion" + this.id).show()
-
+    $("#CardExpansion" + this.id).show();
   }
 
   toggleFullscreen() {
