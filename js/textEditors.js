@@ -53,8 +53,7 @@ class TextEditor extends Card {
           cols: 200,
         })
         .on('change', () => cur.updateMetadata('codeEditor'))
-        .select(() => this.copyText(window.getSelection().toString()))
-        .click(() => console.log(element.firstChild.value));
+        .select(() => this.exportCard(window.getSelection().toString()))
       content.appendChild(element);
     });
     $(content).slick({
@@ -70,7 +69,14 @@ class TextEditor extends Card {
   }
 
   exportCard(cur) {
-    $("#CardExpansion" + this.id).show();
+    $("#CardExpansion" + this.id).show()
+      .on('click', () => {
+        let newCard = canvas.newTextEditor({
+          ext: this.fileExt
+        });
+        $(newCard.editors[0]).val(cur);
+        $(".exportBtn").hide();
+      });
   }
 
   toggleFullscreen() {
