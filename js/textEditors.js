@@ -6,6 +6,12 @@ class TextEditor extends Card {
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata('codeEditor');
+    let foo = document.createElement("button")
+    $(foo).attr("id", "CardExpansion" + this.id)
+      .addClass("exportBtn")
+      .html("Export")
+      .hide()
+    $(this.card).append(foo)
   }
 
 
@@ -46,7 +52,8 @@ class TextEditor extends Card {
           rows: 19,
           cols: 200,
         })
-        .on('change', () => cur.updateMetadata('codeEditor'));
+        .on('change', () => cur.updateMetadata('codeEditor'))
+        .select(() => this.exportCard(window.getSelection().toString()))
       content.appendChild(element);
     });
     $(content).slick({
@@ -56,9 +63,20 @@ class TextEditor extends Card {
       edgeFriction: true,
     });
     this.carousel = content;
-    $(content).find(".slick-arrow").hide()
-    $(content).find(".slick-dots").hide()
-    card.appendChild(content);
+    $(content).find(".slick-arrow").hide();
+    $(content).find(".slick-dots").hide();
+    card.appendChild(content);;
+  }
+
+  exportCard(cur) {
+    $("#CardExpansion" + this.id).show()
+      .on('click', () => {
+        let newCard = canvas.newTextEditor({
+          ext: this.fileExt
+        });
+        $(newCard.editors[0]).val(cur);
+        $(".exportBtn").hide();
+      });
   }
 
   toggleFullscreen() {

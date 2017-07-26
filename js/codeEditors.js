@@ -2,11 +2,16 @@ require('./libs/ace/ext-modelist.js'); // Don't delete me! Needed by ace.req
 class CodeEditor extends Card {
   constructor(type, fileData) {
     super(type, fileData);
-
     this.type = type;
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata('codeEditor');
+    let foo = document.createElement("button")
+    $(foo).attr("id", "CardExpansion" + this.id)
+      .addClass("exportBtn")
+      .html("Export")
+      .hide()
+    $(this.card).append(foo)
   }
 
   // since the fullscreen class doesn't work on the ace_editor manually resize
@@ -66,6 +71,7 @@ class CodeEditor extends Card {
 
     // leave out last card so it can be used for metadata
     this.initAce(faces.slice(0, faces.length - 1));
+
   }
 
   sendSave(idx) {
@@ -75,6 +81,19 @@ class CodeEditor extends Card {
       location: this.location
     });
     $('body').addClass('waiting');
+  }
+
+  exportCard(editor) {
+    $("#CardExpansion" + this.id).show()
+      .on('click', () => {
+        let newCard = canvas.newCodeEditor({
+          ext: this.fileExt
+        });
+        newCard.editors[0].setValue(editor.getCopyText());
+        newCard.editors[0].clearSelection();
+        editor.clearSelection();
+        $(".exportBtn").hide();
+      });
   }
 
   initAce(faces) {
@@ -88,8 +107,11 @@ class CodeEditor extends Card {
         var mode = modelist.getModeForPath(cur.fileExt).mode;
         editor.session.setMode(mode);
       }
-
-      editor.on('change', () => cur.updateMetadata('codeEditor'));
+      $(editor).on('change', () => cur.updateMetadata('codeEditor'))
+        .click(() => editor.getCopyText() == "" ? $(".exportBtn").hide() :
+          cur.exportCard(editor));
+      $(".ace_text-input").on("keydown", () => editor.getCopyText() == "" ?
+        null : cur.exportCard(editor))
       cur.editors.push(editor);
     });
   }
