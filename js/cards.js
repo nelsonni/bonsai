@@ -204,16 +204,16 @@ class Card {
   arrowListeners() {
     $(this.card).mouseenter(() => {
       if (this.inStack == false) {
-        $(this.card.lastElementChild).find('.slick-arrow').show();
-        $(this.card.lastElementChild).find('.slick-dots').show();
+        $(this.card).find('.slick-arrow').show();
+        $(this.card).find('.slick-dots').show();
       }
     });
     $(this.card).mouseout(() => setTimeout(() => {
-      if (!$(this.card.lastElementChild).is(':hover') &&
+      if (!$(this.card).is(':hover') &&
         !$(document.activeElement).hasClass('ace_text-input') ||
         this.inStack == true) { //if not hovering on arrow
-        $(this.card.lastElementChild).find('.slick-arrow').hide();
-        $(this.card.lastElementChild).find('.slick-dots').hide();
+        $(this.card).find('.slick-arrow').hide();
+        $(this.card).find('.slick-dots').hide();
       }
     }, 600));
   }

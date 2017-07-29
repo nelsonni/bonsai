@@ -15,6 +15,11 @@ div.card {
   user-select: none;
 }
 
+.errorBox {
+  color: black;
+  background: white;
+}
+
 div.card.highlight {
   box-shadow: 0 0 3pt 2pt rgba(33, 200, 43, 0.4);
 }

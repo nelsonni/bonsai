@@ -6,14 +6,17 @@ class TextEditor extends Card {
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata('codeEditor');
-    let foo = document.createElement("button")
-    $(foo).attr("id", "CardExpansion" + this.id)
+    this.buildExport();
+  }
+
+  buildExport() {
+    let exportBtn = document.createElement("button")
+    $(exportBtn).attr("id", "CardExpansion" + this.id)
       .addClass("exportBtn")
       .html("Export")
       .hide()
-    $(this.card).append(foo)
+    $(this.card).append(exportBtn)
   }
-
 
   sendSave(idx) {
     ipcRenderer.send('saveSignal', {
