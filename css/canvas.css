@@ -307,6 +307,11 @@ input::-webkit-input-placeholder {
   box-sizing: border-box;
 }
 
+.ace_gutter-cell.ace_error,
+.ace_gutter-cell.ace_warning {
+  background-image: none;
+}
+
 .onoffswitch-inner:before {
   content: "";
   padding-left: 10px;
