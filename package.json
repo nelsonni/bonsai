@@ -22,7 +22,7 @@
     "electron-rebuild": "^1.5.11"
   },
   "dependencies": {
-    "electron": "^1.6.11",
+    "electron": ">=9.4.0",
     "username": "^2.3.0"
   }
 }
