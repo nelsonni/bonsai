@@ -16,6 +16,11 @@ div.card {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+.errorBox {
+  color: black;
+  background: white;
+}
+
 div.card.highlight {
   box-shadow: 0 0 3pt 2pt rgba(102, 204, 117, 0.75);
 }

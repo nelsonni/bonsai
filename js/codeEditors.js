@@ -6,12 +6,25 @@ class CodeEditor extends Card {
     this.editors = [];
     this.contentBuilder(this.card);
     this.buildMetadata('codeEditor');
-    let foo = document.createElement("button")
-    $(foo).attr("id", "CardExpansion" + this.id)
-      .addClass("exportBtn")
-      .html("Export")
-      .hide()
-    $(this.card).append(foo)
+    this.buildExtraButtons();
+    this.gutterHover();
+  }
+
+  gutterHover() {
+    $(".ace_gutter").hover((e) => { // on mouse-in
+      if ($(e.target).hasClass("ace_error")) {
+        let curIdx = $(this.carousel).slick("slickCurrentSlide");
+        var annotations = this.editors[curIdx].session.getAnnotations();
+        for (var i = 0; i < annotations.length; i++) {
+          if (parseInt(e.target.innerHTML) == annotations[i].row + 1) {
+            var htmlString = "Line " + (annotations[i].row + 1).toString() +
+              ": " + annotations[i].text;
+            $("#errorBox" + this.id).show().html(htmlString);
+          }
+          return;
+        }
+      }
+    }, () => $(".errorBox").hide()); // on mouse-out
   }
 
   // since the fullscreen class doesn't work on the ace_editor manually resize
@@ -71,7 +84,6 @@ class CodeEditor extends Card {
 
     // leave out last card so it can be used for metadata
     this.initAce(faces.slice(0, faces.length - 1));
-
   }
 
   sendSave(idx) {
@@ -94,6 +106,19 @@ class CodeEditor extends Card {
         editor.clearSelection();
         $(".exportBtn").hide();
       });
+  }
+  buildExtraButtons() {
+    let exportBtn = document.createElement("button")
+    $(exportBtn).attr("id", "CardExpansion" + this.id)
+      .addClass("exportBtn")
+      .html("Export")
+      .hide();
+    $(this.card).append(exportBtn);
+    let errorBox = document.createElement("div");
+    $(errorBox).attr("id", "errorBox" + this.id)
+      .addClass("errorBox")
+      .hide();
+    $(this.card).append(errorBox);
   }
 
   initAce(faces) {
